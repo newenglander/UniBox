@@ -120,6 +120,10 @@ var app = {
 		$('#newGameModal').on('shown.bs.modal', function() {
 			$('#gameNameInput').focus();
 		});
+		$('#changePasswordModal').on('shown.bs.modal', function() {
+			$('#oldPassword').focus();
+		});
+		$("#changePasswordForm").validator();
 		$(document).on("keydown", function disableF5(e) {
 			if ((e.which || e.keyCode) == 116) {
 				if (!app.debugMode) {
