@@ -127,7 +127,9 @@ public class GameHandler extends ProtectedHttpServlet {
             }
 
             if (InternalConfig.LOG_GAMEPOOL) {
-                this.log.debug("GameHandler: " + game);
+                if (game != null) {
+                    this.log.debug("GameHandler: " + game);
+                }
             }
         }
 
