@@ -253,4 +253,11 @@ public class ProtectedHttpServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
+    
+    protected void invalidRequest(final HttpServletRequest request,
+            final HttpServletResponse response) throws IOException {
+        response.setContentType("text/html");
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.getWriter().write("BAD_REQUEST");
+    }
 }

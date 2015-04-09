@@ -1,15 +1,11 @@
 package de.unibox.model.database.objects;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
 
-/**
- * The Class ResultUpdate.
- */
-public class ResultUpdate extends DatabaseAction<Integer> {
+public class ResultInsert extends DatabaseAction<Integer> {
 
     /** The game id. */
     private Integer gameID = null;
@@ -20,42 +16,9 @@ public class ResultUpdate extends DatabaseAction<Integer> {
     /** The scoring. */
     private Integer scoring = null;
 
-    /**
-     * Instantiates a new result update.
-     *
-     * @param thisStatement
-     *            the this statement
-     * @param thisGameID
-     *            the this game id
-     * @param thisPlayerID
-     *            the this player id
-     * @param thisScoring
-     *            the this scoring
-     */
-    public ResultUpdate(final PreparedStatement thisStatement,
-            final Integer thisGameID, final Integer thisPlayerID,
-            final Integer thisScoring) {
-        super(thisStatement);
-        this.gameID = thisGameID;
-        this.playerID = thisPlayerID;
-        this.scoring = thisScoring;
-    }
-
-    /**
-     * Instantiates a new result update.
-     *
-     * @param thisSqlString
-     *            the this sql string
-     * @param thisGameID
-     *            the this game id
-     * @param thisPlayerID
-     *            the this player id
-     * @param thisScoring
-     *            the this scoring
-     */
-    public ResultUpdate(final String thisSqlString, final Integer thisGameID,
+    public ResultInsert(final Integer thisGameID,
             final Integer thisPlayerID, final Integer thisScoring) {
-        super(thisSqlString);
+        super("INSERT INTO `unibox`.`Result` (`GameID`, `PlayerID`, `Scoring`) VALUES (?, ?, ?);");
         this.gameID = thisGameID;
         this.playerID = thisPlayerID;
         this.scoring = thisScoring;
@@ -80,6 +43,9 @@ public class ResultUpdate extends DatabaseAction<Integer> {
      */
     @Override
     public Integer execute() throws SQLException {
+        super.getStatement().setInt(1, gameID);
+        super.getStatement().setInt(2, playerID);
+        super.getStatement().setInt(2, scoring);
         return super.executeUpdate();
     }
 

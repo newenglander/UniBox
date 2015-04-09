@@ -19,11 +19,11 @@ import de.unibox.config.InternalConfig;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
-import de.unibox.model.database.objects.CategoryUpdate;
-import de.unibox.model.database.objects.GameUpdate;
-import de.unibox.model.database.objects.PlayerUpdate;
-import de.unibox.model.database.objects.QueueUpdate;
-import de.unibox.model.database.objects.ResultUpdate;
+import de.unibox.model.database.objects.CategoryInsert;
+import de.unibox.model.database.objects.GameInsert;
+import de.unibox.model.database.objects.PlayerInsert;
+import de.unibox.model.database.objects.QueueInsert;
+import de.unibox.model.database.objects.ResultInsert;
 import de.unibox.model.database.objects.SelectionQuery;
 
 /**
@@ -131,23 +131,27 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
         SelectionQuery query = null;
 
-        if (requestedData.equals("ranking")) {
+        if (requestedData != null) {
 
-            if (InternalConfig.LOG_DATABASE) {
-                this.log.debug("DatabaseHandler: select ranking table..");
+            if (requestedData.equals("ranking")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug("DatabaseHandler: select ranking table..");
+                }
+                query = new SelectionQuery(
+                        "SELECT @curRank := @curRank + 1 AS Rank, Name, Score FROM (SELECT Name, SUM(Scoring) AS Score FROM player INNER JOIN result WHERE player.PlayerID=result.PlayerID GROUP BY Name ORDER BY Score DESC) AS ranking, (SELECT @curRank := 0) r;");
+                doQuery = true;
+
+            } else if (requestedData.equals("games")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug("DatabaseHandler: select game table..");
+                }
+                query = new SelectionQuery(
+                        "SELECT GameID, GameName, Gametitle, NumberOfPlayers FROM game INNER JOIN category WHERE game.CatID=category.CatID;");
+                doQuery = true;
+
             }
-            query = new SelectionQuery(
-                    "SELECT @curRank := @curRank + 1 AS Rank, Name, Score FROM (SELECT Name, SUM(Scoring) AS Score FROM player INNER JOIN result WHERE player.PlayerID=result.PlayerID GROUP BY Name ORDER BY Score DESC) AS ranking, (SELECT @curRank := 0) r;");
-            doQuery = true;
-
-        } else if (requestedData.equals("games")) {
-
-            if (InternalConfig.LOG_DATABASE) {
-                this.log.debug("DatabaseHandler: select game table..");
-            }
-            query = new SelectionQuery(
-                    "SELECT GameID, GameName, Gametitle, NumberOfPlayers FROM game INNER JOIN category WHERE game.CatID=category.CatID;");
-            doQuery = true;
 
         }
 
@@ -187,8 +191,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             out.flush();
 
         } else {
-
-            super.serviceDenied(request, response);
+            super.invalidRequest(request, response);
         }
     }
 
@@ -216,7 +219,6 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 this.log.debug("DatabaseHandler: update player table..");
             }
 
-            final String thisSqlString = "INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (?, ?, ?);";
             final String thisName = request.getParameter("name");
             final int thisAdminRights = Integer.parseInt(request
                     .getParameter("adminrights"));
@@ -224,7 +226,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             // TODO avoid hardcoded default password
             final String thisPassword = "3022443b7e33a6a68756047e46b81bea";
 
-            query = new PlayerUpdate(thisSqlString, thisAdminRights, thisName,
+            query = new PlayerInsert(thisAdminRights, thisName,
                     thisPassword);
             doInsert = true;
 
@@ -234,12 +236,11 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 this.log.debug("DatabaseHandler: update category table..");
             }
 
-            final String thisSqlString = "INSERT INTO `unibox`.`Category` (`Gametitle`, `NumberOfPlayers`) VALUES (?, ?);";
             final String thisGametitle = request.getParameter("gametitle");
             final int thisNumberOfPlayers = Integer.parseInt(request
                     .getParameter("numberofplayers"));
 
-            query = new CategoryUpdate(thisSqlString, thisGametitle,
+            query = new CategoryInsert(thisGametitle,
                     thisNumberOfPlayers);
             doInsert = true;
 
@@ -249,12 +250,11 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 this.log.debug("DatabaseHandler: update game table..");
             }
 
-            final String thisSqlString = "INSERT INTO `unibox`.`Game` (`GameName`, `CatID`) VALUES (?, ?);";
             final String thisGameName = request.getParameter("gamename");
             final int thisCatID = Integer.parseInt(request
                     .getParameter("catid"));
 
-            query = new GameUpdate(thisSqlString, thisGameName, thisCatID);
+            query = new GameInsert(thisGameName, thisCatID);
             doInsert = true;
 
         } else if (createData.equals("queue")) {
@@ -263,13 +263,12 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 this.log.debug("DatabaseHandler: update game table..");
             }
 
-            final String thisSqlString = "INSERT INTO `unibox`.`Game` (`GameName`, `CatID`) VALUES (?, ?);";
             final int thisPlayerID = Integer.parseInt(request
                     .getParameter("playerid"));
             final int thisGameID = Integer.parseInt(request
                     .getParameter("gameid"));
 
-            query = new QueueUpdate(thisSqlString, thisPlayerID, thisGameID);
+            query = new QueueInsert(thisPlayerID, thisGameID);
             doInsert = true;
 
         } else if (createData.equals("result")) {
@@ -278,7 +277,6 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 this.log.debug("DatabaseHandler: update result table..");
             }
 
-            final String thisSqlString = "INSERT INTO `unibox`.`Result` (`GameID`, `PlayerID`, `Scoring`) VALUES (?, ?, ?);";
             final int thisGameID = Integer.parseInt(request
                     .getParameter("gameid"));
             final int thisPlayerID = Integer.parseInt(request
@@ -286,7 +284,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             final int thisScoring = Integer.parseInt(request
                     .getParameter("scoring"));
 
-            query = new ResultUpdate(thisSqlString, thisGameID, thisPlayerID,
+            query = new ResultInsert(thisGameID, thisPlayerID,
                     thisScoring);
             doInsert = true;
 

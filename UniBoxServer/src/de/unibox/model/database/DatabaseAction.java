@@ -25,16 +25,6 @@ public abstract class DatabaseAction<T> extends InternalConfig {
     /**
      * Instantiates a new database action.
      *
-     * @param thisStatement
-     *            the this statement
-     */
-    protected DatabaseAction(final PreparedStatement thisStatement) {
-        this.statement = thisStatement;
-    }
-
-    /**
-     * Instantiates a new database action.
-     *
      * @param thisSqlString
      *            the this sql string
      */
@@ -119,10 +109,12 @@ public abstract class DatabaseAction<T> extends InternalConfig {
      * @throws SQLException
      *             the SQL exception
      */
-    protected int executeUpdate() throws SQLException {
+    protected Integer executeUpdate() throws SQLException {
         Integer returnThis = null;
         if (this.gotNullMembers()) {
-            returnThis = this.getStatement().executeUpdate();
+            // TODO Nullpointer here
+            // returnThis = this.getStatement().executeUpdate();
+            this.getStatement().executeUpdate();
         }
         return returnThis;
     }
@@ -146,6 +138,10 @@ public abstract class DatabaseAction<T> extends InternalConfig {
         boolean gotNullValues = false;
         final Field[] allFields = this.getClass().getDeclaredFields();
         for (final Field field : allFields) {
+
+            // allow accessing private members
+            field.setAccessible(true);
+
             if (Modifier.isPrivate(field.getModifiers())) {
                 final Class<?> t = field.getType();
                 Object v;

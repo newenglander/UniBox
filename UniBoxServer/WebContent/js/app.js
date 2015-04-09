@@ -117,6 +117,25 @@ var app = {
 		$('#triggerAdmin').click(function() {
 			app.activateMenu(this);
 		});
+		$('#createGameForm').on('submit',function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			var gameName = $('#gameNameInput').val();
+			var gameType = $('#gameTypeInput').val();
+			var gameDescription = $('#gameDescriptionInput').val();
+			jQuery.ajax({
+				type : "POST",
+				url : app.url + app.dataSource,
+				data : "create=game&gamename=" + gameName + "&catid=" + gameType + "&descr=" + gameDescription,
+				success : function(result) {
+					console.log(result);
+				},
+				error : function(e) {
+					console.log(e);
+				},
+				async : false
+			});
+		});
 		$('#newGameModal').on('shown.bs.modal', function() {
 			$('#gameNameInput').focus();
 		});

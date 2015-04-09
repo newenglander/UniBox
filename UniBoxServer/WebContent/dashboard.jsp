@@ -56,7 +56,7 @@
 							<li><a id="changePassword" data-toggle="modal"
 								data-target=".bs-change-password-modal-lg">Change password</a></li>
 						</ul></li>
-					<li><a class="whiteText" href="/UniBox/Logout">Logout</a></li>
+					<li><a class="whiteText" href="/UniBox/Auth?action=logout">Logout</a></li>
 				</ul>
 			</div>
 		</div>
@@ -266,7 +266,7 @@
 		aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content modalFormContent">
-				<form class="form-horizontal">
+				<form class="form-horizontal" id="createGameForm">
 					<fieldset>
 						<legend>Create new Game</legend>
 						<div class="form-group">
@@ -289,7 +289,7 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label" for="Description">Description</label>
 							<div class="col-md-4">
-								<textarea class="form-control" id="descriptionGameInput"
+								<textarea class="form-control" id="gameDescriptionInput"
 									name="Description">Description..</textarea>
 							</div>
 						</div>
@@ -299,7 +299,8 @@
 									class="btn btn-danger" type="button" data-toggle="modal"
 									data-target=".bs-new-game-modal-lg">Cancel</button>
 								<button id="commitNewGame" name="commitNewGame"
-									class="btn btn-success" type="submit">Commit</button>
+									class="btn btn-success" type="submit" data-toggle="modal"
+									data-target=".bs-new-game-modal-lg">Commit</button>
 							</div>
 						</div>
 					</fieldset>

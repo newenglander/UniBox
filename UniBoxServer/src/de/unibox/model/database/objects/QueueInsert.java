@@ -1,15 +1,12 @@
 package de.unibox.model.database.objects;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
 
-/**
- * The Class QueueUpdate.
- */
-public class QueueUpdate extends DatabaseAction<Integer> {
+
+public class QueueInsert extends DatabaseAction<Integer> {
 
     /** The game id. */
     private Integer gameID = null;
@@ -17,36 +14,9 @@ public class QueueUpdate extends DatabaseAction<Integer> {
     /** The player id. */
     private Integer playerID = null;
 
-    /**
-     * Instantiates a new queue update.
-     *
-     * @param thisStatement
-     *            the this statement
-     * @param thisPlayerID
-     *            the this player id
-     * @param thisGameID
-     *            the this game id
-     */
-    public QueueUpdate(final PreparedStatement thisStatement,
-            final Integer thisPlayerID, final Integer thisGameID) {
-        super(thisStatement);
-        this.playerID = thisPlayerID;
-        this.gameID = thisGameID;
-    }
-
-    /**
-     * Instantiates a new queue update.
-     *
-     * @param thisSqlString
-     *            the this sql string
-     * @param thisPlayerID
-     *            the this player id
-     * @param thisGameID
-     *            the this game id
-     */
-    public QueueUpdate(final String thisSqlString, final Integer thisPlayerID,
+    public QueueInsert(final Integer thisPlayerID,
             final Integer thisGameID) {
-        super(thisSqlString);
+        super("INSERT INTO `unibox`.`Game` (`GameName`, `CatID`) VALUES (?, ?);");
         this.playerID = thisPlayerID;
         this.gameID = thisGameID;
     }
@@ -70,6 +40,8 @@ public class QueueUpdate extends DatabaseAction<Integer> {
      */
     @Override
     public Integer execute() throws SQLException {
+        super.getStatement().setInt(1, playerID);
+        super.getStatement().setInt(2, gameID);
         return super.executeUpdate();
     }
 
