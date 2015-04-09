@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="TicTacToe" default="package" basedir=".">
+
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="src.main.dir" value="${src.dir}/tictactoe" />
+	<property name="src.test.dir" value="${src.dir}/tests" />
+
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="lib.compile.dir" value="${lib.dir}/compile" />
+	<property name="lib.test.dir" value="${lib.dir}/test" />
+
+	<property name="target.dir" value="${basedir}/target" />
+	<property name="target.classes.dir" value="${target.dir}/classes" />
+	<property name="target.test.classes.dir" value="${target.dir}/test-classes" />
+	<property name="target.test.report.dir" value="${target.dir}/test-reports" />
+	<property name="target.javadoc.dir" value="${target.dir}/doc" />
+
+	<path id="main.compile.cp">
+		<fileset dir="${lib.compile.dir}" includes="*.jar" />
+	</path>
+	<path id="test.compile.cp">
+		<path refid="main.compile.cp" />
+		<path location="${target.classes.dir}" />
+	</path>
+	<path id="test.run.cp">
+		<path refid="test.compile.cp" />
+		<path location="${target.test.classes.dir}" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${target.dir}" />
+	</target>
+
+	<target name="prepare">
+		<mkdir dir="${target.dir}" />
+	</target>
+
+	<target name="main.compile" depends="prepare">
+		<mkdir dir="${target.classes.dir}" />
+		<javac srcdir="${src.main.dir}" destdir="${target.classes.dir}" classpathref="main.compile.cp" includeantruntime="false" />
+	</target>
+
+	<target name="test.compile" depends="main.compile">
+		<mkdir dir="${target.test.classes.dir}" />
+		<javac srcdir="${src.test.dir}" destdir="${target.test.classes.dir}" classpathref="test.compile.cp" includeantruntime="false" />
+	</target>
+
+	<target name="test.run" depends="test.compile">
+		<mkdir dir="${target.test.report.dir}" />
+		<junit printsummary="true" haltonfailure="false">
+			<formatter type="xml" usefile="true" />
+			<classpath refid="test.run.cp" />
+			<batchtest fork="yes" todir="${target.test.report.dir}">
+				<fileset dir="${src.test.dir}">
+					<include name="*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<target name="test.report" depends="test.run">
+	    <junitreport tofile="TESTS-TestSuites.xml" todir="${lib.test.dir}">
+	        <fileset dir="${lib.test.dir}">
+	            <include name="TEST-*.xml" />
+	        </fileset>
+	        <report format="frames" todir="${lib.test.dir}" />
+	    </junitreport>
+	</target>
+
+	<target name="package" depends="test.run">
+		<mkdir dir="${target.classes.dir}" />
+		<jar destfile="${target.dir}/${ant.project.name}.jar" basedir="${target.classes.dir}" />
+	</target>
+
+	<target name="javadoc" depends="javadoc.generate, javadoc.jar" />
+
+	<target name="javadoc.generate" depends="prepare" description="generate documentation">
+		<mkdir dir="${target.javadoc.dir}" />
+		<javadoc packagenames="*" sourcepath="${src.dir}" destdir="${target.javadoc.dir}" classpathref="main.compile.cp" />
+	</target>
+
+	<target name="javadoc.jar" depends="javadoc.generate">
+		<jar destfile="${target.dir}/${ant.project.name}-javadoc.jar" basedir="${target.javadoc.dir}" />
+	</target>
+
+	<target name="sources" depends="prepare">
+		<jar destfile="${target.dir}/${ant.project.name}-sources.jar" basedir="${src.main.dir}" />
+	</target>
+
+</project>

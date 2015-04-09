@@ -1,0 +1,119 @@
+html {
+	height: 100%;
+}
+
+body {
+	padding-top: 40px;
+	padding-bottom: 40px;
+	background-color: #666666;
+	height: 100%;
+}
+
+.redButton {
+	background-color: #CF3A34;
+	border-color: #CF3A34
+}
+
+.form-signin {
+	background-color: #EBEBEB; max-width : 330px;
+	padding: 15px;
+	margin: 0 auto;
+	max-width: 330px;
+	border-radius: 10px;
+}
+
+.navbar-brand:hover, .navbar-brand:focus {
+	color: white;
+}
+
+.redButton:hover, .redButton:focus {
+	background-color: #CF3A34;
+	border-color: #CF3A34;
+}
+
+.form-signin .form-signin-heading, .form-signin .checkbox {
+	margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+	font-weight: normal;
+}
+
+#username {
+	margin-bottom: 10px;
+}
+
+.form-signin .form-control {
+	position: relative;
+	height: auto;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 10px;
+	font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+	z-index: 2;
+}
+
+.form-signin input[type="email"] {
+	margin-bottom: -1px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+	margin-bottom: 10px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.navbar-brand, .navbar-inverse .navbar-brand, ul.nav.navbar-nav li * {
+	color: white;
+}
+
+.noMargin {
+	margin: 0px !important;
+}
+
+.logoBox {
+	border: 2px solid white;
+	padding: 5px;
+	border-radius: 4px;
+}
+
+.navbar-header, ul.nav.navbar-nav li a:hover {
+	background-color: #E2001A;
+	color: white;
+	width: 100%;
+	margin-bottom: 30px;
+	border-radius: 5px;
+}
+
+.vertical-center {
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	font: 0/0 a;
+}
+
+.vertical-center:before {
+	content: " ";
+	display: inline-block;
+	vertical-align: middle;
+	height: 100%;
+}
+
+.vertical-center>.container {
+	max-width: 100%;
+	display: inline-block;
+	vertical-align: middle;
+	font: 16px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.jumbotron {
+	padding: 0px !important;
+	margin: 0px !important;
+	background-color: #666666;
+}

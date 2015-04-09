@@ -1,0 +1,393 @@
+body {
+	padding-top: 70px;
+	padding-bottom: 0px;
+}
+
+.no-scroll {
+	overflow: hidden;
+}
+
+body, .jumbotron {
+	background-color: #EBEBEC;
+}
+
+.jumbotron {
+	padding: 0px !important;
+	margin: 0px !important;
+	padding-bottom: 15px !important;
+}
+
+.navbar-inverse .navbar-toggle:hover {
+	background-color: white;
+	border-color: #E2001A;
+}
+
+.navbar-inverse .navbar-toggle:focus {
+	background-color: white;
+	border-color: #E2001A;
+}
+
+.navbar-inverse .navbar-toggle.collapsed {
+	background-color: #E2001A;
+	border-color: white;
+}
+
+.navbar-inverse .navbar-toggle.collapsed .icon-bar {
+	background-color: white !important;
+}
+
+.navbar-inverse .navbar-toggle:focus .icon-bar, .navbar-inverse .navbar-toggle:hover .icon-bar
+	{
+	background-color: #E2001A;
+}
+
+.navbar-inverse .navbar-toggle {
+	border-color: white;
+}
+
+.navbar, .dropdown-menu {
+	background-color: #666666;
+	border: white;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+.nav-tabs {
+	margin-bottom: 15px;
+}
+
+.nav.navbar-nav.navbar-right {
+	margin-right: 0px;
+}
+
+.pagination>li>a, .pagination>li>span {
+	color: #333;
+}
+
+.navbar-header, ul.nav.navbar-nav li a:hover {
+	background-color: #E2001A;
+	color: white;
+}
+
+.panel-primary {
+	border-color: #CF3A34;
+}
+
+.panel-primary>.panel-heading {
+	color: #fff;
+	background-color: #CF3A34;
+	border-color: #CF3A34;
+}
+
+.alert {
+	margin-bottom: 8px;
+}
+
+.padding15 {
+	padding: 15px !important;
+}
+
+.list-group-item-menu {
+	color: #ffffff;
+	background-color: #CF3A34;
+	cursor: pointer;
+}
+
+.noPadding {
+	padding: 0px;
+}
+
+.bottomMargin20 {
+	margin-bottom: 20px;
+}
+
+.list-group {
+	padding: 1px;
+	margin-bottom: 0px;
+}
+
+.list-group-item-menu:hover {
+	background-color: #E2001A;
+	color: white;
+}
+
+.list-group-item-menu:focus {
+	background-color: #CF3A34;
+	color: white;
+}
+
+ul.pagination {
+	float: right;
+	margin: 0px;
+}
+
+.panel-title {
+	line-height: 30px;
+}
+
+.navbar-brand, .navbar-inverse .navbar-brand, ul.nav.navbar-nav li * {
+	color: white;
+}
+
+.dropdown-menu {
+	padding: 0px;
+}
+
+.expandMax {
+	width: 100%;
+}
+
+.noPad {
+	padding: 0px !important;
+}
+
+.noMargin {
+	margin: 0px !important;
+}
+
+.logoBox {
+	border: 2px solid white;
+	padding: 5px;
+	border-radius: 4px;
+}
+
+.chatMessenger {
+	min-height: 0px;
+	padding-bottom: 18px;
+}
+
+.transparent {
+	background: transparent;
+}
+
+.rightPad4 {
+	padding-right: 4px;
+}
+
+.noBorder {
+	border: none;
+}
+
+.btnActive {
+	background-color: #E2001A !important;
+}
+
+.messengerFrame, .profileFrame {
+	position: absolute;
+	display: block;
+	top: 50px;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	background: rgba(235, 235, 236, 1);
+	-moz-transition: all 0.2s ease-out;
+	-ms-transition: all 0.2s ease-out;
+	-o-transition: all 0.2s ease-out;
+	transition: all 0.2s ease-out;
+	-webkit-transition: all 0.2s ease-out;
+}
+
+.messengerFrame.out, .profileFrame.out {
+	background: rgba(235, 235, 236, 0);
+	-webkit-transition: all 0.2s ease-out;
+	-moz-transition: all 0.2s ease-out;
+	-ms-transition: all 0.2s ease-out;
+	-o-transition: all 0.2s ease-out;
+	transition: all 0.2s ease-out;
+}
+
+.hidden {
+	display: none;
+}
+
+.messengerFrame.out>*, .profileFrame.out>* {
+	display: none;
+}
+
+.messengerContainer, .profileContainer {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	padding: 14px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.messengerInput {
+  position: absolute;
+  bottom: 10px;
+  left: 15px;
+  right: 15px;
+}
+
+.messengerContent {
+	position: absolute;
+	bottom: 40px;
+	left: 0px;
+	right: 0px;
+	top: -4px;
+	overflow-y: scroll;
+	margin: 14px;
+}
+
+.messengerElement {
+	display: table-row;
+}
+
+.messengerElement div {
+	padding-top: 5px;
+}
+
+.messengerElement>div {
+	display: table-cell;
+}
+
+.bottom>div {
+	vertical-align: bottom;
+}
+
+.dropdown.open .dropdown-toggle {
+	background-color: #E2001A !important;
+}
+
+.chatContent {
+	padding-right: 10px;
+}
+
+.messageText>span {
+	font-weight: bold;
+}
+
+.messageText {
+	-webkit-border-radius: 15px;
+	-moz-border-radius: 15px;
+	border-radius: 8px;
+	border: 1px solid #CF3A34;
+	background-color: #CF3A34;
+	color: white;
+	padding: 8px;
+	float: left;
+	word-wrap: break-word;
+}
+
+.messageText:after {
+	clear: both;
+}
+
+table.dataTable th, table.dataTable td {
+	white-space: nowrap;
+}
+
+table.table {
+	width: 100% !important;
+	margin-top: 0px !important;
+}
+
+div.panel-body {
+	padding: 0px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+	background-color: #CF3A34;
+	color: white !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+	.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover
+	{
+	background-color: #DCDCDC !important;
+}
+
+a.paginate_button.disabled:active, a.paginate_button:hover {
+	background-color: #666666 !important;
+}
+
+.modalFormContent {
+	padding: 10px;
+}
+
+#gamePanel_filter, #rankingPanel_filter {
+	display: none;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+	margin-bottom: 2px;
+}
+
+.dataTables_wrapper .row {
+	margin: 0px !important;
+}
+
+.dataTables_wrapper .row .col-xs-6 {
+	margin: 0px !important;
+	width: auto;
+}
+
+.dataTables_paginate.paging_simple {
+	margin-top: 0px !important;
+	padding-top: 0px !important;
+	margin-bottom: 5px !important;
+}
+
+.dataTables_wrapper .dataTables_info {
+	padding-top: 0px !important;
+}
+
+.dataTables_wrapper .row .col-xs-6:nth-child(1) {
+	float: left;
+}
+
+.dataTables_wrapper .row .col-xs-6:nth-child(2) {
+	float: right;
+}
+
+.floatRight {
+	float: right;
+}
+
+.dataTables_wrapper .row:nth-child(3) {
+	padding-left: 10px !important;
+	padding-right: 10px !important;
+	padding-top: 7px !important;
+}
+
+@media ( min-width : 768px) {
+	.messengerContainer, .profileContainer {
+		width: 750px;
+	}
+	ul.nav.navbar-nav {
+		float: right !important;
+	}
+	.dataTables_wrapper .dataTables_paginate .paginate_button {
+		display: inline;
+		margin-bottom: 0px;
+	}
+	.dataTables_info {
+		padding-top: 5px !important;
+	}
+	div.panel-body {
+		padding-bottom: 15px !important;
+	}
+}
+
+.table-responsive {
+	margin-bottom: 0px !important;
+	/* 		border: 0px !important; */
+}
+
+@media ( min-width : 992px) {
+	.messengerContainer, .profileContainer {
+		width: 970px;
+	}
+}
+
+@media ( min-width : 1200px) {
+	.messengerContainer, .profileContainer {
+		width: 1170px;
+	}
+}
