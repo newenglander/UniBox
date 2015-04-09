@@ -45,20 +45,20 @@ var app = {
 	activateMenu : function(target) {
 		$("#triggerDashboard").removeClass("btnActive");
 		$("#triggerChat").removeClass("btnActive");
-		$("#triggerProfile").removeClass("btnActive");
+		$("#triggerAdmin").removeClass("btnActive");
 		switch (target.id) {
 		case "triggerDashboard":
 			app.hideChat();
-			app.hideProfile();
+			app.hideAdmin();
 			$(target).addClass("btnActive");
 			break;
 		case "triggerChat":
 			app.showChat();
-			app.hideProfile();
+			app.hideAdmin();
 			$(target).addClass("btnActive");
 			break;
-		case "triggerProfile":
-			app.showProfile();
+		case "triggerAdmin":
+			app.showAdmin();
 			app.hideChat();
 			$(target).addClass("btnActive");
 			break;
@@ -84,16 +84,16 @@ var app = {
 			$("#messengerInputForm").focus();
 		}, 100);
 	},
-	hideProfile : function() {
-		$(".profileFrame").addClass("out");
+	hideAdmin : function() {
+		$(".adminFrame").addClass("out");
 		setTimeout(function() {
-			$(".profileFrame").addClass("hidden");
+			$(".adminFrame").addClass("hidden");
 		}, 200);
 		$("body").removeClass("no-scroll");
 	},
-	showProfile : function() {
-		$(".profileFrame").removeClass("out");
-		$(".profileFrame").removeClass("hidden");
+	showAdmin : function() {
+		$(".adminFrame").removeClass("out");
+		$(".adminFrame").removeClass("hidden");
 		$("body").addClass("no-scroll");
 	},
 	bind : function() {
@@ -114,7 +114,7 @@ var app = {
 		$('#triggerChat').click(function() {
 			app.activateMenu(this);
 		});
-		$('#triggerProfile').click(function() {
+		$('#triggerAdmin').click(function() {
 			app.activateMenu(this);
 		});
 		$('#newGameModal').on('shown.bs.modal', function() {

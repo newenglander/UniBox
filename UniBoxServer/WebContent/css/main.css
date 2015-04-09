@@ -174,7 +174,7 @@ ul.pagination {
 	background-color: #E2001A !important;
 }
 
-.messengerFrame, .profileFrame {
+.messengerFrame, .adminFrame {
 	position: absolute;
 	display: block;
 	top: 50px;
@@ -190,7 +190,7 @@ ul.pagination {
 	-webkit-transition: all 0.2s ease-out;
 }
 
-.messengerFrame.out, .profileFrame.out {
+.messengerFrame.out, .adminFrame.out {
 	background: rgba(235, 235, 236, 0);
 	-webkit-transition: all 0.2s ease-out;
 	-moz-transition: all 0.2s ease-out;
@@ -203,11 +203,11 @@ ul.pagination {
 	display: none;
 }
 
-.messengerFrame.out>*, .profileFrame.out>* {
+.messengerFrame.out>*, .adminFrame.out>* {
 	display: none;
 }
 
-.messengerContainer, .profileContainer {
+.messengerContainer, .adminContainer {
 	position: absolute;
 	top: 0px;
 	bottom: 0px;
@@ -357,7 +357,7 @@ a.paginate_button.disabled:active, a.paginate_button:hover {
 }
 
 @media ( min-width : 768px) {
-	.messengerContainer, .profileContainer {
+	.messengerContainer, .adminContainer {
 		width: 750px;
 	}
 	ul.nav.navbar-nav {
@@ -381,13 +381,13 @@ a.paginate_button.disabled:active, a.paginate_button:hover {
 }
 
 @media ( min-width : 992px) {
-	.messengerContainer, .profileContainer {
+	.messengerContainer, .adminContainer {
 		width: 970px;
 	}
 }
 
 @media ( min-width : 1200px) {
-	.messengerContainer, .profileContainer {
+	.messengerContainer, .adminContainer {
 		width: 1170px;
 	}
 }

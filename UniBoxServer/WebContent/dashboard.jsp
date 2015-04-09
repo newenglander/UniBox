@@ -1,3 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<jsp:useBean id="admin" class="de.unibox.http.servlet.beans.AdminBean"
+	scope="session" />
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +47,7 @@
 					<li><a class="whiteText btnActive" id="triggerDashboard"
 						href="#">Dashboard</a></li>
 					<li><a class="whiteText" id="triggerChat" href="#">Chat</a></li>
-					<li><a class="whiteText" id="triggerProfile" href="#">Profile</a></li>
+					<jsp:getProperty name="admin" property="adminMenu" />
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown">Connection <b class="caret"></b></a>
 						<ul class="dropdown-menu">
@@ -190,12 +194,12 @@
 		</div>
 	</div>
 
-	<div class="profileFrame out hidden">
-		<div class="profileContainer">
+	<div class="adminFrame out hidden">
+		<div class="adminContainer">
 			<div class="container">
 				<div class="row">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">User
-						Profile (e.g. Database Dump) goes here..</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						Admin Options here..</div>
 				</div>
 			</div>
 		</div>
