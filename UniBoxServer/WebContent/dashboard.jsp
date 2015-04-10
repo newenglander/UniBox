@@ -281,8 +281,6 @@
 								Gametype</label>
 							<div class="col-md-4">
 								<select id="gameTypeInput" name="gameType" class="form-control">
-									<option value="1">TicTacToe</option>
-									<option value="2">Vier Gewinnt</option>
 								</select>
 							</div>
 						</div>
@@ -290,7 +288,7 @@
 							<label class="col-md-4 control-label" for="Description">Description</label>
 							<div class="col-md-4">
 								<textarea class="form-control" id="gameDescriptionInput"
-									name="Description">Description..</textarea>
+									name="Description" placeholder="Description.."></textarea>
 							</div>
 						</div>
 						<div class="form-group">

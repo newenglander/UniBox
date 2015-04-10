@@ -109,21 +109,19 @@ public abstract class DatabaseAction<T> extends InternalConfig {
      * @throws SQLException
      *             the SQL exception
      */
-    protected Integer executeUpdate() throws SQLException {
-        Integer returnThis = null;
-        if (this.gotNullMembers()) {
-            // TODO Nullpointer here
-            // returnThis = this.getStatement().executeUpdate();
-            this.getStatement().executeUpdate();
+    protected int executeUpdate() throws SQLException {
+        int returnThis = 0;
+        if (!this.gotNullMembers()) {
+            returnThis = this.getStatement().executeUpdate();
         }
         return returnThis;
     }
-
+    
     public final String getSqlString() {
         return this.sqlString;
     }
 
-    protected final PreparedStatement getStatement() {
+    public final PreparedStatement getStatement() {
         return this.statement;
     }
 

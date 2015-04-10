@@ -13,6 +13,26 @@ var app = {
 		app.updateGameTable();
 		app.updateRankingTable();
 		app.gotActiveGame();
+		app.updateFormulars();
+	},
+	updateFormulars : function() {
+		var categorySelection = $("#gameTypeInput");
+		jQuery.ajax({
+			type : "GET",
+			url : app.url + app.dataSource,
+			data : "request=categories",
+			success : function(data) {
+				$.each(data, function(index, value) {
+					$("#gameTypeInput").append(
+							'<option value="' + value.CatID + '">'
+									+ value.Gametitle + '</option>');
+				});
+			},
+			error : function(e) {
+				console.log(e);
+			},
+			async : false
+		});
 	},
 	listen : function() {
 		$('#comet-frame').attr("src", app.url + app.cometSource + '?1').load(
@@ -117,25 +137,31 @@ var app = {
 		$('#triggerAdmin').click(function() {
 			app.activateMenu(this);
 		});
-		$('#createGameForm').on('submit',function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			var gameName = $('#gameNameInput').val();
-			var gameType = $('#gameTypeInput').val();
-			var gameDescription = $('#gameDescriptionInput').val();
-			jQuery.ajax({
-				type : "POST",
-				url : app.url + app.dataSource,
-				data : "create=game&gamename=" + gameName + "&catid=" + gameType + "&descr=" + gameDescription,
-				success : function(result) {
-					console.log(result);
-				},
-				error : function(e) {
-					console.log(e);
-				},
-				async : false
-			});
-		});
+		$('#createGameForm').on(
+				'submit',
+				function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					var gameName = $('#gameNameInput').val();
+					var gameType = $('#gameTypeInput').val();
+					var gameDescription = $('#gameDescriptionInput').val();
+					jQuery.ajax({
+						type : "POST",
+						url : app.url + app.dataSource,
+						data : "create=game&gamename=" + gameName + "&catid="
+								+ gameType + "&descr=" + gameDescription,
+						success : function(result) {
+							app.newsticker("success",
+									"Game created successful.");
+							app.updateGameTable();
+						},
+						error : function(e) {
+							app.newsticker("warning",
+									"Could not create game..!");
+						},
+						async : false
+					});
+				});
 		$('#newGameModal').on('shown.bs.modal', function() {
 			$('#gameNameInput').focus();
 		});
@@ -372,7 +398,6 @@ var app = {
 						+ '</div>');
 	},
 	joinGame : function(id) {
-		console.log("AAAA");
 		jQuery.ajax({
 			type : "GET",
 			url : app.url + "/Game?action=join&gameid=" + id,
@@ -428,7 +453,7 @@ var app = {
 			type : "GET",
 			url : app.url + "/Game?action=whichgame",
 			success : function(data) {
-				
+
 				var id = data.replace("gameid:", "");
 				console.log(id);
 				var linkElement = $("#game-" + id);

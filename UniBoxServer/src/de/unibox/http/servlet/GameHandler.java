@@ -88,6 +88,7 @@ public class GameHandler extends ProtectedHttpServlet {
             boolean done = false;
             switch (action) {
             case "join":
+                GamePool.getInstance();
                 Game prevGame = GamePool.getInstance().getGameByPlayer(user);
                 if (prevGame == null) {
                     done = game.addPlayer(user);

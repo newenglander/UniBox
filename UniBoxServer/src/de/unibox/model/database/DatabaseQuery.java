@@ -69,7 +69,6 @@ public class DatabaseQuery extends InternalConfig {
      *             the SQL exception
      */
     public void connect() throws SQLException {
-
         this.con = DatabaseQuery.pool.getConnection();
         this.con.setAutoCommit(false);
         if (InternalConfig.LOG_DATABASE) {

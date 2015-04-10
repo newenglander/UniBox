@@ -115,6 +115,10 @@ public class GamePool extends InternalConfig {
     public ArrayList<Game> getGameList() {
         return this.gameList;
     }
+    
+    public void update() {
+        this.initialize();
+    }
 
     /**
      * Initialize.

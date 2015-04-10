@@ -15,7 +15,7 @@ public class GameInsert extends DatabaseAction<Integer> {
 
     public GameInsert(final String thisGameName, final int thisCatID) {
         super(
-                "INSERT INTO `unibox`.`Game` (`GameName`, `CatID`) VALUES (?, ?);");
+                "INSERT INTO game (GameName, CatID) VALUES (?, ?);");
         this.gameName = thisGameName;
         this.catID = thisCatID;
     }
@@ -39,8 +39,8 @@ public class GameInsert extends DatabaseAction<Integer> {
      */
     @Override
     public Integer execute() throws SQLException {
-        super.getStatement().setString(1, gameName);
-        super.getStatement().setInt(2, catID);
+        super.getStatement().setString(1, this.gameName);
+        super.getStatement().setInt(2, this.catID);
         return super.executeUpdate();
     }
 

@@ -25,6 +25,7 @@ import de.unibox.model.database.objects.PlayerInsert;
 import de.unibox.model.database.objects.QueueInsert;
 import de.unibox.model.database.objects.ResultInsert;
 import de.unibox.model.database.objects.SelectionQuery;
+import de.unibox.model.game.GamePool;
 
 /**
  * The Class DatabaseHandler.
@@ -151,6 +152,15 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         "SELECT GameID, GameName, Gametitle, NumberOfPlayers FROM game INNER JOIN category WHERE game.CatID=category.CatID;");
                 doQuery = true;
 
+            } else if (requestedData.equals("categories")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug("DatabaseHandler: select game table..");
+                }
+                query = new SelectionQuery(
+                        "SELECT CatID, Gametitle, NumberOfPlayers FROM category;");
+                doQuery = true;
+
             }
 
         }
@@ -226,8 +236,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             // TODO avoid hardcoded default password
             final String thisPassword = "3022443b7e33a6a68756047e46b81bea";
 
-            query = new PlayerInsert(thisAdminRights, thisName,
-                    thisPassword);
+            query = new PlayerInsert(thisAdminRights, thisName, thisPassword);
             doInsert = true;
 
         } else if (createData.equals("category")) {
@@ -240,8 +249,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             final int thisNumberOfPlayers = Integer.parseInt(request
                     .getParameter("numberofplayers"));
 
-            query = new CategoryInsert(thisGametitle,
-                    thisNumberOfPlayers);
+            query = new CategoryInsert(thisGametitle, thisNumberOfPlayers);
             doInsert = true;
 
         } else if (createData.equals("game")) {
@@ -284,8 +292,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             final int thisScoring = Integer.parseInt(request
                     .getParameter("scoring"));
 
-            query = new ResultInsert(thisGameID, thisPlayerID,
-                    thisScoring);
+            query = new ResultInsert(thisGameID, thisPlayerID, thisScoring);
             doInsert = true;
 
         }
@@ -299,7 +306,13 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 transaction.connect();
                 query.attach(transaction);
                 result = query.execute();
+
                 transaction.commit();
+
+                /** update model */
+                if (createData.equals("game")) {
+                    GamePool.getInstance().update();
+                }
 
             } catch (final SQLException e) {
 
