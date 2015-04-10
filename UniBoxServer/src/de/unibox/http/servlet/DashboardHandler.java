@@ -50,7 +50,7 @@ public class DashboardHandler extends ProtectedHttpServlet {
             final Object adminObj = request.getSession().getAttribute("admin");
             AdminBean adminBean = null;
             if ((adminObj != null) && (adminObj instanceof AdminBean)) {
-                adminBean = adminBean;
+                adminBean = (AdminBean) adminObj;
             } else {
                 adminBean = new AdminBean();
                 request.getSession().setAttribute("admin", adminBean);
