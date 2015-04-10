@@ -13,12 +13,18 @@ import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseQuery;
 import de.unibox.model.database.objects.SelectionQuery;
 
+/**
+ * The Class AdminHandler.
+ */
 @WebServlet("/Admin")
 public class AdminHandler extends ProtectedHttpServlet {
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -6489040877604784432L;
 
+    /**
+     * Instantiates a new admin handler.
+     */
     public AdminHandler() {
         super();
     }
@@ -55,7 +61,7 @@ public class AdminHandler extends ProtectedHttpServlet {
 
             transaction.commit();
 
-        } catch (SQLException e) {
+        } catch (final SQLException e) {
             e.printStackTrace();
         }
 

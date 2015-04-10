@@ -8,22 +8,22 @@ import org.apache.log4j.Logger;
 public class InternalConfig {
 
     /** The Constant DB_NAME. */
-    protected static final String DB_NAME = "unibox";
+    public static final String DB_NAME = "unibox";
 
     /** The Constant DB_PASSWORD. */
-    protected static final String DB_PASSWORD = "root";
+    public static final String DB_PASSWORD = "root";
 
     /** The Constant DB_SERVER. */
-    protected static final String DB_SERVER = "localhost";
+    public static final String DB_SERVER = "localhost";
 
     /** The Constant DB_USER. */
-    protected static final String DB_USER = "root";
+    public static final String DB_USER = "root";
 
     /** The Constant DRIVER. */
-    protected static final String DRIVER = "com.mysql.jdbc.Driver";
+    public static final String DRIVER = "com.mysql.jdbc.Driver";
 
     /** The log. */
-    protected static Logger log = Logger.getLogger("UniBoxLogger");
+    public static Logger log = Logger.getLogger("UniBoxLogger");
 
     /** The log async sessions. */
     public static boolean LOG_ASYNC_SESSIONS = false;
@@ -49,6 +49,9 @@ public class InternalConfig {
     /** The log threads. */
     public static boolean LOG_THREADS = false;
 
+    /** The Constant MESSAGE_REFLECTION. */
+    public static final boolean MESSAGE_REFLECTION = false;
+
     /** The Constant PROTOCOL. */
-    protected static final String PROTOCOL = "jdbc:mysql:";
+    public static final String PROTOCOL = "jdbc:mysql:";
 }

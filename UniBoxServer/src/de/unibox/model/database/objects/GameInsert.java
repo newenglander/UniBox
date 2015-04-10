@@ -1,15 +1,14 @@
 package de.unibox.model.database.objects;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
 
 /**
- * The Class GameUpdate.
+ * The Class GameInsert.
  */
-public class GameUpdate extends DatabaseAction<Integer> {
+public class GameInsert extends DatabaseAction<Integer> {
 
     /** The cat id. */
     private Integer catID = null;
@@ -18,35 +17,15 @@ public class GameUpdate extends DatabaseAction<Integer> {
     private String gameName = null;
 
     /**
-     * Instantiates a new game update.
+     * Instantiates a new game insert.
      *
-     * @param thisStatement
-     *            the this statement
      * @param thisGameName
      *            the this game name
      * @param thisCatID
      *            the this cat id
      */
-    public GameUpdate(final PreparedStatement thisStatement,
-            final String thisGameName, final int thisCatID) {
-        super(thisStatement);
-        this.gameName = thisGameName;
-        this.catID = thisCatID;
-    }
-
-    /**
-     * Instantiates a new game update.
-     *
-     * @param thisSqlString
-     *            the this sql string
-     * @param thisGameName
-     *            the this game name
-     * @param thisCatID
-     *            the this cat id
-     */
-    public GameUpdate(final String thisSqlString, final String thisGameName,
-            final int thisCatID) {
-        super(thisSqlString);
+    public GameInsert(final String thisGameName, final int thisCatID) {
+        super("INSERT INTO game (GameName, CatID) VALUES (?, ?);");
         this.gameName = thisGameName;
         this.catID = thisCatID;
     }
@@ -70,6 +49,8 @@ public class GameUpdate extends DatabaseAction<Integer> {
      */
     @Override
     public Integer execute() throws SQLException {
+        super.getStatement().setString(1, this.gameName);
+        super.getStatement().setInt(2, this.catID);
         return super.executeUpdate();
     }
 

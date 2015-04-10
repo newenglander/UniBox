@@ -194,6 +194,23 @@ public class ProtectedHttpServlet extends HttpServlet {
         super.service(request, response);
     }
 
+    /**
+     * Invalid request.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    protected void invalidRequest(final HttpServletRequest request,
+            final HttpServletResponse response) throws IOException {
+        response.setContentType("text/html");
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.getWriter().write("BAD_REQUEST");
+    }
+
     /*
      * (non-Javadoc)
      * 

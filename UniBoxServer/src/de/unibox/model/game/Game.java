@@ -8,7 +8,7 @@ import de.unibox.model.user.AbstractUser;
 /**
  * The Class Game.
  */
-public class Game extends InternalConfig {
+public class Game {
 
     /** The game id. */
     private final int gameId;
@@ -58,8 +58,10 @@ public class Game extends InternalConfig {
         boolean returnThis = false;
         if (!this.playerList.contains(player)) {
             if (this.playerList.size() < this.numberOfPlayers) {
-                if (LOG_GAMEPOOL) {
-                    log.debug(this.getClass().getSimpleName() + ": " + player.getName() + " joining game: " + this);
+                if (InternalConfig.LOG_GAMEPOOL) {
+                    InternalConfig.log.debug(this.getClass().getSimpleName()
+                            + ": " + player.getName() + " joining game: "
+                            + this);
                 }
                 this.playerList.add(player);
                 returnThis = true;
@@ -111,8 +113,9 @@ public class Game extends InternalConfig {
      * @return true, if successful
      */
     public boolean removePlayer(final AbstractUser player) {
-        if (LOG_GAMEPOOL) {
-            log.debug(this.getClass().getSimpleName() + ": " + player.getName() + " leaving game: " + this);
+        if (InternalConfig.LOG_GAMEPOOL) {
+            InternalConfig.log.debug(this.getClass().getSimpleName() + ": "
+                    + player.getName() + " leaving game: " + this);
         }
         return this.playerList.remove(player);
     }

@@ -6,31 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import de.unibox.config.InternalConfig;
-
 /**
  * The Class DatabaseAction.
  *
  * @param <T>
  *            the generic type
  */
-public abstract class DatabaseAction<T> extends InternalConfig {
+public abstract class DatabaseAction<T> {
 
     /** The sql string. */
     private String sqlString = null;
 
     /** The statement. */
     private PreparedStatement statement = null;
-
-    /**
-     * Instantiates a new database action.
-     *
-     * @param thisStatement
-     *            the this statement
-     */
-    protected DatabaseAction(final PreparedStatement thisStatement) {
-        this.statement = thisStatement;
-    }
 
     /**
      * Instantiates a new database action.
@@ -120,8 +108,8 @@ public abstract class DatabaseAction<T> extends InternalConfig {
      *             the SQL exception
      */
     protected int executeUpdate() throws SQLException {
-        Integer returnThis = null;
-        if (this.gotNullMembers()) {
+        int returnThis = 0;
+        if (!this.gotNullMembers()) {
             returnThis = this.getStatement().executeUpdate();
         }
         return returnThis;
@@ -131,7 +119,7 @@ public abstract class DatabaseAction<T> extends InternalConfig {
         return this.sqlString;
     }
 
-    protected final PreparedStatement getStatement() {
+    public final PreparedStatement getStatement() {
         return this.statement;
     }
 
@@ -146,6 +134,10 @@ public abstract class DatabaseAction<T> extends InternalConfig {
         boolean gotNullValues = false;
         final Field[] allFields = this.getClass().getDeclaredFields();
         for (final Field field : allFields) {
+
+            // allow accessing private members
+            field.setAccessible(true);
+
             if (Modifier.isPrivate(field.getModifiers())) {
                 final Class<?> t = field.getType();
                 Object v;

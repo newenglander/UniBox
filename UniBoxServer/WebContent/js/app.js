@@ -4,6 +4,7 @@ var app = {
 	lastTimeStamp : 0,
 	cometSource : '/Communicator/JavaScript',
 	dataSource : '/Database',
+	authSource : '/Auth',
 	initialize : function() {
 		app.bind();
 		app.login();
@@ -13,6 +14,27 @@ var app = {
 		app.updateGameTable();
 		app.updateRankingTable();
 		app.gotActiveGame();
+		app.updateFormulars();
+	},
+	updateFormulars : function() {
+		var categorySelection = $("#gameTypeInput");
+		jQuery.ajax({
+			type : "GET",
+			url : app.url + app.dataSource,
+			data : "request=categories",
+			success : function(data) {
+				$.each(data, function(index, value) {
+					$("#gameTypeInput").append(
+							'<option value="' + value.CatID + '">'
+									+ value.Gametitle + '</option>');
+				});
+			},
+			error : function(e) {
+				app.newsticker("warning",
+				"Could not update game categories..!");
+			},
+			async : false
+		});
 	},
 	listen : function() {
 		$('#comet-frame').attr("src", app.url + app.cometSource + '?1').load(
@@ -117,9 +139,77 @@ var app = {
 		$('#triggerAdmin').click(function() {
 			app.activateMenu(this);
 		});
+		$('#createGameForm').on(
+				'submit',
+				function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					var gameName = $('#gameNameInput').val();
+					var gameType = $('#gameTypeInput').val();
+					var gameDescription = $('#gameDescriptionInput').val();
+					jQuery.ajax({
+						type : "POST",
+						url : app.url + app.dataSource,
+						data : "create=game&gamename=" + gameName + "&catid="
+								+ gameType + "&descr=" + gameDescription,
+						success : function(result) {
+							app.newsticker("success",
+									"Game created successful.");
+							app.updateGameTable();
+						},
+						error : function(e) {
+							app.newsticker("warning",
+									"Could not create game..!");
+						},
+						async : false
+					});
+				});
+		$('#changePasswordForm')
+				.on(
+						'submit',
+						function(e) {
+							e.preventDefault();
+							e.stopPropagation();
+							var oldPassword = $('#oldPassword').val();
+							var inputPassword = $('#inputPassword').val();
+							var inputPasswordConfirm = $(
+									'#inputPasswordConfirm').val();
+							jQuery
+									.ajax({
+										type : "POST",
+										url : app.url + app.authSource,
+										data : "action=changePassword&oldPassword="
+												+ Base64.encode(oldPassword)
+												+ "&inputPassword="
+												+ Base64.encode(inputPassword)
+												+ "&inputPasswordConfirm="
+												+ Base64
+														.encode(inputPasswordConfirm),
+										success : function(result) {
+											if (result == "success") {
+												app.newsticker("success",
+														"Password changed.");
+											} else {
+												app
+														.newsticker("warning",
+																"Could not change password..!");
+											}
+										},
+										error : function(e) {
+											app
+													.newsticker("warning",
+															"Could not change password..!");
+										},
+										async : false
+									});
+						});
 		$('#newGameModal').on('shown.bs.modal', function() {
 			$('#gameNameInput').focus();
 		});
+		$('#changePasswordModal').on('shown.bs.modal', function() {
+			$('#oldPassword').focus();
+		});
+		$("#changePasswordForm").validator();
 		$(document).on("keydown", function disableF5(e) {
 			if ((e.which || e.keyCode) == 116) {
 				if (!app.debugMode) {
@@ -128,39 +218,28 @@ var app = {
 				}
 			}
 		});
-		$('.navbar-collapse').on('hidden.bs.collapse', function() {
-			$(".navbar-toggle").blur();
-		});
-		$(".navbar-toggle").focusout(function() {
-			if ($(".navbar-collapse").hasClass("in")) {
-				$(this).click();
-			}
-		});
-		$('.alert')
-				.click(
-						function() {
-							// DEMO
-							app.newsticker("info",
-									"Info: UniBox connects your Java Games..");
-							setTimeout(
-									function() {
-										app
-												.newsticker("warning",
-														"Warning: It´s boring.. UniBox is idling..");
-									}, 4000);
-							setTimeout(
-									function() {
-										app
-												.newsticker("danger",
-														"Danger: UniBox is almost fell asleep.. zzZZzz..");
-									}, 8000);
-							setTimeout(
-									function() {
-										app
-												.newsticker("success",
-														"Success: ..How are you? UniBox is ready to conquer!");
-									}, 12000);
-						});
+//		$('.navbar-collapse').on('hidden.bs.collapse', function() {
+//			console.log("HI");
+//			$(".navbar-toggle").blur();
+//		});
+//		$(".navbar-toggle").focusout(function() {
+//			console.log("IH");
+//			if ($(".navbar-collapse").hasClass("in")) {
+//				$(this).click();
+//			}
+//		});
+		/**
+		 * DEMO for status panel
+		 * 
+		 * $('.alert') .click( function() { // DEMO app.newsticker("info",
+		 * "Info: UniBox connects your Java Games.."); setTimeout( function() {
+		 * app .newsticker("warning", "Warning: It´s boring.. UniBox is
+		 * idling.."); }, 4000); setTimeout( function() { app
+		 * .newsticker("danger", "Danger: UniBox is almost fell asleep..
+		 * zzZZzz.."); }, 8000); setTimeout( function() { app
+		 * .newsticker("success", "Success: ..How are you? UniBox is ready to
+		 * conquer!"); }, 12000); });
+		 */
 	},
 	reload : function() {
 		swal({
@@ -194,9 +273,6 @@ var app = {
 				type : "POST",
 				url : app.url + app.cometSource,
 				data : "action=post&message=" + Base64.encode(message),
-				success : function(result) {
-					console.log("sending message: " + message);
-				},
 				error : function() {
 					app.redirect("post");
 				},
@@ -262,7 +338,7 @@ var app = {
 				gameDataTable.draw();
 			},
 			error : function() {
-				console.log("Error due game table update");
+				app.newsticker("warning", "Could not update game table..!");
 			},
 			statusCode : {
 				403 : function() {
@@ -311,7 +387,7 @@ var app = {
 				rankingDataTable.draw();
 			},
 			error : function() {
-				console.log("Error due ranking table update");
+				app.newsticker("warning", "Could not update ranking table..!");
 			},
 			statusCode : {
 				403 : function() {
@@ -349,7 +425,6 @@ var app = {
 						+ '</div>');
 	},
 	joinGame : function(id) {
-		console.log("AAAA");
 		jQuery.ajax({
 			type : "GET",
 			url : app.url + "/Game?action=join&gameid=" + id,
@@ -361,7 +436,7 @@ var app = {
 				linkElement.text("leave");
 			},
 			error : function() {
-				console.log("Error: could not rejoin game");
+				app.newsticker("warning", "Could not rejoin game..!");
 			},
 			statusCode : {
 				403 : function() {
@@ -387,7 +462,7 @@ var app = {
 						linkElement.text("join");
 					},
 					error : function() {
-						console.log("Error: could not releave game");
+						app.newsticker("warning", "Could not releave game..!");
 					},
 					statusCode : {
 						403 : function() {
@@ -405,16 +480,11 @@ var app = {
 			type : "GET",
 			url : app.url + "/Game?action=whichgame",
 			success : function(data) {
-				
 				var id = data.replace("gameid:", "");
-				console.log(id);
 				var linkElement = $("#game-" + id);
 				linkElement
 						.attr("href", "javascript:app.leaveGame(" + id + ")");
 				linkElement.text("leave");
-			},
-			error : function() {
-				console.log("Error: could not releave game");
 			},
 			statusCode : {
 				403 : function() {

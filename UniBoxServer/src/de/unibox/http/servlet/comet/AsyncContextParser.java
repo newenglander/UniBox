@@ -15,7 +15,7 @@ import de.unibox.core.provider.Reversed;
 /**
  * The Class AsyncContextParser.
  */
-public class AsyncContextParser extends InternalConfig {
+public class AsyncContextParser {
 
     /** The list. */
     public static List<AsyncContextParser> list = null;

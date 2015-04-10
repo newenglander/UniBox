@@ -18,7 +18,7 @@ import de.unibox.config.InternalConfig;
  * The Class RequestLogFilter.
  */
 @WebFilter(urlPatterns = { "/LogFilter" }, asyncSupported = true)
-public class RequestLogFilter extends InternalConfig implements Filter {
+public class RequestLogFilter implements Filter {
 
     /**
      * Instantiates a new request log filter.

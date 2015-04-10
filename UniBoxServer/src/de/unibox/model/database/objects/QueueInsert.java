@@ -1,15 +1,14 @@
 package de.unibox.model.database.objects;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
 
 /**
- * The Class QueueUpdate.
+ * The Class QueueInsert.
  */
-public class QueueUpdate extends DatabaseAction<Integer> {
+public class QueueInsert extends DatabaseAction<Integer> {
 
     /** The game id. */
     private Integer gameID = null;
@@ -18,35 +17,16 @@ public class QueueUpdate extends DatabaseAction<Integer> {
     private Integer playerID = null;
 
     /**
-     * Instantiates a new queue update.
+     * Instantiates a new queue insert.
      *
-     * @param thisStatement
-     *            the this statement
      * @param thisPlayerID
      *            the this player id
      * @param thisGameID
      *            the this game id
      */
-    public QueueUpdate(final PreparedStatement thisStatement,
-            final Integer thisPlayerID, final Integer thisGameID) {
-        super(thisStatement);
-        this.playerID = thisPlayerID;
-        this.gameID = thisGameID;
-    }
-
-    /**
-     * Instantiates a new queue update.
-     *
-     * @param thisSqlString
-     *            the this sql string
-     * @param thisPlayerID
-     *            the this player id
-     * @param thisGameID
-     *            the this game id
-     */
-    public QueueUpdate(final String thisSqlString, final Integer thisPlayerID,
-            final Integer thisGameID) {
-        super(thisSqlString);
+    public QueueInsert(final Integer thisPlayerID, final Integer thisGameID) {
+        super(
+                "INSERT INTO `unibox`.`Game` (`GameName`, `CatID`) VALUES (?, ?);");
         this.playerID = thisPlayerID;
         this.gameID = thisGameID;
     }
@@ -70,6 +50,8 @@ public class QueueUpdate extends DatabaseAction<Integer> {
      */
     @Override
     public Integer execute() throws SQLException {
+        super.getStatement().setInt(1, this.playerID);
+        super.getStatement().setInt(2, this.gameID);
         return super.executeUpdate();
     }
 

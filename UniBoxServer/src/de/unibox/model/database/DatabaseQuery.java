@@ -10,7 +10,7 @@ import de.unibox.http.servlet.filter.SecurityWrapper.SecurityLevel;
 /**
  * The Class DatabaseQuery.
  */
-public class DatabaseQuery extends InternalConfig {
+public class DatabaseQuery {
 
     /** The pool. */
     private static DatabaseConnection pool = null;
@@ -69,7 +69,6 @@ public class DatabaseQuery extends InternalConfig {
      *             the SQL exception
      */
     public void connect() throws SQLException {
-
         this.con = DatabaseQuery.pool.getConnection();
         this.con.setAutoCommit(false);
         if (InternalConfig.LOG_DATABASE) {

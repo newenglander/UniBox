@@ -12,7 +12,7 @@ import de.unibox.model.user.AbstractUser;
 /**
  * The Class GameQueue.
  */
-public class GamePool extends InternalConfig {
+public class GamePool {
 
     /** The instance. */
     private static GamePool instance;
@@ -75,22 +75,6 @@ public class GamePool extends InternalConfig {
         }
         return returnThis;
     }
-    
-    public Game getGameByPlayer(final AbstractUser player) {
-        Game returnThis = null;
-        for (final Game game : this.gameList) {
-            final ArrayList<AbstractUser> playerList = game.getPlayerList();
-            if (!playerList.isEmpty()) {
-                if (playerList.contains(player)) {
-                    returnThis = game;
-                    break;
-                } else {
-                    continue;
-                }
-            }
-        }
-        return returnThis;
-    }
 
     /**
      * Gets the game.
@@ -107,6 +91,29 @@ public class GamePool extends InternalConfig {
                 break;
             } else {
                 continue;
+            }
+        }
+        return returnThis;
+    }
+
+    /**
+     * Gets the game by player.
+     *
+     * @param player
+     *            the player
+     * @return the game by player
+     */
+    public Game getGameByPlayer(final AbstractUser player) {
+        Game returnThis = null;
+        for (final Game game : this.gameList) {
+            final ArrayList<AbstractUser> playerList = game.getPlayerList();
+            if (!playerList.isEmpty()) {
+                if (playerList.contains(player)) {
+                    returnThis = game;
+                    break;
+                } else {
+                    continue;
+                }
             }
         }
         return returnThis;
@@ -169,6 +176,13 @@ public class GamePool extends InternalConfig {
                     + ": available!");
         }
 
+    }
+
+    /**
+     * Update.
+     */
+    public void update() {
+        this.initialize();
     }
 
 }

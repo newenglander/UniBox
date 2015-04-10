@@ -15,8 +15,7 @@ import de.unibox.model.user.AbstractUser;
 /**
  * The Class HttpSessionCollector.
  */
-public class HttpSessionCollector extends InternalConfig implements
-        HttpSessionListener {
+public class HttpSessionCollector implements HttpSessionListener {
 
     /** The Constant sessions. */
     private static final Map<String, HttpSession> sessions = new HashMap<String, HttpSession>();

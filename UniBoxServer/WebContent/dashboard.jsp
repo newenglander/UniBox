@@ -49,12 +49,14 @@
 					<li><a class="whiteText" id="triggerChat" href="#">Chat</a></li>
 					<jsp:getProperty name="admin" property="adminMenu" />
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">Connection <b class="caret"></b></a>
+						data-toggle="dropdown" role="button">Options <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a id="refreshOption" href="">Reconnect Chat</a></li>
 							<li><a href="Dashboard">Reload Page</a></li>
+							<li><a id="changePassword" data-toggle="modal"
+								data-target=".bs-change-password-modal-lg">Change password</a></li>
 						</ul></li>
-					<li><a class="whiteText" href="/UniBox/Logout">Logout</a></li>
+					<li><a class="whiteText" href="/UniBox/Auth?action=logout">Logout</a></li>
 				</ul>
 			</div>
 		</div>
@@ -64,8 +66,8 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 newsTicker">
-					<div class="alert alert-info" role="alert">UniBox -
-						Initializing Newsticker..</div>
+					<div class="alert alert-info" role="alert">UniBox - InfoBox
+						online..</div>
 				</div>
 				<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
 					<div class="list-group">
@@ -198,9 +200,62 @@
 		<div class="adminContainer">
 			<div class="container">
 				<div class="row">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						Admin Options here..</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">Admin
+						Options here..</div>
 				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade bs-change-password-modal-lg"
+		id="changePasswordModal" id="changePasswordModal" tabindex="-1"
+		role="dialog" aria-labelledby="Create new Game" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content modalFormContent">
+				<form class="form-horizontal" id="changePasswordForm" role="form">
+					<fieldset>
+						<legend>Change password</legend>
+						<div class="form-group">
+							<label class="col-md-4 control-label" for="gameName">Current
+								Password</label>
+							<div class="col-md-4">
+								<input id="oldPassword" name="oldPassword" type="password"
+									placeholder="Password" class="form-control input-md" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword" class="col-md-4 control-label">New
+								Password</label>
+							<div class="col-md-4">
+								<input type="password" data-minlength="6" class="form-control"
+									id="inputPassword" placeholder="Password" required> <span
+									class="help-block">Minimum of 6 characters</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="inputPassword" class="col-md-4 control-label">Confirm
+								Password</label>
+							<div class="col-md-4">
+								<input type="password" class="form-control"
+									id="inputPasswordConfirm" data-match="#inputPassword"
+									data-match-error="Whoops, these don't match"
+									placeholder="Confirm" required> <span
+									class="help-block">Confirm your password</span>
+								<div class="help-block with-errors"></div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-8 floatRight">
+								<button id="cancelChangePassword" name="cancelChangePassword"
+									class="btn btn-danger" type="button" data-toggle="modal"
+									data-target=".bs-change-password-modal-lg">Cancel</button>
+								<button id="commitChangePassword" name="commitChangePassword"
+									class="btn btn-success" type="submit">Commit</button>
+							</div>
+						</div>
+					</fieldset>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -210,7 +265,7 @@
 		aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content modalFormContent">
-				<form class="form-horizontal">
+				<form class="form-horizontal" id="createGameForm">
 					<fieldset>
 						<legend>Create new Game</legend>
 						<div class="form-group">
@@ -225,25 +280,25 @@
 								Gametype</label>
 							<div class="col-md-4">
 								<select id="gameTypeInput" name="gameType" class="form-control">
-									<option value="1">TicTacToe</option>
-									<option value="2">Vier Gewinnt</option>
 								</select>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-md-4 control-label" for="Description">Description</label>
-							<div class="col-md-4">
-								<textarea class="form-control" id="descriptionGameInput"
-									name="Description">Description..</textarea>
-							</div>
-						</div>
+						<!-- Feature: GameDescription not implemented atm. -->
+						<!-- <div class="form-group"> -->
+						<!-- 	<label class="col-md-4 control-label" for="Description">Description</label> -->
+						<!-- 	<div class="col-md-4"> -->
+						<!-- 		<textarea class="form-control" id="gameDescriptionInput" -->
+						<!-- 			name="Description" placeholder="Description.."></textarea> -->
+						<!-- 	</div> -->
+						<!-- </div> -->
 						<div class="form-group">
 							<div class="col-md-8 floatRight">
 								<button id="cancelNewGame" name="cancelNewGame"
 									class="btn btn-danger" type="button" data-toggle="modal"
 									data-target=".bs-new-game-modal-lg">Cancel</button>
 								<button id="commitNewGame" name="commitNewGame"
-									class="btn btn-success" type="submit">Commit</button>
+									class="btn btn-success" type="submit" data-toggle="modal"
+									data-target=".bs-new-game-modal-lg">Commit</button>
 							</div>
 						</div>
 					</fieldset>
@@ -260,7 +315,8 @@
 	<script src="js/vendor/dataTables.responsive.min.js"
 		type="text/javascript"></script>
 	<script src="js/vendor/dataTables.bootstrap.js" type="text/javascript"></script>
-	<script src="js/vendor/sweet-alert.min.js" type="text/javascript"></script>
+	<script src="js/vendor/dataTables.bootstrap.js" type="text/javascript"></script>
+	<script src="js/vendor/validator.min.js" type="text/javascript"></script>
 	<script src="js/vendor/base64.js"></script>
 	<script src="js/main.js" type="text/javascript"></script>
 	<script src="js/app.js" type="text/javascript"></script>

@@ -11,10 +11,22 @@ body, .jumbotron {
 	background-color: #EBEBEC;
 }
 
+#gameTableBody tr td:first-child {
+	text-align:center;
+}
+
 .jumbotron {
 	padding: 0px !important;
 	margin: 0px !important;
 	padding-bottom: 15px !important;
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+	color: white;
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a:hover {
+	background-color: #E2001A;
 }
 
 .navbar-inverse .navbar-toggle:hover {

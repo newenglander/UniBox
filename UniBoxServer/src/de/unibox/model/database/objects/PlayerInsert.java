@@ -1,15 +1,14 @@
 package de.unibox.model.database.objects;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
 
 /**
- * The Class PlayerUpdate.
+ * The Class PlayerInsert.
  */
-public class PlayerUpdate extends DatabaseAction<Integer> {
+public class PlayerInsert extends DatabaseAction<Integer> {
 
     /** The admin rights. */
     private Integer adminRights = null;
@@ -21,10 +20,8 @@ public class PlayerUpdate extends DatabaseAction<Integer> {
     private String password = null;
 
     /**
-     * Instantiates a new player update.
+     * Instantiates a new player insert.
      *
-     * @param thisStatement
-     *            the this statement
      * @param thisAdminRights
      *            the this admin rights
      * @param thisName
@@ -32,31 +29,10 @@ public class PlayerUpdate extends DatabaseAction<Integer> {
      * @param thisPassword
      *            the this password
      */
-    public PlayerUpdate(final PreparedStatement thisStatement,
-            final Integer thisAdminRights, final String thisName,
+    public PlayerInsert(final Integer thisAdminRights, final String thisName,
             final String thisPassword) {
-        super(thisStatement);
-        this.adminRights = thisAdminRights;
-        this.name = thisName;
-        this.password = thisPassword;
-    }
-
-    /**
-     * Instantiates a new player update.
-     *
-     * @param thisSqlString
-     *            the this sql string
-     * @param thisAdminRights
-     *            the this admin rights
-     * @param thisName
-     *            the this name
-     * @param thisPassword
-     *            the this password
-     */
-    public PlayerUpdate(final String thisSqlString,
-            final Integer thisAdminRights, final String thisName,
-            final String thisPassword) {
-        super(thisSqlString);
+        super(
+                "INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (?, ?, ?);");
         this.adminRights = thisAdminRights;
         this.name = thisName;
         this.password = thisPassword;
@@ -81,6 +57,9 @@ public class PlayerUpdate extends DatabaseAction<Integer> {
      */
     @Override
     public Integer execute() throws SQLException {
+        super.getStatement().setInt(1, this.adminRights);
+        super.getStatement().setString(2, this.name);
+        super.getStatement().setString(2, this.password);
         return super.executeUpdate();
     }
 

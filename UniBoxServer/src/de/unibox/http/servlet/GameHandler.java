@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.unibox.config.InternalConfig;
+import de.unibox.core.network.object.CommunicatorMessage;
+import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.game.Game;
 import de.unibox.model.game.GamePool;
@@ -88,18 +91,23 @@ public class GameHandler extends ProtectedHttpServlet {
             boolean done = false;
             switch (action) {
             case "join":
-                Game prevGame = GamePool.getInstance().getGameByPlayer(user);
+                GamePool.getInstance();
+                final Game prevGame = GamePool.getInstance().getGameByPlayer(
+                        user);
                 if (prevGame == null) {
                     done = game.addPlayer(user);
+                    this.sendUpdateBroadcast(user);
                 } else if (prevGame != game) {
                     prevGame.removePlayer(user);
                     done = game.addPlayer(user);
+                    this.sendUpdateBroadcast(user);
                 } else {
                     errorMessage = "skipped:already_joined";
                 }
                 break;
             case "leave":
                 done = game.removePlayer(user);
+                this.sendUpdateBroadcast(user);
                 break;
             case "whichgame":
                 game = GamePool.getInstance().getGameByPlayer(user);
@@ -127,7 +135,9 @@ public class GameHandler extends ProtectedHttpServlet {
             }
 
             if (InternalConfig.LOG_GAMEPOOL) {
-                this.log.debug("GameHandler: " + game);
+                if (game != null) {
+                    this.log.debug("GameHandler: " + game);
+                }
             }
         }
 
@@ -148,6 +158,19 @@ public class GameHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
         this.doGet(request, response);
+    }
+
+    /**
+     * Send update broadcast.
+     *
+     * @param user
+     *            the user
+     */
+    private void sendUpdateBroadcast(final AbstractUser user) {
+        // send update game table broadcast
+        Communicator.getMessagequeue().add(
+                new CommunicatorMessage(MessageType.JS_Command, user.getName(),
+                        "window.parent.app.updateGameTable();"));
     }
 
 }

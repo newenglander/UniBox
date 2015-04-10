@@ -18,7 +18,7 @@ import de.unibox.config.InternalConfig;
  * The Class SecurityWrapper.
  */
 @WebFilter(urlPatterns = { "/SecurityWrapper" }, asyncSupported = true)
-public class SecurityWrapper extends InternalConfig implements Filter {
+public class SecurityWrapper implements Filter {
 
     /**
      * The Enum SecurityLevel. Essential enum to identify and relate userRoles

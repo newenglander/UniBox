@@ -1,15 +1,14 @@
 package de.unibox.model.database.objects;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
 
 /**
- * The Class CategoryUpdate.
+ * The Class CategoryInsert.
  */
-public class CategoryUpdate extends DatabaseAction<Integer> {
+public class CategoryInsert extends DatabaseAction<Integer> {
 
     /** The game title. */
     private String gameTitle = null;
@@ -18,35 +17,17 @@ public class CategoryUpdate extends DatabaseAction<Integer> {
     private Integer numberOfPlayers = null;
 
     /**
-     * Instantiates a new category update.
+     * Instantiates a new category insert.
      *
-     * @param thisStatement
-     *            the this statement
      * @param thisGametitle
      *            the this gametitle
      * @param thisNumberOfPlayers
      *            the this number of players
      */
-    public CategoryUpdate(final PreparedStatement thisStatement,
-            final String thisGametitle, final int thisNumberOfPlayers) {
-        super(thisStatement);
-        this.gameTitle = thisGametitle;
-        this.numberOfPlayers = thisNumberOfPlayers;
-    }
-
-    /**
-     * Instantiates a new category update.
-     *
-     * @param thisSqlString
-     *            the this sql string
-     * @param thisGametitle
-     *            the this gametitle
-     * @param thisNumberOfPlayers
-     *            the this number of players
-     */
-    public CategoryUpdate(final String thisSqlString,
-            final String thisGametitle, final int thisNumberOfPlayers) {
-        super(thisSqlString);
+    public CategoryInsert(final String thisGametitle,
+            final int thisNumberOfPlayers) {
+        super(
+                "INSERT INTO `unibox`.`Category` (`Gametitle`, `NumberOfPlayers`) VALUES (?, ?);");
         this.gameTitle = thisGametitle;
         this.numberOfPlayers = thisNumberOfPlayers;
     }
@@ -70,6 +51,8 @@ public class CategoryUpdate extends DatabaseAction<Integer> {
      */
     @Override
     public Integer execute() throws SQLException {
+        super.getStatement().setString(1, this.gameTitle);
+        super.getStatement().setInt(2, this.numberOfPlayers);
         return super.executeUpdate();
     }
 

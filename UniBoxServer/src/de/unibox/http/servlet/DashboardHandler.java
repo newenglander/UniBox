@@ -47,14 +47,15 @@ public class DashboardHandler extends ProtectedHttpServlet {
                 .getAttribute("login.object");
 
         if (user instanceof AdministratorUser) {
-            Object adminObj = request.getSession().getAttribute("admin");
+            final Object adminObj = request.getSession().getAttribute("admin");
             AdminBean adminBean = null;
-            if (adminObj != null && adminObj instanceof AdminBean) {
-                adminBean = (AdminBean) adminBean;
+            if ((adminObj != null) && (adminObj instanceof AdminBean)) {
+                adminBean = adminBean;
             } else {
                 adminBean = new AdminBean();
                 request.getSession().setAttribute("admin", adminBean);
-                adminBean.setAdminMenu("<li><a class='whiteText' id='triggerAdmin' href='#'>Administration</a></li>");
+                adminBean
+                        .setAdminMenu("<li><a class='whiteText' id='triggerAdmin' href='#'>Administration</a></li>");
             }
         }
 
