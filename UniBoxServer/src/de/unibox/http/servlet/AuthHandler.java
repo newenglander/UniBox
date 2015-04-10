@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import de.unibox.config.InternalConfig;
-import de.unibox.core.provider.Helper;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
@@ -95,56 +94,58 @@ public class AuthHandler extends ProtectedHttpServlet {
                         + ": Change password for " + user.getName());
             }
 
-            // TODO change password in database
+            final Integer userId = user.getPlayerId();
+            final String oldPassword = request.getParameter("oldPassword");
+            final String inputPassword = request.getParameter("inputPassword");
+            final String inputPasswordConfirm = request
+                    .getParameter("inputPasswordConfirm");
+            
+            if (userId != null && oldPassword != null && inputPassword != null
+                    && inputPasswordConfirm != null) {
 
-            final String nick = user.getName();
-            // String passwordBase64old = request.getParameter("oldPassword");
-            final String passwordBase64 = request.getParameter("inputPassword");
-            // String passwordBase64confirm = request
-            // .getParameter("inputPasswordConfirm");
+                DatabaseAction<Integer> query = null;
 
-            DatabaseAction<Integer> query = null;
+                query = new PasswordUpdate(userId, oldPassword, inputPassword,
+                        inputPasswordConfirm);
 
-            if (!nick.isEmpty() && !passwordBase64.isEmpty()) {
-                final String passwordPlain = Helper
-                        .decodeBase64(passwordBase64);
-                final String password = Helper.md5(passwordPlain);
-                System.out.println("CHANGE_PW:" + password);
-                query = new PasswordUpdate(nick, password);
-            }
+                int affectedRows = 0;
+                response.setContentType("text/html");
+                final PrintWriter out = response.getWriter();
 
-            int affectedRows = 0;
-            response.setContentType("text/html");
-            final PrintWriter out = response.getWriter();
+                try {
 
-            try {
+                    final DatabaseQuery transaction = new DatabaseQuery();
+                    transaction.connect();
+                    query.attach(transaction);
+                    affectedRows = query.execute();
 
-                final DatabaseQuery transaction = new DatabaseQuery();
-                transaction.connect();
-                query.attach(transaction);
-                affectedRows = query.execute();
+                    System.out.println("AFF:" + affectedRows);
 
-                if (affectedRows == 1) {
-                    out.print("success");
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    transaction.commit();
-                } else {
-                    out.print("failed");
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    transaction.rollback();
+                    if (affectedRows == 1) {
+                        out.print("success");
+                        response.setStatus(HttpServletResponse.SC_OK);
+                        transaction.commit();
+                    } else {
+                        out.print("failed");
+                        response.setStatus(HttpServletResponse.SC_OK);
+                        transaction.rollback();
+                    }
+
+                } catch (final SQLException e) {
+
+                    if (InternalConfig.LOG_DATABASE) {
+                        this.log.debug("GameHandler: Could not update database: "
+                                + query.getSqlString());
+                    }
+                    e.printStackTrace();
                 }
 
-            } catch (final SQLException e) {
+                out.flush();
+                out.close();
 
-                if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("GameHandler: Could not update database: "
-                            + query.getSqlString());
-                }
-                e.printStackTrace();
+            } else {
+                super.invalidRequest(request, response);
             }
-
-            out.flush();
-            out.close();
             break;
         default:
             break;
