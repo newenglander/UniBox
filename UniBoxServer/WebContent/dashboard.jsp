@@ -66,8 +66,8 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 newsTicker">
-					<div class="alert alert-info" role="alert">UniBox -
-						InfoBox online..</div>
+					<div class="alert alert-info" role="alert">UniBox - InfoBox
+						online..</div>
 				</div>
 				<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
 					<div class="list-group">
@@ -208,9 +208,9 @@
 	</div>
 
 
-	<div class="modal fade bs-change-password-modal-lg" id="changePasswordModal"
-		id="changePasswordModal" tabindex="-1" role="dialog"
-		aria-labelledby="Create new Game" aria-hidden="true">
+	<div class="modal fade bs-change-password-modal-lg"
+		id="changePasswordModal" id="changePasswordModal" tabindex="-1"
+		role="dialog" aria-labelledby="Create new Game" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content modalFormContent">
 				<form class="form-horizontal" id="changePasswordForm" role="form">
@@ -240,8 +240,7 @@
 								<input type="password" class="form-control"
 									id="inputPasswordConfirm" data-match="#inputPassword"
 									data-match-error="Whoops, these don't match"
-									placeholder="Confirm" required>
-									<span
+									placeholder="Confirm" required> <span
 									class="help-block">Confirm your password</span>
 								<div class="help-block with-errors"></div>
 							</div>
@@ -284,13 +283,14 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-group">
-							<label class="col-md-4 control-label" for="Description">Description</label>
-							<div class="col-md-4">
-								<textarea class="form-control" id="gameDescriptionInput"
-									name="Description" placeholder="Description.."></textarea>
-							</div>
-						</div>
+						<!-- Feature: GameDescription not implemented atm. -->
+						<!-- <div class="form-group"> -->
+						<!-- 	<label class="col-md-4 control-label" for="Description">Description</label> -->
+						<!-- 	<div class="col-md-4"> -->
+						<!-- 		<textarea class="form-control" id="gameDescriptionInput" -->
+						<!-- 			name="Description" placeholder="Description.."></textarea> -->
+						<!-- 	</div> -->
+						<!-- </div> -->
 						<div class="form-group">
 							<div class="col-md-8 floatRight">
 								<button id="cancelNewGame" name="cancelNewGame"
