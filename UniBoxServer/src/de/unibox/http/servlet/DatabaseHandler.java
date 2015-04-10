@@ -25,6 +25,7 @@ import de.unibox.model.database.objects.PlayerInsert;
 import de.unibox.model.database.objects.QueueInsert;
 import de.unibox.model.database.objects.ResultInsert;
 import de.unibox.model.database.objects.SelectionQuery;
+import de.unibox.model.game.Game;
 import de.unibox.model.game.GamePool;
 
 /**
@@ -177,6 +178,18 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 final ResultSet resultSet = query.execute();
                 jsonArray = this.convertToJson(resultSet);
                 transaction.commit();
+
+                // refine data output for Places = joinedPlayer/maxPlayer
+                if (requestedData.equals("games")) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject obj = jsonArray.getJSONObject(i);
+                        Game game = GamePool.getInstance().getGame(
+                                obj.getInt("GameID"));
+                        obj.put("NumberOfPlayers",
+                                "" + game.getPlayerList().size() + "/"
+                                        + game.getNumberOfPlayers());
+                    }
+                }
 
             } catch (final SQLException e) {
 

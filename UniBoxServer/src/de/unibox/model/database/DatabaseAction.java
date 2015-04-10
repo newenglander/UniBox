@@ -6,15 +6,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import de.unibox.config.InternalConfig;
-
 /**
  * The Class DatabaseAction.
  *
  * @param <T>
  *            the generic type
  */
-public abstract class DatabaseAction<T> extends InternalConfig {
+public abstract class DatabaseAction<T> {
 
     /** The sql string. */
     private String sqlString = null;

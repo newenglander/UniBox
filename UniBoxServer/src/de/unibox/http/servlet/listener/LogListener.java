@@ -23,7 +23,7 @@ import de.unibox.config.InternalConfig;
  *
  * @see LogEvent
  */
-public class LogListener extends InternalConfig implements
+public class LogListener implements
         ServletContextListener {
 
     /*

@@ -480,9 +480,7 @@ var app = {
 			type : "GET",
 			url : app.url + "/Game?action=whichgame",
 			success : function(data) {
-
 				var id = data.replace("gameid:", "");
-				console.log(id);
 				var linkElement = $("#game-" + id);
 				linkElement
 						.attr("href", "javascript:app.leaveGame(" + id + ")");

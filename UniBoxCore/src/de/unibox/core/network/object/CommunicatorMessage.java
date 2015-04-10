@@ -30,7 +30,9 @@ public class CommunicatorMessage implements Serializable {
         GAME,
 
         /** The system. */
-        SYSTEM
+        SYSTEM,
+
+        JS_Command
     }
 
     /** The Constant serialVersionUID. */
@@ -261,21 +263,26 @@ public class CommunicatorMessage implements Serializable {
      */
     public String toJavaScript() {
         String returnThis = "";
-        if (this.DEBUG) {
-            returnThis = "<script type='text/javascript'>window.parent.app.message({name:\""
-                    + this.getName()
-                    + "\",message:\""
-                    + this.getMessage()
-                    + "\"});</script>";
-
-        } else {
-            returnThis = "<script type='text/javascript'>window.parent.app.message({name:\""
-                    + this.getName()
-                    + "\",message:\""
-                    + this.getMessage()
-                    + "\"});var e=document.getElementsByTagName(\"script\");"
-                    + "for(i=e.length-1;i>=0;i--){e[i].parentNode.removeChild(e[i]);}"
+        if (type == MessageType.JS_Command) {
+            returnThis = "<script type='text/javascript'>" + this.getMessage()
                     + "</script>";
+        } else {
+            if (this.DEBUG) {
+                returnThis = "<script type='text/javascript'>window.parent.app.message({name:\""
+                        + this.getName()
+                        + "\",message:\""
+                        + this.getMessage()
+                        + "\"});</script>";
+
+            } else {
+                returnThis = "<script type='text/javascript'>window.parent.app.message({name:\""
+                        + this.getName()
+                        + "\",message:\""
+                        + this.getMessage()
+                        + "\"});var e=document.getElementsByTagName(\"script\");"
+                        + "for(i=e.length-1;i>=0;i--){e[i].parentNode.removeChild(e[i]);}"
+                        + "</script>";
+            }
         }
         return returnThis;
     }

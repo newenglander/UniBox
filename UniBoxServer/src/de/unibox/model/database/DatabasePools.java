@@ -9,7 +9,7 @@ import de.unibox.http.servlet.filter.SecurityWrapper.SecurityLevel;
 /**
  * The Class DatabasePools.
  */
-public class DatabasePools extends InternalConfig {
+public class DatabasePools {
 
     /** The administrator pool. */
     public static DatabaseConnection administratorPool = null;
@@ -18,8 +18,8 @@ public class DatabasePools extends InternalConfig {
     public static DatabaseConnection pagePool = null;
 
     /** The Constant URL. */
-    private static final String URL = DatabasePools.PROTOCOL + "//"
-            + DatabasePools.DB_SERVER + "/" + DatabasePools.DB_NAME;
+    private static final String URL = InternalConfig.PROTOCOL + "//"
+            + InternalConfig.DB_SERVER + "/" + InternalConfig.DB_NAME;
 
     /** The user pool. */
     public static DatabaseConnection userPool = null;

@@ -55,6 +55,10 @@ public class Communicator extends ProtectedHttpServlet {
     /** The Constant messageQueue. */
     private static final BlockingQueue<CommunicatorMessage> messageQueue = new LinkedBlockingQueue<CommunicatorMessage>();
 
+    public static BlockingQueue<CommunicatorMessage> getMessagequeue() {
+        return messageQueue;
+    }
+
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -2919167206889576860L;
 
@@ -291,6 +295,21 @@ public class Communicator extends ProtectedHttpServlet {
                                 switch (remoteType) {
                                 case JAVASCRIPT:
                                     // ignore GAME messages for webinterface
+                                    if (messageType == MessageType.JS_Command) {
+                                        if (receiver.getName().equals(
+                                                cMessage.getName())) {
+                                            if (InternalConfig.LOG_COMMUNICATION) {
+                                                Communicator.this.log
+                                                        .debug("Communicator run(): NOT REFLECTING JS_COMMAND: ClientType="
+                                                                + remoteType
+                                                                + ", MessageType="
+                                                                + messageType
+                                                                + ", session="
+                                                                + sessionId);
+                                            }
+                                            break;
+                                        }
+                                    }
                                     if (messageType != MessageType.GAME) {
                                         this.send(acWriter,
                                                 cMessage.toJavaScript());

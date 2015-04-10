@@ -10,7 +10,7 @@ import de.unibox.http.servlet.filter.SecurityWrapper.SecurityLevel;
 /**
  * The Class DatabaseQuery.
  */
-public class DatabaseQuery extends InternalConfig {
+public class DatabaseQuery {
 
     /** The pool. */
     private static DatabaseConnection pool = null;

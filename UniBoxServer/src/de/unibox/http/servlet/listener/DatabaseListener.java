@@ -19,7 +19,7 @@ import de.unibox.model.database.DatabaseQuery;
  *
  * @see DatabaseEvent
  */
-public class DatabaseListener extends InternalConfig implements
+public class DatabaseListener implements
         ServletContextListener {
 
     /*

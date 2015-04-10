@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.unibox.config.InternalConfig;
+import de.unibox.core.network.object.CommunicatorMessage;
+import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.http.servlet.comet.JavaScriptCommunicator;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.game.Game;
 import de.unibox.model.game.GamePool;
@@ -92,15 +95,18 @@ public class GameHandler extends ProtectedHttpServlet {
                 Game prevGame = GamePool.getInstance().getGameByPlayer(user);
                 if (prevGame == null) {
                     done = game.addPlayer(user);
+                    sendUpdateBroadcast(user);
                 } else if (prevGame != game) {
                     prevGame.removePlayer(user);
                     done = game.addPlayer(user);
+                    sendUpdateBroadcast(user);
                 } else {
                     errorMessage = "skipped:already_joined";
                 }
                 break;
             case "leave":
                 done = game.removePlayer(user);
+                sendUpdateBroadcast(user);
                 break;
             case "whichgame":
                 game = GamePool.getInstance().getGameByPlayer(user);
@@ -151,6 +157,13 @@ public class GameHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
         this.doGet(request, response);
+    }
+
+    private void sendUpdateBroadcast(AbstractUser user) {
+        // send update game table broadcast
+        JavaScriptCommunicator.getMessagequeue().add(
+                new CommunicatorMessage(MessageType.JS_Command, user.getName(),
+                        "window.parent.app.updateGameTable();"));
     }
 
 }

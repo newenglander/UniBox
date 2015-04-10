@@ -13,7 +13,7 @@ import de.unibox.config.InternalConfig;
 /**
  * The Class DatabaseConnection.
  */
-public class DatabaseConnection extends InternalConfig {
+public class DatabaseConnection {
 
     /** The connections. */
     private final Hashtable connections = new Hashtable();

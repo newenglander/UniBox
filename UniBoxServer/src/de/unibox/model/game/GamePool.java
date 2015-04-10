@@ -12,7 +12,7 @@ import de.unibox.model.user.AbstractUser;
 /**
  * The Class GameQueue.
  */
-public class GamePool extends InternalConfig {
+public class GamePool {
 
     /** The instance. */
     private static GamePool instance;

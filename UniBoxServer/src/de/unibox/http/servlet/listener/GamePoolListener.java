@@ -3,7 +3,6 @@ package de.unibox.http.servlet.listener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import de.unibox.config.InternalConfig;
 import de.unibox.model.game.GamePool;
 
 /**
@@ -16,7 +15,7 @@ import de.unibox.model.game.GamePool;
  *
  * @see GamePoolEvent
  */
-public class GamePoolListener extends InternalConfig implements
+public class GamePoolListener implements
         ServletContextListener {
 
     /*

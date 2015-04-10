@@ -5,7 +5,7 @@ import de.unibox.config.InternalConfig;
 /**
  * The Class AbstractUser.
  */
-public abstract class AbstractUser extends InternalConfig {
+public abstract class AbstractUser {
 
     /** The name. */
     private String name;
