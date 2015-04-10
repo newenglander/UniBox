@@ -62,6 +62,30 @@ public class AuthHandler extends ProtectedHttpServlet {
 
             rd.forward(request, response);
             break;
+        default:
+            break;
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest
+     * , javax.servlet.http.HttpServletResponse)
+     */
+    @Override
+    protected void doPost(final HttpServletRequest request,
+            final HttpServletResponse response) throws ServletException,
+            IOException {
+
+        final HttpSession session = request.getSession();
+        final AbstractUser user = (AbstractUser) session
+                .getAttribute("login.object");
+        final String action = request.getParameter("action");
+
+        switch (action) {
         case "changePassword":
             if (InternalConfig.LOG_AUTHENTIFICATION) {
                 this.log.debug(this.getClass().getSimpleName()
@@ -99,9 +123,11 @@ public class AuthHandler extends ProtectedHttpServlet {
 
                 if (affectedRows == 1) {
                     out.print("success");
+                    response.setStatus(HttpServletResponse.SC_OK);
                     transaction.commit();
                 } else {
                     out.print("failed");
+                    response.setStatus(HttpServletResponse.SC_OK);
                     transaction.rollback();
                 }
 
@@ -121,20 +147,6 @@ public class AuthHandler extends ProtectedHttpServlet {
             break;
         }
 
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest
-     * , javax.servlet.http.HttpServletResponse)
-     */
-    @Override
-    protected void doPost(final HttpServletRequest request,
-            final HttpServletResponse response) throws ServletException,
-            IOException {
-        this.doGet(request, response);
     }
 
 }

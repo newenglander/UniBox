@@ -17,6 +17,14 @@ body, .jumbotron {
 	padding-bottom: 15px !important;
 }
 
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+	color: white;
+}
+
+.navbar-inverse .navbar-nav .open .dropdown-menu>li>a:hover {
+	background-color: #E2001A;
+}
+
 .navbar-inverse .navbar-toggle:hover {
 	background-color: white;
 	border-color: #E2001A;

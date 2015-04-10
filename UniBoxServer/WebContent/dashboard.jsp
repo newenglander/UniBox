@@ -49,7 +49,7 @@
 					<li><a class="whiteText" id="triggerChat" href="#">Chat</a></li>
 					<jsp:getProperty name="admin" property="adminMenu" />
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
-						data-toggle="dropdown">Options <b class="caret"></b></a>
+						data-toggle="dropdown" role="button">Options <b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><a id="refreshOption" href="">Reconnect Chat</a></li>
 							<li><a href="Dashboard">Reload Page</a></li>
@@ -67,7 +67,7 @@
 			<div class="row">
 				<div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 newsTicker">
 					<div class="alert alert-info" role="alert">UniBox -
-						Initializing Newsticker..</div>
+						InfoBox online..</div>
 				</div>
 				<div class="col-xs-12 col-sm-5 col-md-5 col-lg-5">
 					<div class="list-group">
