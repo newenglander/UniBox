@@ -22,9 +22,18 @@ public class PasswordUpdate extends DatabaseAction<Integer> {
             final String thisInputPasswordConfirm) {
         super("UPDATE player SET Password=? WHERE PlayerID=? AND Password=?");
         this.playerId = thisNick;
-        this.oldPasswordMD5 = Helper.md5(thisOldPassword);
-        this.inputPasswordMD5 = Helper.md5(thisInputPassword);
-        this.inputPasswordConfirmMD5 = Helper.md5(thisInputPasswordConfirm);
+        this.oldPasswordMD5 = Helper.md5(Helper.decodeBase64(thisOldPassword));
+        this.inputPasswordMD5 = Helper.md5(Helper
+                .decodeBase64(thisInputPassword));
+        this.inputPasswordConfirmMD5 = Helper.md5(Helper
+                .decodeBase64(thisInputPasswordConfirm));
+    }
+
+    @Override
+    public String toString() {
+        return "PasswordUpdate [playerId=" + playerId + ", oldPasswordMD5="
+                + oldPasswordMD5 + ", inputPasswordMD5=" + inputPasswordMD5
+                + ", inputPasswordConfirmMD5=" + inputPasswordConfirmMD5 + "]";
     }
 
     /*
@@ -47,6 +56,7 @@ public class PasswordUpdate extends DatabaseAction<Integer> {
     @Override
     public Integer execute() throws SQLException {
         // TODO MAKE IT WORKING !!!
+        System.out.println(this);
         if (inputPasswordMD5.equals(inputPasswordConfirmMD5)) {
             super.getStatement().setString(1, inputPasswordMD5);
             super.getStatement().setInt(2, this.playerId);

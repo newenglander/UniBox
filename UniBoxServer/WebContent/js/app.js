@@ -30,8 +30,9 @@ var app = {
 				});
 			},
 			error : function(e) {
-				app.newsticker("warning",
-				"Could not update game categories..!");
+				app
+						.newsticker("warning",
+								"Could not update game categories..!");
 			},
 			async : false
 		});
@@ -147,22 +148,30 @@ var app = {
 					var gameName = $('#gameNameInput').val();
 					var gameType = $('#gameTypeInput').val();
 					var gameDescription = $('#gameDescriptionInput').val();
-					jQuery.ajax({
-						type : "POST",
-						url : app.url + app.dataSource,
-						data : "create=game&gamename=" + gameName + "&catid="
-								+ gameType + "&descr=" + gameDescription,
-						success : function(result) {
-							app.newsticker("success",
-									"Game created successful.");
-							app.updateGameTable();
-						},
-						error : function(e) {
-							app.newsticker("warning",
-									"Could not create game..!");
-						},
-						async : false
-					});
+					jQuery
+							.ajax({
+								type : "POST",
+								url : app.url + app.dataSource,
+								data : "create=game&gamename=" + gameName
+										+ "&catid=" + gameType + "&descr="
+										+ gameDescription,
+								success : function(result) {
+									app.newsticker("success",
+											"Game created successful.");
+									swal("Good job!", "Game created!",
+											"success");
+									$('#createGameForm').trigger("reset");
+									app.updateGameTable();
+								},
+								error : function(e) {
+									app.newsticker("warning",
+											"Could not create game..!");
+									swal("Ups..", "Could not create game..",
+											"warning");
+									$('#createGameForm').trigger("reset");
+								},
+								async : false
+							});
 				});
 		$('#changePasswordForm')
 				.on(
@@ -186,13 +195,26 @@ var app = {
 												+ Base64
 														.encode(inputPasswordConfirm),
 										success : function(result) {
+											$('#changePasswordModal').modal(
+													'hide')
 											if (result == "success") {
 												app.newsticker("success",
 														"Password changed.");
+
+												swal("Good job!",
+														"Password changed!",
+														"success");
 											} else {
+												console.log(result);
 												app
 														.newsticker("warning",
 																"Could not change password..!");
+												swal(
+														"Ups..",
+														"Could not change password.. Wrong user password?",
+														"warning");
+												$('#changePasswordForm')
+														.trigger("reset");
 											}
 										},
 										error : function(e) {
@@ -218,16 +240,16 @@ var app = {
 				}
 			}
 		});
-//		$('.navbar-collapse').on('hidden.bs.collapse', function() {
-//			console.log("HI");
-//			$(".navbar-toggle").blur();
-//		});
-//		$(".navbar-toggle").focusout(function() {
-//			console.log("IH");
-//			if ($(".navbar-collapse").hasClass("in")) {
-//				$(this).click();
-//			}
-//		});
+		// $('.navbar-collapse').on('hidden.bs.collapse', function() {
+		// console.log("HI");
+		// $(".navbar-toggle").blur();
+		// });
+		// $(".navbar-toggle").focusout(function() {
+		// console.log("IH");
+		// if ($(".navbar-collapse").hasClass("in")) {
+		// $(this).click();
+		// }
+		// });
 		/**
 		 * DEMO for status panel
 		 * 

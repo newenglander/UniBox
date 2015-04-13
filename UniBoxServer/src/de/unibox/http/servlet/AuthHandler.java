@@ -95,18 +95,20 @@ public class AuthHandler extends ProtectedHttpServlet {
             }
 
             final Integer userId = user.getPlayerId();
-            final String oldPassword = request.getParameter("oldPassword");
-            final String inputPassword = request.getParameter("inputPassword");
-            final String inputPasswordConfirm = request
+            final String oldPassword64 = request.getParameter("oldPassword");
+            final String inputPassword64 = request
+                    .getParameter("inputPassword");
+            final String inputPasswordConfirm64 = request
                     .getParameter("inputPasswordConfirm");
-            
-            if (userId != null && oldPassword != null && inputPassword != null
-                    && inputPasswordConfirm != null) {
+
+            if (userId != null && oldPassword64 != null
+                    && inputPassword64 != null
+                    && inputPasswordConfirm64 != null) {
 
                 DatabaseAction<Integer> query = null;
 
-                query = new PasswordUpdate(userId, oldPassword, inputPassword,
-                        inputPasswordConfirm);
+                query = new PasswordUpdate(userId, oldPassword64,
+                        inputPassword64, inputPasswordConfirm64);
 
                 int affectedRows = 0;
                 response.setContentType("text/html");
@@ -119,13 +121,21 @@ public class AuthHandler extends ProtectedHttpServlet {
                     query.attach(transaction);
                     affectedRows = query.execute();
 
-                    System.out.println("AFF:" + affectedRows);
-
                     if (affectedRows == 1) {
+                        if (InternalConfig.LOG_AUTHENTIFICATION) {
+                            log.debug(this.getClass().getSimpleName()
+                                    + " change password succesfull. Affected rows: "
+                                    + affectedRows);
+                        }
                         out.print("success");
                         response.setStatus(HttpServletResponse.SC_OK);
                         transaction.commit();
                     } else {
+                        if (InternalConfig.LOG_AUTHENTIFICATION) {
+                            log.debug(this.getClass().getSimpleName()
+                                    + " change password failed. Affected rows: "
+                                    + affectedRows);
+                        }
                         out.print("failed");
                         response.setStatus(HttpServletResponse.SC_OK);
                         transaction.rollback();

@@ -51,9 +51,9 @@
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" role="button">Options <b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><a id="refreshOption" href="">Reconnect Chat</a></li>
+							<li><a id="refreshOption" href="#">Reconnect Chat</a></li>
 							<li><a href="Dashboard">Reload Page</a></li>
-							<li><a id="changePassword" data-toggle="modal"
+							<li><a id="changePassword" href="#" data-toggle="modal"
 								data-target=".bs-change-password-modal-lg">Change password</a></li>
 						</ul></li>
 					<li><a class="whiteText" href="/UniBox/Auth?action=logout">Logout</a></li>
@@ -317,6 +317,7 @@
 	<script src="js/vendor/dataTables.bootstrap.js" type="text/javascript"></script>
 	<script src="js/vendor/dataTables.bootstrap.js" type="text/javascript"></script>
 	<script src="js/vendor/validator.min.js" type="text/javascript"></script>
+	<script src="js/vendor/sweet-alert.min.js" type="text/javascript"></script>
 	<script src="js/vendor/base64.js"></script>
 	<script src="js/main.js" type="text/javascript"></script>
 	<script src="js/app.js" type="text/javascript"></script>
