@@ -55,7 +55,6 @@ public class PasswordUpdate extends DatabaseAction<Integer> {
      */
     @Override
     public Integer execute() throws SQLException {
-        // TODO MAKE IT WORKING !!!
         System.out.println(this);
         if (inputPasswordMD5.equals(inputPasswordConfirmMD5)) {
             super.getStatement().setString(1, inputPasswordMD5);
