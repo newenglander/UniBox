@@ -200,8 +200,107 @@
 		<div class="adminContainer">
 			<div class="container">
 				<div class="row">
-					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">Admin
-						Options here..</div>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<form class="form-horizontal" id="adminControlForm" role="form">
+							<fieldset>
+								<legend>Admin Dashboard</legend>
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="broadcastMessage">Message
+										Text</label>
+									<div class="col-md-4">
+										<input id="broadcastMessage" name="broadcastMessage"
+											type="text" placeholder="Message.."
+											class="form-control input-md">
+
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="broadcastType">Message
+										Type</label>
+									<div class="col-md-4">
+										<select id="broadcastType" name="broadcastType"
+											class="form-control">
+											<option value="newsticker">as Newsticker</option>
+											<option value="popup">as Popup</option>
+											<option value="chatmessage">as Chat Message</option>
+											<option value="systemmessage">as System Message</option>
+											<option value="welcomemessage">as Welcome Message</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="sendBroadcast"></label>
+									<div class="col-md-4">
+										<button id="sendBroadcast" name="sendBroadcast"
+											class="btn btn-success">Send</button>
+									</div>
+								</div>
+								<hr class="divider">
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="selectDeleteUser">Delete
+										User</label>
+									<div class="col-md-4">
+										<select id="selectDeleteUser" name="selectDeleteUser"
+											class="form-control">
+											<option value="1">UserA</option>
+											<option value="2">UserB</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="addUser">Create
+										User</label>
+									<div class="col-md-4">
+										<input id="addUser" name="addUser" type="text"
+											placeholder="Username.." class="form-control input-md">
+										<span class="help-block">Default password: user</span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="sendBroadcast"></label>
+									<div class="col-md-4">
+										<button id="sendBroadcast" name="sendBroadcast"
+											class="btn btn-success">Create</button>
+									</div>
+								</div>
+								<hr class="divider">
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="resetDb">Reset
+										Database</label>
+									<div class="col-md-4">
+										<button id="resetDb" name="resetDb" class="btn btn-danger">Reset</button>
+									</div>
+								</div>
+								<hr class="divider">
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="resetUserDb">Reset
+										UserTable</label>
+									<div class="col-md-4">
+										<button id="resetUserDb" name="resetUserDb"
+											class="btn btn-warning">Reset</button>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="resetGameDb">Reset
+										GameTable</label>
+									<div class="col-md-4">
+										<button id="resetGameDb" name="resetGameDb"
+											class="btn btn-warning">Reset</button>
+									</div>
+								</div>
+								<hr class="divider">
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="lockSystem">Lock
+										Platform</label>
+									<div class="col-md-4">
+										<button id="lockSystem" name="lockSystem"
+											class="btn btn-danger">Lock</button>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -265,7 +364,7 @@
 		aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content modalFormContent">
-				<form class="form-horizontal" id="createGameForm">
+				<form class="form-horizontal" id="createGameForm" role="form">
 					<fieldset>
 						<legend>Create new Game</legend>
 						<div class="form-group">
@@ -320,9 +419,7 @@
 	<script src="js/vendor/sweet-alert.min.js" type="text/javascript"></script>
 	<script src="js/vendor/base64.js"></script>
 	<script src="js/main.js" type="text/javascript"></script>
-	<script src="js/app.js" type="text/javascript"></script>
-
-	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<script src="js/app.js" type="text/javascript"></script><!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 	<script src="js/vendor/ie10-viewport-bug-workaround.js"></script>
 
 </body>
