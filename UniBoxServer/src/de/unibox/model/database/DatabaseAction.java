@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class DatabaseAction.
  *
@@ -13,6 +15,10 @@ import java.sql.SQLException;
  *            the generic type
  */
 public abstract class DatabaseAction<T> {
+    
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
+
 
     /** The sql string. */
     private String sqlString = null;
