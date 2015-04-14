@@ -329,8 +329,17 @@ public class ClientProvider {
      * @param url
      *            the new url
      */
-    public static final void setUrl(final String url) {
+    public static final void setFullUrl(final String url) {
         ClientProvider.url = url;
+    }
+    
+    /**
+     * Sets the ip.
+     *
+     * @param ip the new ip
+     */
+    public static final void setIp(final String ip) {
+    	ClientProvider.url = "http://" + ip + ":8080/UniBox";
     }
 
     /**
@@ -339,7 +348,7 @@ public class ClientProvider {
     public static final void setupScanner() {
         Scanner s = new Scanner(System.in);
         System.out.print("ServerIP:");
-        ClientProvider.setUrl("http://" + s.next() + ":8080/UniBox");
+        ClientProvider.setFullUrl("http://" + s.next() + ":8080/UniBox");
         System.out.print("Username:");
         ClientProvider.setUsername(s.next());
         System.out.print("Password:");
