@@ -152,7 +152,7 @@ public class Gui {
      */
     public final void determineSituation() {
 
-        System.out.println("_determineSituation()");
+        System.out.println("Gui: _determineSituation()");
 
         // determine situation
         final boolean[] result = Gui.this.model.isWin(Gui.this
@@ -213,14 +213,14 @@ public class Gui {
 
                     if (clickedButton.getText().equals("0")) {
 
-                        System.out.println("_mouseMove(): "
+                        System.out.println("Gui: _mouseMove(): "
                                 + Gui.this.getMoveCounter());
 
                         // set color
                         if ((Gui.this.getMoveCounter() % 2) != 0) {
                             // set X
                             clickedButton.setText("1");
-                            System.out.println("_send():"
+                            System.out.println("Gui: _send():"
                                     + clickedButton.getId());
                             ClientProvider.sendGameMessage("clicked:"
                                     + clickedButton.getId());
@@ -229,10 +229,10 @@ public class Gui {
                             // movecount
                             Gui.this.nextMoveCounter();
                         } else {
-                            System.out.println("REMOTE PLAYER TURN");
+                            System.out.println("Gui: REMOTE PLAYER TURN");
                         }
                     } else {
-                        System.out.println("BUTTON ALREADY MARKED");
+                        System.out.println("Gui: BUTTON ALREADY MARKED");
                     }
 
                     Gui.this.determineSituation();
@@ -480,7 +480,7 @@ public class Gui {
      * Next move counter.
      */
     public final void nextMoveCounter() {
-        System.out.println("_nextMoveCounter()");
+        System.out.println("Gui: _nextMoveCounter()");
         this.getModel().setMoveCounter(this.getModel().getMoveCounter() + 1);
     }
 
@@ -585,7 +585,7 @@ public class Gui {
      *            the new player1color
      */
     public final void setPlayer1color(final String player1color) {
-        System.out.println("PLAYER1_color: " + player1color);
+        System.out.println("Gui: PLAYER1_color: " + player1color);
         this.getModel().setPlayer1color(player1color);
     }
 
@@ -606,7 +606,7 @@ public class Gui {
      *            the new player2color
      */
     public final void setPlayer2color(final String player2color) {
-        System.out.println("PLAYER2_color: " + player2color);
+        System.out.println("Gui: PLAYER2_color: " + player2color);
         this.getModel().setPlayer2color(player2color);
     }
 
