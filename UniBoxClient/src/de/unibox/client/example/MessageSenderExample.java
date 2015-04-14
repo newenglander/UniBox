@@ -17,7 +17,7 @@ public class MessageSenderExample {
 
         ClientProvider.setUsername("user");
         ClientProvider.setPassword("user");
-        ClientProvider.setUrl("http://localhost:7637/UniBox");
+        ClientProvider.setFullUrl("http://localhost:7637/UniBox");
 
         ClientProvider.login();
         ClientProvider.connect();
