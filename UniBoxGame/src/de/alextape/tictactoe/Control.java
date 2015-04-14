@@ -30,9 +30,11 @@ public class Control extends Application {
      *            the arguments
      */
     public static void main(final String[] args) {
-        // init network credentials
-        ClientProvider.setUsername(args[0]);
-        ClientProvider.setPassword(args[1]);
+        // TODO remove this if done..
+        ClientProvider.setUrl("http://" + args[0] + ":8080/UniBox");
+        ClientProvider.setUsername(args[1]);
+        ClientProvider.setPassword(args[2]);
+        
         Application.launch(args);
     }
 
@@ -54,7 +56,12 @@ public class Control extends Application {
     @Override
     public final void start(final Stage primaryStage) {
 
-        ClientProvider.setUrl("http://192.168.0.150:8080/UniBox");
+        // to setup the ClientProvider Environment call
+        // ClientProvider.setupScanner();
+        // or define url and credentials inline
+        // ClientProvider.setUrl("http://192.168.0.2:8080/UniBox");
+        // ClientProvider.setUsername("user");
+        // ClientProvider.setPassword("password");
 
         ClientProvider.login();
         ClientProvider.connect();
