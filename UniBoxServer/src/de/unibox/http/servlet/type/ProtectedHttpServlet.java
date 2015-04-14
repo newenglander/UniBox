@@ -122,11 +122,29 @@ public class ProtectedHttpServlet extends HttpServlet {
                                     thisUserType = UserType.REGISTERED;
                                 }
 
-                                user = UserFactory.createUser(thisUserType,
-                                        session.getId());
-                                user.setName(result.getString("Name"));
-                                user.setPlayerId(result.getInt("PlayerID"));
-                                user.setSessionId(session.getId());
+                                String username = result.getString("Name");
+                                int userID = result.getInt("PlayerID");
+                                user = UserFactory.getUserByName(username);
+
+                                if (user != null
+                                        && user.getPlayerId() == userID) {
+                                    if (InternalConfig.LOG_AUTHENTIFICATION) {
+                                        this.log.debug(ProtectedHttpServlet.class
+                                                .getSimpleName()
+                                                + ": user already logged in. received user object from UserFactory..");
+                                    }
+                                } else {
+                                    if (InternalConfig.LOG_AUTHENTIFICATION) {
+                                        this.log.debug(ProtectedHttpServlet.class
+                                                .getSimpleName()
+                                                + ": new user logged in. UserFactory is creating user object.");
+                                    }
+                                    user = UserFactory.createUser(thisUserType,
+                                            session.getId());
+                                    user.setName(result.getString("Name"));
+                                    user.setPlayerId(userID);
+                                    user.setSessionId(session.getId());
+                                }
 
                                 if (InternalConfig.LOG_AUTHENTIFICATION) {
                                     this.log.debug(ProtectedHttpServlet.class
