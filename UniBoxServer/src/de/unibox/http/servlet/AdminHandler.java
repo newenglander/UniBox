@@ -70,8 +70,10 @@ public class AdminHandler extends ProtectedHttpServlet {
         out.flush();
         out.close();
 
+        // TODO implement functions displayed on the admin dashboard.
+        
     }
-
+    
     /*
      * (non-Javadoc)
      * 

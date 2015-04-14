@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import de.unibox.config.InternalConfig;
-import de.unibox.core.provider.Helper;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
@@ -95,56 +94,68 @@ public class AuthHandler extends ProtectedHttpServlet {
                         + ": Change password for " + user.getName());
             }
 
-            // TODO change password in database
+            final Integer userId = user.getPlayerId();
+            final String oldPassword64 = request.getParameter("oldPassword");
+            final String inputPassword64 = request
+                    .getParameter("inputPassword");
+            final String inputPasswordConfirm64 = request
+                    .getParameter("inputPasswordConfirm");
 
-            final String nick = user.getName();
-            // String passwordBase64old = request.getParameter("oldPassword");
-            final String passwordBase64 = request.getParameter("inputPassword");
-            // String passwordBase64confirm = request
-            // .getParameter("inputPasswordConfirm");
+            if (userId != null && oldPassword64 != null
+                    && inputPassword64 != null
+                    && inputPasswordConfirm64 != null) {
 
-            DatabaseAction<Integer> query = null;
+                DatabaseAction<Integer> query = null;
 
-            if (!nick.isEmpty() && !passwordBase64.isEmpty()) {
-                final String passwordPlain = Helper
-                        .decodeBase64(passwordBase64);
-                final String password = Helper.md5(passwordPlain);
-                System.out.println("CHANGE_PW:" + password);
-                query = new PasswordUpdate(nick, password);
-            }
+                query = new PasswordUpdate(userId, oldPassword64,
+                        inputPassword64, inputPasswordConfirm64);
 
-            int affectedRows = 0;
-            response.setContentType("text/html");
-            final PrintWriter out = response.getWriter();
+                int affectedRows = 0;
+                response.setContentType("text/html");
+                final PrintWriter out = response.getWriter();
 
-            try {
+                try {
 
-                final DatabaseQuery transaction = new DatabaseQuery();
-                transaction.connect();
-                query.attach(transaction);
-                affectedRows = query.execute();
+                    final DatabaseQuery transaction = new DatabaseQuery();
+                    transaction.connect();
+                    query.attach(transaction);
+                    affectedRows = query.execute();
 
-                if (affectedRows == 1) {
-                    out.print("success");
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    transaction.commit();
-                } else {
-                    out.print("failed");
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    transaction.rollback();
+                    if (affectedRows == 1) {
+                        if (InternalConfig.LOG_AUTHENTIFICATION) {
+                            log.debug(this.getClass().getSimpleName()
+                                    + " change password succesfull. Affected rows: "
+                                    + affectedRows);
+                        }
+                        out.print("success");
+                        response.setStatus(HttpServletResponse.SC_OK);
+                        transaction.commit();
+                    } else {
+                        if (InternalConfig.LOG_AUTHENTIFICATION) {
+                            log.debug(this.getClass().getSimpleName()
+                                    + " change password failed. Affected rows: "
+                                    + affectedRows);
+                        }
+                        out.print("failed");
+                        response.setStatus(HttpServletResponse.SC_OK);
+                        transaction.rollback();
+                    }
+
+                } catch (final SQLException e) {
+
+                    if (InternalConfig.LOG_DATABASE) {
+                        this.log.debug("GameHandler: Could not update database: "
+                                + query.getSqlString());
+                    }
+                    e.printStackTrace();
                 }
 
-            } catch (final SQLException e) {
+                out.flush();
+                out.close();
 
-                if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("GameHandler: Could not update database: "
-                            + query.getSqlString());
-                }
-                e.printStackTrace();
+            } else {
+                super.invalidRequest(request, response);
             }
-
-            out.flush();
-            out.close();
             break;
         default:
             break;

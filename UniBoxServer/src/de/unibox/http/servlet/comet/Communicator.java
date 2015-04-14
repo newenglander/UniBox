@@ -385,9 +385,10 @@ public class Communicator extends ProtectedHttpServlet {
                         done = true;
                         if (InternalConfig.LOG_THREADS) {
                             Communicator.this.log
-                                    .warn("Communicator shutdown..");
+                                    .warn("Communicator shutdown and rebooting..");
+                            e2.printStackTrace();
                         }
-                        e2.printStackTrace();
+                        this.run();
                     }
                 }
             }

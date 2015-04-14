@@ -247,7 +247,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 final int thisAdminRights = Integer.parseInt(request
                         .getParameter("adminrights"));
 
-                // TODO avoid hardcoded default password
+                // NOTE: avoid hardcoded default password
                 final String thisPassword = "3022443b7e33a6a68756047e46b81bea";
 
                 query = new PlayerInsert(thisAdminRights, thisName,

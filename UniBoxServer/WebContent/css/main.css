@@ -12,7 +12,7 @@ body, .jumbotron {
 }
 
 #gameTableBody tr td:first-child {
-	text-align:center;
+	text-align: center;
 }
 
 .jumbotron {
@@ -113,6 +113,23 @@ body, .jumbotron {
 
 .bottomMargin20 {
 	margin-bottom: 20px;
+}
+
+.divider {
+	border-color: #666666;
+}
+
+.whiteText li a {
+	color: white;
+}
+
+.whiteText li a:hover {
+	color: white;
+	background-color: #E2001A;
+}
+
+legend {
+	border-bottom: 1px solid #666666;
 }
 
 .list-group {
@@ -231,10 +248,10 @@ ul.pagination {
 }
 
 .messengerInput {
-  position: absolute;
-  bottom: 10px;
-  left: 15px;
-  right: 15px;
+	position: absolute;
+	bottom: 10px;
+	left: 15px;
+	right: 15px;
 }
 
 .messengerContent {

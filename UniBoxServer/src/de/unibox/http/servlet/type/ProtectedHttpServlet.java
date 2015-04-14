@@ -85,7 +85,7 @@ public class ProtectedHttpServlet extends HttpServlet {
                                     .decodeBase64(passwordBase64);
                             final String password = Helper.md5(passwordPlain);
 
-                            // TODO high critical logging!!! log will contain
+                            // high critical logging!!! log will contain
                             // password data..
                             if (InternalConfig.LOG_AUTHENTIFICATION) {
                                 this.log.debug(ProtectedHttpServlet.class
