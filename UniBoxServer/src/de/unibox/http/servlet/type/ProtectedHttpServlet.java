@@ -35,6 +35,12 @@ public class ProtectedHttpServlet extends HttpServlet {
     /** The log. */
     protected Logger log = Logger.getLogger("UniBoxLogger");
 
+    /** The this session. */
+    protected HttpSession thisSession = null;
+
+    /** The this user. */
+    protected AbstractUser thisUser = null;
+
     /**
      * Auth.
      *
@@ -44,30 +50,32 @@ public class ProtectedHttpServlet extends HttpServlet {
      */
     protected boolean auth(final HttpServletRequest request) {
 
-        // get session instance
-        final HttpSession session = request.getSession();
-
         // no session is authed by default
         boolean isAuthed = false;
 
+        // get session
+        thisSession = request.getSession();
+
         // create an abstract user object
-        AbstractUser user;
         if (InternalConfig.LOG_AUTHENTIFICATION) {
             this.log.debug(ProtectedHttpServlet.class.getSimpleName()
-                    + ": session: " + session.getId() + " - login.object: "
-                    + session.getAttribute("login.object"));
+                    + ": session: " + this.thisSession.getId()
+                    + " - login.object: "
+                    + this.thisSession.getAttribute("login.object"));
         }
 
         try {
 
             // retrieve user from session
-            user = (AbstractUser) session.getAttribute("login.object");
-            if ((user instanceof RegisteredUser)
-                    || (user instanceof AdministratorUser)) {
+            this.thisUser = (AbstractUser) this.thisSession
+                    .getAttribute("login.object");
+            if ((this.thisUser instanceof RegisteredUser)
+                    || (this.thisUser instanceof AdministratorUser)) {
                 isAuthed = true;
                 if (InternalConfig.LOG_AUTHENTIFICATION) {
                     this.log.debug(ProtectedHttpServlet.class.getSimpleName()
-                            + ": access granted for " + user.toString());
+                            + ": access granted for "
+                            + this.thisUser.toString());
                 }
             } else {
 
@@ -122,12 +130,14 @@ public class ProtectedHttpServlet extends HttpServlet {
                                     thisUserType = UserType.REGISTERED;
                                 }
 
-                                String username = result.getString("Name");
-                                int userID = result.getInt("PlayerID");
-                                user = UserFactory.getUserByName(username);
+                                final String username = result
+                                        .getString("Name");
+                                final int userID = result.getInt("PlayerID");
+                                this.thisUser = UserFactory
+                                        .getUserByName(username);
 
-                                if (user != null
-                                        && user.getPlayerId() == userID) {
+                                if ((this.thisUser != null)
+                                        && (this.thisUser.getPlayerId() == userID)) {
                                     if (InternalConfig.LOG_AUTHENTIFICATION) {
                                         this.log.debug(ProtectedHttpServlet.class
                                                 .getSimpleName()
@@ -139,24 +149,28 @@ public class ProtectedHttpServlet extends HttpServlet {
                                                 .getSimpleName()
                                                 + ": new user logged in. UserFactory is creating user object.");
                                     }
-                                    user = UserFactory.createUser(thisUserType,
-                                            session.getId());
-                                    user.setName(result.getString("Name"));
-                                    user.setPlayerId(userID);
-                                    user.setSessionId(session.getId());
+                                    this.thisUser = UserFactory.createUser(
+                                            thisUserType,
+                                            this.thisSession.getId());
+                                    this.thisUser.setName(result
+                                            .getString("Name"));
+                                    this.thisUser.setPlayerId(userID);
+                                    this.thisUser.setSessionId(this.thisSession
+                                            .getId());
                                 }
 
                                 if (InternalConfig.LOG_AUTHENTIFICATION) {
                                     this.log.debug(ProtectedHttpServlet.class
                                             .getSimpleName()
                                             + ": auth request for  "
-                                            + user.getName()
+                                            + this.thisUser.getName()
                                             + " - ID: "
-                                            + user.getSessionId()
-                                            + " - Object: " + user);
+                                            + this.thisUser.getSessionId()
+                                            + " - Object: " + this.thisUser);
                                 }
 
-                                session.setAttribute("login.object", user);
+                                this.thisSession.setAttribute("login.object",
+                                        this.thisUser);
                                 isAuthed = true;
 
                             } else {
@@ -206,7 +220,7 @@ public class ProtectedHttpServlet extends HttpServlet {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    private void doService(final HttpServletRequest request,
+    protected void doService(final HttpServletRequest request,
             final HttpServletResponse response) throws ServletException,
             IOException {
         super.service(request, response);
@@ -255,6 +269,12 @@ public class ProtectedHttpServlet extends HttpServlet {
             }
 
             response = (HttpServletResponse) res;
+            
+            // predefine standard response
+            response.setContentType("text/html");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setHeader("Pragma", "no-cache");
+            response.setStatus(HttpServletResponse.SC_OK);
 
         } catch (final ClassCastException e) {
             throw new ServletException("non-HTTP request or response");

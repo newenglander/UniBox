@@ -12,33 +12,62 @@ import de.unibox.model.user.AdministratorUser;
  */
 public class AdminStatement extends DatabaseAction<Integer> {
 
+    /** The user. */
     private AbstractUser user = null;
 
-    public AdminStatement(AbstractUser thisUser, String thisStatement) {
+    /**
+     * Instantiates a new admin statement.
+     *
+     * @param thisUser
+     *            the this user
+     * @param thisStatement
+     *            the this statement
+     */
+    public AdminStatement(final AbstractUser thisUser,
+            final String thisStatement) {
         super(thisStatement);
         this.user = thisUser;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.unibox.model.database.DatabaseAction#attach(de.unibox.model.database
+     * .DatabaseQuery)
+     */
     @Override
-    public void attach(DatabaseQuery transaction) throws SQLException {
+    public void attach(final DatabaseQuery transaction) throws SQLException {
         // not needed here
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.unibox.model.database.DatabaseAction#execute()
+     */
     @Override
     public Integer execute() throws SQLException, IllegalAccessError {
-        if (user != null) {
-            if (user instanceof AdministratorUser) {
+        if (this.user != null) {
+            if (this.user instanceof AdministratorUser) {
                 return super.executeUpdate();
             } else {
-                noPrivilegs("no admin privilegs for: " + super.getStatement());
+                this.noPrivilegs("no admin privilegs for: "
+                        + super.getStatement());
             }
         } else {
-            noPrivilegs("user is NULL for: " + super.getStatement());
+            this.noPrivilegs("user is NULL for: " + super.getStatement());
         }
         return null;
     }
 
-    private void noPrivilegs(String errorMessage) {
+    /**
+     * No privilegs.
+     *
+     * @param errorMessage
+     *            the error message
+     */
+    private void noPrivilegs(final String errorMessage) {
         throw new IllegalAccessError(errorMessage);
     }
 

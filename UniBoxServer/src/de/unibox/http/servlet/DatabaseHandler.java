@@ -244,7 +244,8 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                     this.log.debug("DatabaseHandler: update player table..");
                 }
 
-                final String thisName = Helper.decodeBase64(request.getParameter("name"));
+                final String thisName = Helper.decodeBase64(request
+                        .getParameter("name"));
                 final int thisAdminRights = Integer.parseInt(request
                         .getParameter("adminrights"));
 

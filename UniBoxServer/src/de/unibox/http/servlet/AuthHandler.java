@@ -9,14 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
 import de.unibox.model.database.objects.PasswordUpdate;
-import de.unibox.model.user.AbstractUser;
 
 /**
  * The Class LogoutHandler.
@@ -45,23 +43,22 @@ public class AuthHandler extends ProtectedHttpServlet {
     protected void doGet(final HttpServletRequest request,
             final HttpServletResponse response) throws ServletException,
             IOException {
-
-        final HttpSession session = request.getSession();
-        final AbstractUser user = (AbstractUser) session
-                .getAttribute("login.object");
+        
         final String action = request.getParameter("action");
 
         switch (action) {
         case "logout":
             if (InternalConfig.LOG_AUTHENTIFICATION) {
                 this.log.debug(this.getClass().getSimpleName()
-                        + ": Invalidate session for " + user.getName());
+                        + ": Invalidate session for "
+                        + super.thisUser.getName());
             }
             final RequestDispatcher rd = request
                     .getRequestDispatcher("/login.html");
 
-            session.invalidate();
+            request.getSession().invalidate();
 
+            response.setStatus(HttpServletResponse.SC_OK);
             rd.forward(request, response);
             break;
         default:
@@ -82,28 +79,25 @@ public class AuthHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        final HttpSession session = request.getSession();
-        final AbstractUser user = (AbstractUser) session
-                .getAttribute("login.object");
         final String action = request.getParameter("action");
 
         switch (action) {
         case "changePassword":
             if (InternalConfig.LOG_AUTHENTIFICATION) {
                 this.log.debug(this.getClass().getSimpleName()
-                        + ": Change password for " + user.getName());
+                        + ": Change password for " + super.thisUser.getName());
             }
 
-            final Integer userId = user.getPlayerId();
+            final Integer userId = super.thisUser.getPlayerId();
             final String oldPassword64 = request.getParameter("oldPassword");
             final String inputPassword64 = request
                     .getParameter("inputPassword");
             final String inputPasswordConfirm64 = request
                     .getParameter("inputPasswordConfirm");
 
-            if (userId != null && oldPassword64 != null
-                    && inputPassword64 != null
-                    && inputPasswordConfirm64 != null) {
+            if ((userId != null) && (oldPassword64 != null)
+                    && (inputPassword64 != null)
+                    && (inputPasswordConfirm64 != null)) {
 
                 DatabaseAction<Integer> query = null;
 
@@ -123,7 +117,7 @@ public class AuthHandler extends ProtectedHttpServlet {
 
                     if (affectedRows == 1) {
                         if (InternalConfig.LOG_AUTHENTIFICATION) {
-                            log.debug(this.getClass().getSimpleName()
+                            this.log.debug(this.getClass().getSimpleName()
                                     + " change password succesfull. Affected rows: "
                                     + affectedRows);
                         }
@@ -132,7 +126,7 @@ public class AuthHandler extends ProtectedHttpServlet {
                         transaction.commit();
                     } else {
                         if (InternalConfig.LOG_AUTHENTIFICATION) {
-                            log.debug(this.getClass().getSimpleName()
+                            this.log.debug(this.getClass().getSimpleName()
                                     + " change password failed. Affected rows: "
                                     + affectedRows);
                         }

@@ -67,19 +67,19 @@ public class AsyncContextParser {
     }
 
     /** The context. */
-    private final AsyncContext context;
+    private AsyncContext context = null;
 
     /** The creation time. */
-    private final long creationTime;
+    private long creationTime = 0;
 
     /** The creation time string. */
-    private final String creationTimeString;
+    private String creationTimeString = null;
 
     /** The id. */
-    private final String id;
+    private String id = null;
 
     /** The session. */
-    private final HttpSession session;
+    private HttpSession session = null;
 
     /**
      * Instantiates a new async context parser.
@@ -90,21 +90,42 @@ public class AsyncContextParser {
     public AsyncContextParser(final AsyncContext thisContext) {
         super();
         this.context = thisContext;
-        final HttpServletRequest req = (HttpServletRequest) thisContext
-                .getRequest();
-        this.session = req.getSession();
-        this.id = this.session.getId();
-        this.creationTime = this.session.getCreationTime();
-        this.creationTimeString = Helper.longToDate(this.session
-                .getCreationTime());
-        if (InternalConfig.LOG_ASYNC_SESSIONS) {
-            InternalConfig.log.debug(AsyncContextParser.class.getSimpleName()
-                    + ": add Context: " + thisContext);
-            InternalConfig.log.debug(AsyncContextParser.class.getSimpleName()
-                    + ": adding id=" + this.id + ", creationTime="
-                    + this.creationTimeString + ", ac=" + this.context);
+        HttpServletRequest req = null;
+        try {
+            req = (HttpServletRequest) thisContext.getRequest();
+        } catch (IllegalStateException e) {
+            if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                e.printStackTrace();
+            }
         }
-        AsyncContextParser.list.add(this);
+
+        if (null != req) {
+            this.session = req.getSession();
+            this.id = this.session.getId();
+            this.creationTime = this.session.getCreationTime();
+            this.creationTimeString = Helper.longToDate(this.session
+                    .getCreationTime());
+            if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                InternalConfig.log.debug(AsyncContextParser.class
+                        .getSimpleName() + ": add Context: " + thisContext);
+                InternalConfig.log.debug(AsyncContextParser.class
+                        .getSimpleName()
+                        + ": adding id="
+                        + this.id
+                        + ", creationTime="
+                        + this.creationTimeString
+                        + ", ac="
+                        + this.context);
+            }
+            AsyncContextParser.list.add(this);
+        } else {
+            if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                InternalConfig.log.debug(AsyncContextParser.class
+                        .getSimpleName()
+                        + ": illegal state for context detected: "
+                        + thisContext);
+            }
+        }
     }
 
     public AsyncContext getContext() {

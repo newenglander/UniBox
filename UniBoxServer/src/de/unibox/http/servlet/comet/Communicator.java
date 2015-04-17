@@ -16,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.sun.media.sound.InvalidFormatException;
 
@@ -104,19 +103,11 @@ public class Communicator extends ProtectedHttpServlet {
     protected void doGet(final HttpServletRequest req,
             final HttpServletResponse res) throws ServletException, IOException {
 
-        res.setContentType("text/html");
-        res.setHeader("Cache-Control", "private");
-        res.setHeader("Pragma", "no-cache");
-
         req.setAttribute("format", ClientType.PLAIN);
-
-        final HttpSession session = req.getSession();
-        final AbstractUser user = (AbstractUser) session
-                .getAttribute("login.object");
-        user.setSessionId(session.getId());
+        super.thisUser.setSessionId(super.thisSession.getId());
 
         if (InternalConfig.LOG_COMMUNICATION) {
-            this.log.debug("Communicator: Get detected: " + user);
+            this.log.debug("Communicator: Get detected: " + super.thisUser);
         }
 
         final PrintWriter writer = res.getWriter();
@@ -174,19 +165,14 @@ public class Communicator extends ProtectedHttpServlet {
             final HttpServletResponse res) throws ServletException, IOException {
 
         res.setContentType("text/plain");
-        res.setHeader("Cache-Control", "private");
-        res.setHeader("Pragma", "no-cache");
         req.setAttribute("format", ClientType.PLAIN);
         req.setCharacterEncoding("UTF-8");
 
         final String action = req.getParameter("action");
-        final HttpSession session = req.getSession();
-        final AbstractUser user = (AbstractUser) session
-                .getAttribute("login.object");
 
         if (InternalConfig.LOG_COMMUNICATION) {
             this.log.debug("Communicator: Detected: POST, Action: " + action
-                    + ", User: " + user);
+                    + ", User: " + super.thisUser);
         }
 
         final StringBuilder buffer = new StringBuilder();
@@ -196,7 +182,7 @@ public class Communicator extends ProtectedHttpServlet {
             buffer.append(line);
         }
 
-        this.switchAction(req, res, user, action);
+        this.switchAction(req, res, action);
     }
 
     /**
@@ -366,7 +352,7 @@ public class Communicator extends ProtectedHttpServlet {
                             } catch (final IOException e1) {
                                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                                     Communicator.this.log
-                                            .debug("aCommunicator: response already committed. removing: "
+                                            .debug("Communicator: response already committed. removing: "
                                                     + ac);
                                 }
                                 Communicator.asyncContextQueue.remove(ac);
@@ -394,12 +380,19 @@ public class Communicator extends ProtectedHttpServlet {
             }
 
             private void send(final PrintWriter acWriter,
-                    final String concreteMessage) {
+                    final String concreteMessage) throws IOException {
                 if (InternalConfig.LOG_COMMUNICATION) {
                     Communicator.this.log.debug("Communicator says: "
                             + concreteMessage);
                 }
                 acWriter.println(concreteMessage);
+                /**
+                 * if you got a SocketException traced to this point after
+                 * logout and login in a short period of time, read this:
+                 * https://bz.apache.org/bugzilla/show_bug.cgi?id=57683
+                 * 
+                 * It depends on your Tomcat version and can be ignored.
+                 */
                 acWriter.flush();
             }
         };
@@ -433,8 +426,6 @@ public class Communicator extends ProtectedHttpServlet {
      *            the req
      * @param res
      *            the res
-     * @param user
-     *            the user
      * @param action
      *            the action
      * @throws ServletException
@@ -443,14 +434,16 @@ public class Communicator extends ProtectedHttpServlet {
      *             Signals that an I/O exception has occurred.
      */
     protected void switchAction(final HttpServletRequest req,
-            final HttpServletResponse res, final AbstractUser user,
-            final String action) throws ServletException, IOException {
+            final HttpServletResponse res, final String action)
+            throws ServletException, IOException {
 
         if ("connect".equals(action)) {
 
             final CommunicatorMessage notifyMessage = this.generateCommand(
-                    MessageType.SYSTEM, this.getClass().getSimpleName(),
-                    Helper.encodeBase64(user.getName() + " has joined."));
+                    MessageType.SYSTEM,
+                    this.getClass().getSimpleName(),
+                    Helper.encodeBase64(super.thisUser.getName()
+                            + " has joined."));
             this.notify(notifyMessage);
 
             res.setStatus(HttpServletResponse.SC_OK);
@@ -473,7 +466,7 @@ public class Communicator extends ProtectedHttpServlet {
                 switch (clientType) {
                 case JAVASCRIPT:
                     cMessage = this.generateCommand(MessageType.CHAT,
-                            user.getName(), messageString);
+                            super.thisUser.getName(), messageString);
                     break;
                 case SERIAL:
                     cMessage = ObjectSerializerImpl.stringToObject(
@@ -482,7 +475,8 @@ public class Communicator extends ProtectedHttpServlet {
                 case PLAIN:
                     if (InternalConfig.LOG_COMMUNICATION) {
                         this.log.warn("UNHANDLED PLAIN MESSAGE: "
-                                + user.getName() + ": " + messageString);
+                                + super.thisUser.getName() + ": "
+                                + messageString);
                     }
                     break;
                 default:

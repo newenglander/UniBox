@@ -72,7 +72,7 @@ public class DatabaseQuery {
     public void connect() throws SQLException {
         try {
             this.con = DatabaseQuery.pool.getConnection();
-        } catch (NullPointerException e) {
+        } catch (final NullPointerException e) {
             throw new SQLException("SQL Server offline?");
         }
         this.con.setAutoCommit(false);
