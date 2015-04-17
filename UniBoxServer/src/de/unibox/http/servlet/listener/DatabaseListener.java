@@ -42,11 +42,13 @@ public class DatabaseListener implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent event) {
 
         try {
+            InternalConfig.log.info(DatabaseListener.class.getSimpleName()
+                    + ": Database initialization..");
             DatabaseQuery.init();
         } catch (final SQLException e) {
             if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log
-                        .warn("DatabaseListener: Database initialization failed!");
+                InternalConfig.log.warn(DatabaseListener.class.getSimpleName()
+                        + ": Database initialization failed!");
             }
             e.printStackTrace();
         }

@@ -38,7 +38,7 @@ public class JavaScriptCommunicator extends Communicator {
         super.thisUser.setSessionId(super.thisSession.getId());
 
         if (InternalConfig.LOG_AUTHENTIFICATION) {
-            this.log.debug("JavaScriptCommunicator: Get detected: " + super.thisUser);
+            this.log.debug(JavaScriptCommunicator.class.getSimpleName() + ": Get detected: " + super.thisUser);
         }
 
         final PrintWriter writer = res.getWriter();
@@ -51,7 +51,7 @@ public class JavaScriptCommunicator extends Communicator {
             public void onComplete(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                     JavaScriptCommunicator.this.log
-                            .debug("JavaScriptCommunicator onComplete()");
+                            .debug(JavaScriptCommunicator.class.getSimpleName() + " onComplete()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
             }
@@ -60,7 +60,7 @@ public class JavaScriptCommunicator extends Communicator {
             public void onError(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                     JavaScriptCommunicator.this.log
-                            .debug("JavaScriptCommunicator onError()");
+                            .debug(JavaScriptCommunicator.class.getSimpleName() + " onError()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
             }
@@ -69,7 +69,7 @@ public class JavaScriptCommunicator extends Communicator {
             public void onStartAsync(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                     JavaScriptCommunicator.this.log
-                            .debug("JavaScriptCommunicator onStartAsync()");
+                            .debug(JavaScriptCommunicator.class.getSimpleName() + " onStartAsync()");
                 }
             }
 
@@ -77,7 +77,7 @@ public class JavaScriptCommunicator extends Communicator {
             public void onTimeout(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                     JavaScriptCommunicator.this.log
-                            .debug("JavaScriptCommunicator onTimeout()");
+                            .debug(JavaScriptCommunicator.class.getSimpleName() + " onTimeout()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
             }
@@ -102,7 +102,7 @@ public class JavaScriptCommunicator extends Communicator {
         final String action = req.getParameter("action");
 
         if (InternalConfig.LOG_COMMUNICATION) {
-            this.log.debug("JavaScriptCommunicator: Post detected: "
+            this.log.debug(JavaScriptCommunicator.class.getSimpleName() + ": Post detected: "
                     + super.thisUser);
         }
 

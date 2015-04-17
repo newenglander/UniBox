@@ -260,7 +260,7 @@ public class ProtectedHttpServlet extends HttpServlet {
             if (InternalConfig.LOG_REQUEST_HEADER) {
                 final Enumeration<String> headerNames = request
                         .getHeaderNames();
-                this.log.debug("RequestHeader:");
+                this.log.debug(this.getClass().getSimpleName() + ": RequestHeader:");
                 while (headerNames.hasMoreElements()) {
                     final String headerName = headerNames.nextElement();
                     this.log.debug(headerName + ": "

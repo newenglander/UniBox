@@ -66,7 +66,8 @@ public class GameHandler extends ProtectedHttpServlet {
 
         } catch (final Exception e) {
 
-            this.log.debug("GameHandler: could not retrieve relevant game");
+            this.log.debug(this.getClass().getSimpleName()
+                    + ": could not retrieve relevant game");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             out.print("invalid request\n");
             e.printStackTrace();
@@ -75,12 +76,13 @@ public class GameHandler extends ProtectedHttpServlet {
 
             if (InternalConfig.LOG_GAMEPOOL) {
                 if (game == null) {
-                    this.log.debug("GameHandler: switching "
-                            + super.thisUser.getName() + " with " + action);
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": switching " + super.thisUser.getName()
+                            + " with " + action);
                 } else {
-                    this.log.debug("GameHandler: switching "
-                            + super.thisUser.getName() + " with " + action
-                            + " for " + game);
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": switching " + super.thisUser.getName()
+                            + " with " + action + " for " + game);
                 }
             }
 
@@ -135,7 +137,8 @@ public class GameHandler extends ProtectedHttpServlet {
 
             if (InternalConfig.LOG_GAMEPOOL) {
                 if (game != null) {
-                    this.log.debug("GameHandler: " + game);
+                    this.log.debug(this.getClass().getSimpleName() + ": "
+                            + game);
                 }
             }
         }

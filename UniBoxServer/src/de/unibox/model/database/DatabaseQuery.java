@@ -26,20 +26,20 @@ public class DatabaseQuery {
             try {
                 if (InternalConfig.LOG_DATABASE) {
                     InternalConfig.log
-                            .debug("Query: initialize ConnectionPool with "
+                            .debug(DatabaseQuery.class.getSimpleName() + ": initialize ConnectionPool with "
                                     + SecurityLevel.USER);
                 }
                 DatabasePools.initialize(SecurityLevel.USER);
                 if (InternalConfig.LOG_DATABASE) {
                     InternalConfig.log
-                            .debug("Query: retrieve ConnectionPool for "
+                            .debug(DatabaseQuery.class.getSimpleName() + ": retrieve ConnectionPool for "
                                     + SecurityLevel.USER);
                 }
                 DatabaseQuery.pool = DatabasePools.getPool(SecurityLevel.USER);
             } catch (final Exception e) {
                 if (InternalConfig.LOG_DATABASE) {
                     InternalConfig.log
-                            .warn("Query: could not initialize ConnectionPool");
+                            .warn(DatabaseQuery.class.getSimpleName() + ": could not initialize ConnectionPool");
                 }
                 e.printStackTrace();
             }
@@ -59,7 +59,7 @@ public class DatabaseQuery {
         this.con.commit();
         DatabaseQuery.pool.returnConnection(this.con);
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: committed");
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName() + ": committed");
         }
     }
 
@@ -77,7 +77,7 @@ public class DatabaseQuery {
         }
         this.con.setAutoCommit(false);
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: connected");
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName() + ": connected");
         }
     }
 
@@ -93,7 +93,7 @@ public class DatabaseQuery {
     public PreparedStatement getQuery(final String statement)
             throws SQLException {
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: Preparing Query: "
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName() + ": Preparing Query: "
                     + statement);
         }
         final PreparedStatement query = this.con.prepareStatement(statement);
@@ -112,7 +112,7 @@ public class DatabaseQuery {
     public PreparedStatement getUpdate(final String statement)
             throws SQLException {
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: Preparing Update: "
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName() + ": Preparing Update: "
                     + statement);
         }
         final PreparedStatement update = this.con.prepareStatement(statement);
@@ -129,7 +129,7 @@ public class DatabaseQuery {
         this.con.rollback();
         DatabaseQuery.pool.returnConnection(this.con);
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: rollback");
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName() + ": rollback");
         }
     }
 

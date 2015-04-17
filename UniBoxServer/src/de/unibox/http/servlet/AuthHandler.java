@@ -138,7 +138,7 @@ public class AuthHandler extends ProtectedHttpServlet {
                 } catch (final SQLException e) {
 
                     if (InternalConfig.LOG_DATABASE) {
-                        this.log.debug("GameHandler: Could not update database: "
+                        this.log.debug(this.getClass().getSimpleName() + ": Could not update database: "
                                 + query.getSqlString());
                     }
                     e.printStackTrace();

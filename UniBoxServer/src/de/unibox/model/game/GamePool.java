@@ -1,5 +1,6 @@
 package de.unibox.model.game;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class GamePool {
     /** The instance. */
     private static GamePool instance;
 
-    public static GamePool getInstance() {
+    public static GamePool getInstance() throws IOException {
         if (GamePool.instance == null) {
             GamePool.instance = new GamePool();
         }
@@ -30,7 +31,7 @@ public class GamePool {
     /**
      * Instantiates a new game pool.
      */
-    private GamePool() {
+    private GamePool() throws IOException {
         if (InternalConfig.LOG_GAMEPOOL) {
             InternalConfig.log.debug(this.getClass().getSimpleName()
                     + ": constructor()");
@@ -126,7 +127,7 @@ public class GamePool {
     /**
      * Initialize.
      */
-    private void initialize() {
+    private void initialize() throws IOException {
 
         if (InternalConfig.LOG_GAMEPOOL) {
             InternalConfig.log.debug(this.getClass().getSimpleName()
@@ -169,6 +170,7 @@ public class GamePool {
                         + ": Could not query game table.");
             }
             e.printStackTrace();
+            throw new IOException("Could not connect to Database!");
         }
 
     }
@@ -176,7 +178,7 @@ public class GamePool {
     /**
      * Update.
      */
-    public void update() {
+    public void update() throws IOException {
         this.initialize();
     }
 

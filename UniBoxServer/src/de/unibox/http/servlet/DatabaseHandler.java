@@ -16,14 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.unibox.config.InternalConfig;
-import de.unibox.core.provider.Helper;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
-import de.unibox.model.database.objects.CategoryInsert;
 import de.unibox.model.database.objects.GameInsert;
-import de.unibox.model.database.objects.PlayerInsert;
-import de.unibox.model.database.objects.QueueInsert;
 import de.unibox.model.database.objects.ResultInsert;
 import de.unibox.model.database.objects.SelectionQuery;
 import de.unibox.model.game.Game;
@@ -139,7 +135,8 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             if (requestedData.equals("ranking")) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("DatabaseHandler: select ranking table..");
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": select ranking table..");
                 }
                 query = new SelectionQuery(
                         "SELECT @curRank := @curRank + 1 AS Rank, Name, Score, ID FROM (SELECT Name, player.PlayerID AS ID, SUM(Scoring) AS Score FROM player INNER JOIN result WHERE player.PlayerID=result.PlayerID GROUP BY Name ORDER BY Score DESC) AS ranking, (SELECT @curRank := 0) r;");
@@ -148,7 +145,8 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             } else if (requestedData.equals("games")) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("DatabaseHandler: select game table..");
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": select game table..");
                 }
                 query = new SelectionQuery(
                         "SELECT GameID, GameName, Gametitle, NumberOfPlayers FROM game INNER JOIN category WHERE game.CatID=category.CatID;");
@@ -157,7 +155,8 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             } else if (requestedData.equals("categories")) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("DatabaseHandler: select game table..");
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": select game table..");
                 }
                 query = new SelectionQuery(
                         "SELECT CatID, Gametitle, NumberOfPlayers FROM category;");
@@ -195,17 +194,18 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             } catch (final SQLException e) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("GameHandler: Could not query game table.");
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": Could not query game table.");
                 }
                 e.printStackTrace();
 
             } catch (final JSONException e) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("GameHandler: Could not convert game table data to json.");
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": Could not convert game table data to json.");
                 }
                 e.printStackTrace();
-
             }
 
             response.setContentType("application/json");
@@ -238,41 +238,10 @@ public class DatabaseHandler extends ProtectedHttpServlet {
         DatabaseAction<Integer> query = null;
 
         if (createData != null) {
-            if (createData.equals("player")) {
+            if (createData.equals("game")) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("DatabaseHandler: update player table..");
-                }
-
-                final String thisName = Helper.decodeBase64(request
-                        .getParameter("name"));
-                final int thisAdminRights = Integer.parseInt(request
-                        .getParameter("adminrights"));
-
-                // NOTE: avoid hardcoded default password
-                final String thisPassword = "3022443b7e33a6a68756047e46b81bea";
-
-                query = new PlayerInsert(thisAdminRights, thisName,
-                        thisPassword);
-                doInsert = true;
-
-            } else if (createData.equals("category")) {
-
-                if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("DatabaseHandler: update category table..");
-                }
-
-                final String thisGametitle = request.getParameter("gametitle");
-                final int thisNumberOfPlayers = Integer.parseInt(request
-                        .getParameter("numberofplayers"));
-
-                query = new CategoryInsert(thisGametitle, thisNumberOfPlayers);
-                doInsert = true;
-
-            } else if (createData.equals("game")) {
-
-                if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("DatabaseHandler: update game table..");
+                    this.log.debug(this.getClass().getSimpleName() + ": update game table..");
                 }
 
                 final String thisGameName = request.getParameter("gamename");
@@ -282,24 +251,25 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 query = new GameInsert(thisGameName, thisCatID);
                 doInsert = true;
 
-            } else if (createData.equals("queue")) {
-
-                if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("DatabaseHandler: update game table..");
-                }
-
-                final int thisPlayerID = Integer.parseInt(request
-                        .getParameter("playerid"));
-                final int thisGameID = Integer.parseInt(request
-                        .getParameter("gameid"));
-
-                query = new QueueInsert(thisPlayerID, thisGameID);
-                doInsert = true;
+                // } else if (createData.equals("queue")) {
+                //
+                // if (InternalConfig.LOG_DATABASE) {
+                // this.log.debug(this.getClass().getSimpleName() +
+                // ": update game table..");
+                // }
+                //
+                // final int thisPlayerID = Integer.parseInt(request
+                // .getParameter("playerid"));
+                // final int thisGameID = Integer.parseInt(request
+                // .getParameter("gameid"));
+                //
+                // query = new QueueInsert(thisPlayerID, thisGameID);
+                // doInsert = true;
 
             } else if (createData.equals("result")) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug("DatabaseHandler: update result table..");
+                    this.log.debug(this.getClass().getSimpleName() + ": update result table..");
                 }
 
                 final int thisGameID = Integer.parseInt(request
@@ -334,7 +304,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 } catch (final SQLException e) {
 
                     if (InternalConfig.LOG_DATABASE) {
-                        this.log.debug("GameHandler: Could not update database: "
+                        this.log.debug(this.getClass().getSimpleName() + ": Could not update database: "
                                 + query.getSqlString());
                     }
                     e.printStackTrace();

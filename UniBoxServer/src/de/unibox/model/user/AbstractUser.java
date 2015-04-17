@@ -29,7 +29,7 @@ public abstract class AbstractUser {
      */
     public AbstractUser(final UserType thisType, final String thisSessionId) {
         if (InternalConfig.LOG_AUTHENTIFICATION) {
-            InternalConfig.log.debug("Constructor: AbstractUser Type: "
+            InternalConfig.log.debug(this.getClass().getSimpleName() + ": AbstractUser Type: "
                     + thisType + " SessionID: " + this.sessionId);
         }
         this.sessionId = thisSessionId;
