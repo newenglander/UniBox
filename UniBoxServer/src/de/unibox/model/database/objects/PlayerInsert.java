@@ -59,7 +59,7 @@ public class PlayerInsert extends DatabaseAction<Integer> {
     public Integer execute() throws SQLException {
         super.getStatement().setInt(1, this.adminRights);
         super.getStatement().setString(2, this.name);
-        super.getStatement().setString(2, this.password);
+        super.getStatement().setString(3, this.password);
         return super.executeUpdate();
     }
 

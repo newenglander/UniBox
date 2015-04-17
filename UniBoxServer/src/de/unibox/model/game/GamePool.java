@@ -158,22 +158,17 @@ public class GamePool {
             }
             transaction.commit();
 
+            if (InternalConfig.LOG_DATABASE) {
+                InternalConfig.log.debug(this.getClass().getSimpleName()
+                        + ": game pool loaded and available!");
+            }
+
         } catch (final SQLException e) {
             if (InternalConfig.LOG_DATABASE) {
                 InternalConfig.log.debug(this.getClass().getSimpleName()
                         + ": Could not query game table.");
             }
             e.printStackTrace();
-        } finally {
-            if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log.debug(this.getClass().getSimpleName()
-                        + ": game pool loaded..");
-            }
-        }
-
-        if (InternalConfig.LOG_GAMEPOOL) {
-            InternalConfig.log.debug(this.getClass().getSimpleName()
-                    + ": available!");
         }
 
     }

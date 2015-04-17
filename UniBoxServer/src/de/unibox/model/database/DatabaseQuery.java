@@ -41,6 +41,7 @@ public class DatabaseQuery {
                     InternalConfig.log
                             .warn("Query: could not initialize ConnectionPool");
                 }
+                e.printStackTrace();
             }
         }
     }
@@ -69,7 +70,11 @@ public class DatabaseQuery {
      *             the SQL exception
      */
     public void connect() throws SQLException {
-        this.con = DatabaseQuery.pool.getConnection();
+        try {
+            this.con = DatabaseQuery.pool.getConnection();
+        } catch (NullPointerException e) {
+            throw new SQLException("SQL Server offline?");
+        }
         this.con.setAutoCommit(false);
         if (InternalConfig.LOG_DATABASE) {
             InternalConfig.log.debug("DatabaseQuery: connected");

@@ -69,10 +69,12 @@ public class GameHandler extends ProtectedHttpServlet {
             }
 
         } catch (final Exception e) {
+
             this.log.debug("GameHandler: could not retrieve relevant game");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             out.print("invalid request\n");
             e.printStackTrace();
+
         } finally {
 
             if (InternalConfig.LOG_GAMEPOOL) {

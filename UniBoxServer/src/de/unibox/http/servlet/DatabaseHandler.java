@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.unibox.config.InternalConfig;
+import de.unibox.core.provider.Helper;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
@@ -55,7 +56,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
      * @throws JSONException
      *             the JSON exception
      */
-    public JSONArray convertToJson(final ResultSet rs) throws SQLException,
+    private JSONArray convertToJson(final ResultSet rs) throws SQLException,
             JSONException {
         final JSONArray json = new JSONArray();
         final ResultSetMetaData rsmd = rs.getMetaData();
@@ -141,7 +142,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                     this.log.debug("DatabaseHandler: select ranking table..");
                 }
                 query = new SelectionQuery(
-                        "SELECT @curRank := @curRank + 1 AS Rank, Name, Score FROM (SELECT Name, SUM(Scoring) AS Score FROM player INNER JOIN result WHERE player.PlayerID=result.PlayerID GROUP BY Name ORDER BY Score DESC) AS ranking, (SELECT @curRank := 0) r;");
+                        "SELECT @curRank := @curRank + 1 AS Rank, Name, Score, ID FROM (SELECT Name, player.PlayerID AS ID, SUM(Scoring) AS Score FROM player INNER JOIN result WHERE player.PlayerID=result.PlayerID GROUP BY Name ORDER BY Score DESC) AS ranking, (SELECT @curRank := 0) r;");
                 doQuery = true;
 
             } else if (requestedData.equals("games")) {
@@ -243,7 +244,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                     this.log.debug("DatabaseHandler: update player table..");
                 }
 
-                final String thisName = request.getParameter("name");
+                final String thisName = Helper.decodeBase64(request.getParameter("name"));
                 final int thisAdminRights = Integer.parseInt(request
                         .getParameter("adminrights"));
 

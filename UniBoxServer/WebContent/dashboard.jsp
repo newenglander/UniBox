@@ -15,6 +15,8 @@
 
 <link href="css/vendor/bootstrap.min.css" rel="stylesheet"
 	type="text/css">
+<link href="css/vendor/bootstrap-multiselect.css" rel="stylesheet"
+	type="text/css">
 <link href="css/vendor/jquery.dataTables.min.css" rel="stylesheet"
 	type="text/css">
 <link href="css/vendor/dataTables.responsive.css" rel="stylesheet"
@@ -201,66 +203,75 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<form class="form-horizontal" id="adminControlForm" role="form">
+						<form class="form-horizontal adminControlForm"
+							id="adminControlForm" role="form">
 							<fieldset>
 								<legend>Admin Dashboard</legend>
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="broadcastMessage">Message
-										Text</label>
+									<label class="col-md-4 control-label" for="createUserField">Create
+										User</label>
 									<div class="col-md-4">
-										<input id="broadcastMessage" name="broadcastMessage"
-											type="text" placeholder="Message.."
-											class="form-control input-md">
-
+										<input id="createUserField" name="createUserField" type="text"
+											placeholder="Username.." class="form-control input-md">
+										<span class="help-block">Default password: user</span> <label
+											class="createUserAdmin" for="isAdminCheckbox"> <input
+											type="checkbox" name="checkboxes" id="isAdminCheckbox"
+											value="1"> grant admin privilegs
+										</label>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="broadcastType">Message
-										Type</label>
+									<label class="col-md-4 control-label"></label>
 									<div class="col-md-4">
-										<select id="broadcastType" name="broadcastType"
-											class="form-control">
-											<option value="newsticker">as Newsticker</option>
-											<option value="popup">as Popup</option>
-											<option value="chatmessage">as Chat Message</option>
-											<option value="systemmessage">as System Message</option>
-											<option value="welcomemessage">as Welcome Message</option>
-										</select>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-md-4 control-label" for="sendBroadcast"></label>
-									<div class="col-md-4">
-										<button id="sendBroadcast" name="sendBroadcast"
-											class="btn btn-success">Send</button>
+										<button id="createUserBtn" name="createUserBtn"
+											class="btn btn-success">Create</button>
 									</div>
 								</div>
 								<hr class="divider">
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="selectDeleteUser">Delete
-										User</label>
+									<label class="col-md-4 control-label"
+										for="multiSelectDeleteUser">Delete User</label>
 									<div class="col-md-4">
-										<select id="selectDeleteUser" name="selectDeleteUser"
-											class="form-control">
-											<option value="1">UserA</option>
-											<option value="2">UserB</option>
-										</select>
+										<select id="multiSelectDeleteUser"
+											name="multiSelectDeleteUser[]" class="form-control"
+											multiple="multiple">
+										</select> <span class="help-block">..be patient by using the
+											"all" option!</span>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="addUser">Create
-										User</label>
+									<label class="col-md-4 control-label"></label>
 									<div class="col-md-4">
-										<input id="addUser" name="addUser" type="text"
-											placeholder="Username.." class="form-control input-md">
-										<span class="help-block">Default password: user</span>
+										<button id="deleteUserBtn" name="deleteUserBtn"
+											class="btn btn-danger">Delete</button>
+									</div>
+								</div>
+								<hr class="divider">
+								<div class="form-group">
+									<label class="col-md-4 control-label"
+										for="multiSelectDeleteGame">Delete Game</label>
+									<div class="col-md-4">
+										<select id="multiSelectDeleteGame"
+											name="multiSelectDeleteGame[]" class="form-control"
+											multiple="multiple">
+										</select> <span class="help-block">..Scores will remain.</span>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-md-4 control-label" for="sendBroadcast"></label>
+									<label class="col-md-4 control-label"></label>
 									<div class="col-md-4">
-										<button id="sendBroadcast" name="sendBroadcast"
-											class="btn btn-success">Create</button>
+										<button id="deleteGameBtn" name="deleteGameBtn"
+											class="btn btn-danger">Delete</button>
+									</div>
+								</div>
+								<hr class="divider">
+								<div class="form-group">
+									<label class="col-md-4 control-label" for="resetDb">Reset
+										Scores</label>
+									<div class="col-md-4">
+										<button id="resetScoresBtn" name="resetScoresBtn"
+											class="btn btn-warning">Reset</button>
+										<span class="help-block">..reset result table.</span>
 									</div>
 								</div>
 								<hr class="divider">
@@ -268,34 +279,10 @@
 									<label class="col-md-4 control-label" for="resetDb">Reset
 										Database</label>
 									<div class="col-md-4">
-										<button id="resetDb" name="resetDb" class="btn btn-danger">Reset</button>
-									</div>
-								</div>
-								<hr class="divider">
-								<div class="form-group">
-									<label class="col-md-4 control-label" for="resetUserDb">Reset
-										UserTable</label>
-									<div class="col-md-4">
-										<button id="resetUserDb" name="resetUserDb"
-											class="btn btn-warning">Reset</button>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label class="col-md-4 control-label" for="resetGameDb">Reset
-										GameTable</label>
-									<div class="col-md-4">
-										<button id="resetGameDb" name="resetGameDb"
-											class="btn btn-warning">Reset</button>
-									</div>
-								</div>
-								<hr class="divider">
-								<div class="form-group">
-									<label class="col-md-4 control-label" for="lockSystem">Lock
-										Platform</label>
-									<div class="col-md-4">
-										<button id="lockSystem" name="lockSystem"
-											class="btn btn-danger">Lock</button>
+										<button id="resetDbBtn" name="resetDbBtn"
+											class="btn btn-danger">Reset</button>
+										<span class="help-block">..drop all and create new
+											tables.</span>
 									</div>
 								</div>
 							</fieldset>
@@ -410,16 +397,17 @@
 
 	<script src="js/vendor/jquery.min.js" type="text/javascript"></script>
 	<script src="js/vendor/bootstrap.min.js" type="text/javascript"></script>
+	<script src="js/vendor/bootstrap-multiselect.js" type="text/javascript"></script>
 	<script src="js/vendor/jquery.dataTables.min.js" type="text/javascript"></script>
 	<script src="js/vendor/dataTables.responsive.min.js"
 		type="text/javascript"></script>
-	<script src="js/vendor/dataTables.bootstrap.js" type="text/javascript"></script>
 	<script src="js/vendor/dataTables.bootstrap.js" type="text/javascript"></script>
 	<script src="js/vendor/validator.min.js" type="text/javascript"></script>
 	<script src="js/vendor/sweet-alert.min.js" type="text/javascript"></script>
 	<script src="js/vendor/base64.js"></script>
 	<script src="js/main.js" type="text/javascript"></script>
-	<script src="js/app.js" type="text/javascript"></script><!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<script src="js/app.js" type="text/javascript"></script>
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 	<script src="js/vendor/ie10-viewport-bug-workaround.js"></script>
 
 </body>

@@ -62,6 +62,11 @@ body, .jumbotron {
 	border: white;
 }
 
+.multiselect-container.dropdown-menu {
+	background-color: white;
+	padding-bottom: 8px;
+}
+
 .nowrap {
 	white-space: nowrap;
 }
@@ -203,13 +208,16 @@ ul.pagination {
 	background-color: #E2001A !important;
 }
 
-.messengerFrame, .adminFrame {
+.messengerFrame {
 	position: absolute;
+	bottom: 0px;
+}
+
+.messengerFrame, .adminFrame {
 	display: block;
 	top: 50px;
 	right: 0px;
 	left: 0px;
-	bottom: 0px;
 	width: 100%;
 	background: rgba(235, 235, 236, 1);
 	-moz-transition: all 0.2s ease-out;
@@ -236,15 +244,30 @@ ul.pagination {
 	display: none;
 }
 
+.adminControlForm {
+	padding-top: 50px;
+}
+
+.adminControlForm fieldset div.form-group div div.btn-group, .adminControlForm fieldset div.form-group div div.btn-group button {
+	width: 100%;
+}
+
 .messengerContainer, .adminContainer {
 	position: absolute;
 	top: 0px;
-	bottom: 0px;
 	right: 0px;
 	left: 0px;
 	padding: 14px;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.messengerContainer {
+	bottom: 0px;
+}
+
+.adminContainer {
+	background-color: #EBEBEC; 
 }
 
 .messengerInput {
