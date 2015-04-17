@@ -15,15 +15,14 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `unibox`;
-INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (1, 'Koelle', '3022443b7e33a6a68756047e46b81bea');
-INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (0, 'user', '3022443b7e33a6a68756047e46b81bea');
-INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (0, 'Hans', '3022443b7e33a6a68756047e46b81bea');
-INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (0, 'Susi', '3022443b7e33a6a68756047e46b81bea');
-INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (0, 'Dana', '3022443b7e33a6a68756047e46b81bea');
-INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (0, 'Frank', '3022443b7e33a6a68756047e46b81bea');
+INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (1, 'Admin', '3022443b7e33a6a68756047e46b81bea');
+/*
+INSERT INTO `unibox`.`Player` (`AdminRights`, `Name`, `Password`) VALUES (0, 'Player', '3022443b7e33a6a68756047e46b81bea');
+*/
 
 COMMIT;
 
+/*
 -- -----------------------------------------------------
 -- Data for table `unibox`.`Game`
 -- -----------------------------------------------------
@@ -60,4 +59,4 @@ INSERT INTO `unibox`.`Queue` (`PlayerID`, `GameID`) VALUES (1, 1);
 INSERT INTO `unibox`.`Queue` (`PlayerID`, `GameID`) VALUES (2, 1);
 
 COMMIT;
-
+*/

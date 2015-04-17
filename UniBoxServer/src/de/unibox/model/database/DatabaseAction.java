@@ -15,10 +15,9 @@ import org.apache.log4j.Logger;
  *            the generic type
  */
 public abstract class DatabaseAction<T> {
-    
+
     /** The log. */
     protected Logger log = Logger.getLogger("UniBoxLogger");
-
 
     /** The sql string. */
     private String sqlString = null;

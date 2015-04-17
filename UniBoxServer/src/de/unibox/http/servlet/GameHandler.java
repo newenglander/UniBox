@@ -45,11 +45,7 @@ public class GameHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        response.setContentType("text/html");
         final PrintWriter out = response.getWriter();
-
-        final AbstractUser user = (AbstractUser) request.getSession()
-                .getAttribute("login.object");
 
         String action = null;
         int gameId = 0;
@@ -69,18 +65,23 @@ public class GameHandler extends ProtectedHttpServlet {
             }
 
         } catch (final Exception e) {
-            this.log.debug("GameHandler: could not retrieve relevant game");
+
+            this.log.debug(this.getClass().getSimpleName()
+                    + ": could not retrieve relevant game");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             out.print("invalid request\n");
             e.printStackTrace();
+
         } finally {
 
             if (InternalConfig.LOG_GAMEPOOL) {
                 if (game == null) {
-                    this.log.debug("GameHandler: switching " + user.getName()
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": switching " + super.thisUser.getName()
                             + " with " + action);
                 } else {
-                    this.log.debug("GameHandler: switching " + user.getName()
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": switching " + super.thisUser.getName()
                             + " with " + action + " for " + game);
                 }
             }
@@ -93,24 +94,24 @@ public class GameHandler extends ProtectedHttpServlet {
             case "join":
                 GamePool.getInstance();
                 final Game prevGame = GamePool.getInstance().getGameByPlayer(
-                        user);
+                        super.thisUser);
                 if (prevGame == null) {
-                    done = game.addPlayer(user);
-                    this.sendUpdateBroadcast(user);
+                    done = game.addPlayer(super.thisUser);
+                    this.sendUpdateBroadcast(super.thisUser);
                 } else if (prevGame != game) {
-                    prevGame.removePlayer(user);
-                    done = game.addPlayer(user);
-                    this.sendUpdateBroadcast(user);
+                    prevGame.removePlayer(super.thisUser);
+                    done = game.addPlayer(super.thisUser);
+                    this.sendUpdateBroadcast(super.thisUser);
                 } else {
                     errorMessage = "skipped:already_joined";
                 }
                 break;
             case "leave":
-                done = game.removePlayer(user);
-                this.sendUpdateBroadcast(user);
+                done = game.removePlayer(super.thisUser);
+                this.sendUpdateBroadcast(super.thisUser);
                 break;
             case "whichgame":
-                game = GamePool.getInstance().getGameByPlayer(user);
+                game = GamePool.getInstance().getGameByPlayer(super.thisUser);
                 if (game != null) {
                     gameid = game.getGameId();
                 } else {
@@ -136,7 +137,8 @@ public class GameHandler extends ProtectedHttpServlet {
 
             if (InternalConfig.LOG_GAMEPOOL) {
                 if (game != null) {
-                    this.log.debug("GameHandler: " + game);
+                    this.log.debug(this.getClass().getSimpleName() + ": "
+                            + game);
                 }
             }
         }

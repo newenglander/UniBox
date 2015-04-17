@@ -25,22 +25,25 @@ public class DatabaseQuery {
         if (DatabaseQuery.pool == null) {
             try {
                 if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log
-                            .debug("Query: initialize ConnectionPool with "
-                                    + SecurityLevel.USER);
+                    InternalConfig.log.debug(DatabaseQuery.class
+                            .getSimpleName()
+                            + ": initialize ConnectionPool with "
+                            + SecurityLevel.USER);
                 }
                 DatabasePools.initialize(SecurityLevel.USER);
                 if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log
-                            .debug("Query: retrieve ConnectionPool for "
-                                    + SecurityLevel.USER);
+                    InternalConfig.log.debug(DatabaseQuery.class
+                            .getSimpleName()
+                            + ": retrieve ConnectionPool for "
+                            + SecurityLevel.USER);
                 }
                 DatabaseQuery.pool = DatabasePools.getPool(SecurityLevel.USER);
             } catch (final Exception e) {
                 if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log
-                            .warn("Query: could not initialize ConnectionPool");
+                    InternalConfig.log.warn(DatabaseQuery.class.getSimpleName()
+                            + ": could not initialize ConnectionPool");
                 }
+                e.printStackTrace();
             }
         }
     }
@@ -58,7 +61,8 @@ public class DatabaseQuery {
         this.con.commit();
         DatabaseQuery.pool.returnConnection(this.con);
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: committed");
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+                    + ": committed");
         }
     }
 
@@ -69,10 +73,15 @@ public class DatabaseQuery {
      *             the SQL exception
      */
     public void connect() throws SQLException {
-        this.con = DatabaseQuery.pool.getConnection();
+        try {
+            this.con = DatabaseQuery.pool.getConnection();
+        } catch (final NullPointerException e) {
+            throw new SQLException("SQL Server offline?");
+        }
         this.con.setAutoCommit(false);
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: connected");
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+                    + ": connected");
         }
     }
 
@@ -88,8 +97,8 @@ public class DatabaseQuery {
     public PreparedStatement getQuery(final String statement)
             throws SQLException {
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: Preparing Query: "
-                    + statement);
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+                    + ": Preparing Query: " + statement);
         }
         final PreparedStatement query = this.con.prepareStatement(statement);
         return query;
@@ -107,8 +116,8 @@ public class DatabaseQuery {
     public PreparedStatement getUpdate(final String statement)
             throws SQLException {
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: Preparing Update: "
-                    + statement);
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+                    + ": Preparing Update: " + statement);
         }
         final PreparedStatement update = this.con.prepareStatement(statement);
         return update;
@@ -124,7 +133,8 @@ public class DatabaseQuery {
         this.con.rollback();
         DatabaseQuery.pool.returnConnection(this.con);
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseQuery: rollback");
+            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+                    + ": rollback");
         }
     }
 

@@ -10,10 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import de.unibox.config.InternalConfig;
-import de.unibox.model.user.AbstractUser;
 
 /**
  * The Class JavaScriptCommunicator.
@@ -34,19 +32,14 @@ public class JavaScriptCommunicator extends Communicator {
     @Override
     protected void doGet(final HttpServletRequest req,
             final HttpServletResponse res) throws ServletException, IOException {
-        res.setContentType("text/html");
-        res.setHeader("Cache-Control", "private");
-        res.setHeader("Pragma", "no-cache");
 
         req.setAttribute("format", ClientType.JAVASCRIPT);
 
-        final HttpSession session = req.getSession();
-        final AbstractUser user = (AbstractUser) session
-                .getAttribute("login.object");
-        user.setSessionId(session.getId());
+        super.thisUser.setSessionId(super.thisSession.getId());
 
         if (InternalConfig.LOG_AUTHENTIFICATION) {
-            this.log.debug("JavaScriptCommunicator: Get detected: " + user);
+            this.log.debug(JavaScriptCommunicator.class.getSimpleName()
+                    + ": Get detected: " + super.thisUser);
         }
 
         final PrintWriter writer = res.getWriter();
@@ -59,7 +52,8 @@ public class JavaScriptCommunicator extends Communicator {
             public void onComplete(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                     JavaScriptCommunicator.this.log
-                            .debug("JavaScriptCommunicator onComplete()");
+                            .debug(JavaScriptCommunicator.class.getSimpleName()
+                                    + " onComplete()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
             }
@@ -68,7 +62,8 @@ public class JavaScriptCommunicator extends Communicator {
             public void onError(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                     JavaScriptCommunicator.this.log
-                            .debug("JavaScriptCommunicator onError()");
+                            .debug(JavaScriptCommunicator.class.getSimpleName()
+                                    + " onError()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
             }
@@ -77,7 +72,8 @@ public class JavaScriptCommunicator extends Communicator {
             public void onStartAsync(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                     JavaScriptCommunicator.this.log
-                            .debug("JavaScriptCommunicator onStartAsync()");
+                            .debug(JavaScriptCommunicator.class.getSimpleName()
+                                    + " onStartAsync()");
                 }
             }
 
@@ -85,7 +81,8 @@ public class JavaScriptCommunicator extends Communicator {
             public void onTimeout(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                     JavaScriptCommunicator.this.log
-                            .debug("JavaScriptCommunicator onTimeout()");
+                            .debug(JavaScriptCommunicator.class.getSimpleName()
+                                    + " onTimeout()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
             }
@@ -104,22 +101,17 @@ public class JavaScriptCommunicator extends Communicator {
     protected void doPost(final HttpServletRequest req,
             final HttpServletResponse res) throws ServletException, IOException {
 
-        res.setContentType("text/plain");
-        res.setHeader("Cache-Control", "private");
-        res.setHeader("Pragma", "no-cache");
         req.setAttribute("format", ClientType.JAVASCRIPT);
         req.setCharacterEncoding("UTF-8");
 
         final String action = req.getParameter("action");
-        final HttpSession session = req.getSession();
-        final AbstractUser user = (AbstractUser) session
-                .getAttribute("login.object");
 
         if (InternalConfig.LOG_COMMUNICATION) {
-            this.log.debug("JavaScriptCommunicator: Post detected: " + user);
+            this.log.debug(JavaScriptCommunicator.class.getSimpleName()
+                    + ": Post detected: " + super.thisUser);
         }
 
-        super.switchAction(req, res, user, action);
+        super.switchAction(req, res, action);
     }
 
 }

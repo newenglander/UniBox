@@ -85,7 +85,8 @@ public class DatabasePools {
                 DatabasePools.userPool = new DatabaseConnection(props,
                         userRole.getConnectionCount());
                 if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log.info("ClassPools userPool is online");
+                    InternalConfig.log.info(DatabasePools.class.getSimpleName()
+                            + ": userPool is online");
                 }
                 break;
             } else {
@@ -105,21 +106,22 @@ public class DatabasePools {
                 DatabasePools.pagePool = new DatabaseConnection(props,
                         userRole.getConnectionCount());
                 if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log
-                            .info("ClassPools administratorPool is online");
+                    InternalConfig.log.info(DatabasePools.class.getSimpleName()
+                            + ": administratorPool is online");
                 }
                 break;
             } else {
                 if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log
-                            .info("ClassPools administratorPool already online");
+                    InternalConfig.log.info(DatabasePools.class.getSimpleName()
+                            + ": administratorPool already online");
                 }
                 break;
             }
         default:
             if (InternalConfig.LOG_DATABASE) {
                 InternalConfig.log
-                        .warn("ClassPools non valid configuration trys to instance new pool");
+                        .warn(DatabasePools.class.getSimpleName()
+                                + ": non valid configuration trys to instance new pool");
             }
             break;
         }
