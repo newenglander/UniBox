@@ -43,7 +43,7 @@ public class AuthHandler extends ProtectedHttpServlet {
     protected void doGet(final HttpServletRequest request,
             final HttpServletResponse response) throws ServletException,
             IOException {
-        
+
         final String action = request.getParameter("action");
 
         switch (action) {
@@ -138,7 +138,8 @@ public class AuthHandler extends ProtectedHttpServlet {
                 } catch (final SQLException e) {
 
                     if (InternalConfig.LOG_DATABASE) {
-                        this.log.debug(this.getClass().getSimpleName() + ": Could not update database: "
+                        this.log.debug(this.getClass().getSimpleName()
+                                + ": Could not update database: "
                                 + query.getSqlString());
                     }
                     e.printStackTrace();

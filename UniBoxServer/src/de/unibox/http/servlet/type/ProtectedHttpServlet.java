@@ -54,7 +54,7 @@ public class ProtectedHttpServlet extends HttpServlet {
         boolean isAuthed = false;
 
         // get session
-        thisSession = request.getSession();
+        this.thisSession = request.getSession();
 
         // create an abstract user object
         if (InternalConfig.LOG_AUTHENTIFICATION) {
@@ -260,7 +260,8 @@ public class ProtectedHttpServlet extends HttpServlet {
             if (InternalConfig.LOG_REQUEST_HEADER) {
                 final Enumeration<String> headerNames = request
                         .getHeaderNames();
-                this.log.debug(this.getClass().getSimpleName() + ": RequestHeader:");
+                this.log.debug(this.getClass().getSimpleName()
+                        + ": RequestHeader:");
                 while (headerNames.hasMoreElements()) {
                     final String headerName = headerNames.nextElement();
                     this.log.debug(headerName + ": "
@@ -269,7 +270,7 @@ public class ProtectedHttpServlet extends HttpServlet {
             }
 
             response = (HttpServletResponse) res;
-            
+
             // predefine standard response
             response.setContentType("text/html");
             response.setHeader("Cache-Control", "no-cache");

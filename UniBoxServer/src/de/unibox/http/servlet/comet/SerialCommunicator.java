@@ -38,7 +38,8 @@ public class SerialCommunicator extends Communicator {
         super.thisUser.setSessionId(super.thisSession.getId());
 
         if (InternalConfig.LOG_COMMUNICATION) {
-            this.log.debug(SerialCommunicator.class.getSimpleName() + ": Get detected: " + super.thisUser);
+            this.log.debug(SerialCommunicator.class.getSimpleName()
+                    + ": Get detected: " + super.thisUser);
         }
 
         final PrintWriter writer = res.getWriter();
@@ -50,8 +51,8 @@ public class SerialCommunicator extends Communicator {
             @Override
             public void onComplete(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                    SerialCommunicator.this.log
-                            .debug(SerialCommunicator.class.getSimpleName() + " onComplete()");
+                    SerialCommunicator.this.log.debug(SerialCommunicator.class
+                            .getSimpleName() + " onComplete()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
             }
@@ -59,8 +60,8 @@ public class SerialCommunicator extends Communicator {
             @Override
             public void onError(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                    SerialCommunicator.this.log
-                            .debug(SerialCommunicator.class.getSimpleName() + " onError()");
+                    SerialCommunicator.this.log.debug(SerialCommunicator.class
+                            .getSimpleName() + " onError()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
             }
@@ -68,16 +69,16 @@ public class SerialCommunicator extends Communicator {
             @Override
             public void onStartAsync(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                    SerialCommunicator.this.log
-                            .debug(SerialCommunicator.class.getSimpleName() + " onStartAsync()");
+                    SerialCommunicator.this.log.debug(SerialCommunicator.class
+                            .getSimpleName() + " onStartAsync()");
                 }
             }
 
             @Override
             public void onTimeout(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                    SerialCommunicator.this.log
-                            .debug(SerialCommunicator.class.getSimpleName() + " onTimeout()");
+                    SerialCommunicator.this.log.debug(SerialCommunicator.class
+                            .getSimpleName() + " onTimeout()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
             }
@@ -103,8 +104,8 @@ public class SerialCommunicator extends Communicator {
         final String action = req.getParameter("action");
 
         if (InternalConfig.LOG_COMMUNICATION) {
-            this.log.debug(SerialCommunicator.class.getSimpleName() + ": Post detected: "
-                    + super.thisUser);
+            this.log.debug(SerialCommunicator.class.getSimpleName()
+                    + ": Post detected: " + super.thisUser);
         }
 
         super.switchAction(req, res, action);

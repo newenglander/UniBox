@@ -412,7 +412,7 @@ public class Communicator extends ProtectedHttpServlet {
                  * if you got a SocketException traced to this point after
                  * logout and login in a short period of time, read this:
                  * https://bz.apache.org/bugzilla/show_bug.cgi?id=57683
-                 * 
+                 *
                  * It depends on your Tomcat version and can be ignored.
                  */
                 acWriter.flush();

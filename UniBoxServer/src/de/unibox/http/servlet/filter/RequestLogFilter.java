@@ -65,13 +65,14 @@ public class RequestLogFilter implements Filter {
                 status.append(((HttpServletResponse) response).getStatus());
             }
             if (query.toString().equals("?null")) {
-                InternalConfig.log.debug(this.getClass().getSimpleName() + ": CODE: " + status + ", TIME: "
-                        + (aft - bef) + "ms, TYPE: " + method + ", URL: "
-                        + url.toString());
+                InternalConfig.log.debug(this.getClass().getSimpleName()
+                        + ": CODE: " + status + ", TIME: " + (aft - bef)
+                        + "ms, TYPE: " + method + ", URL: " + url.toString());
             } else {
-                InternalConfig.log.debug(this.getClass().getSimpleName() + ": CODE: " + status + ", TIME: "
-                        + (aft - bef) + "ms, TYPE: " + method + ", URL: "
-                        + url.toString() + query.toString());
+                InternalConfig.log.debug(this.getClass().getSimpleName()
+                        + ": CODE: " + status + ", TIME: " + (aft - bef)
+                        + "ms, TYPE: " + method + ", URL: " + url.toString()
+                        + query.toString());
             }
 
         } else {

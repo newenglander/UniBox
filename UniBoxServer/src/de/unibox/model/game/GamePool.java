@@ -30,6 +30,9 @@ public class GamePool {
 
     /**
      * Instantiates a new game pool.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     private GamePool() throws IOException {
         if (InternalConfig.LOG_GAMEPOOL) {
@@ -126,6 +129,9 @@ public class GamePool {
 
     /**
      * Initialize.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     private void initialize() throws IOException {
 
@@ -177,6 +183,9 @@ public class GamePool {
 
     /**
      * Update.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
     public void update() throws IOException {
         this.initialize();

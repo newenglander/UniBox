@@ -78,7 +78,8 @@ public class AdminHandler extends AdminHttpServlet {
             if (createData.equals("player")) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug(this.getClass().getSimpleName() + ": update player table..");
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": update player table..");
                 }
 
                 final String thisName = Helper.decodeBase64(request
@@ -96,7 +97,8 @@ public class AdminHandler extends AdminHttpServlet {
             } else if (createData.equals("category")) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug(this.getClass().getSimpleName() + ": update category table..");
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": update category table..");
                 }
 
                 final String thisGametitle = request.getParameter("gametitle");

@@ -93,7 +93,7 @@ public class AsyncContextParser {
         HttpServletRequest req = null;
         try {
             req = (HttpServletRequest) thisContext.getRequest();
-        } catch (IllegalStateException e) {
+        } catch (final IllegalStateException e) {
             if (InternalConfig.LOG_ASYNC_SESSIONS) {
                 e.printStackTrace();
             }

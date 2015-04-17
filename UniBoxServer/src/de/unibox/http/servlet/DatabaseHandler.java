@@ -241,7 +241,8 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             if (createData.equals("game")) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug(this.getClass().getSimpleName() + ": update game table..");
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": update game table..");
                 }
 
                 final String thisGameName = request.getParameter("gamename");
@@ -269,7 +270,8 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             } else if (createData.equals("result")) {
 
                 if (InternalConfig.LOG_DATABASE) {
-                    this.log.debug(this.getClass().getSimpleName() + ": update result table..");
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": update result table..");
                 }
 
                 final int thisGameID = Integer.parseInt(request
@@ -304,7 +306,8 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 } catch (final SQLException e) {
 
                     if (InternalConfig.LOG_DATABASE) {
-                        this.log.debug(this.getClass().getSimpleName() + ": Could not update database: "
+                        this.log.debug(this.getClass().getSimpleName()
+                                + ": Could not update database: "
                                 + query.getSqlString());
                     }
                     e.printStackTrace();

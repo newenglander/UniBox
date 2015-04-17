@@ -32,9 +32,8 @@ public class HttpSessionCollector implements HttpSessionListener {
     public static ArrayList<HttpSession> findByClientType(
             final ClientType clientType) {
         if (InternalConfig.LOG_AUTHENTIFICATION) {
-            InternalConfig.log
-                    .debug(HttpSessionCollector.class.getSimpleName() + ": tries to find session by ClientType: "
-                            + clientType);
+            InternalConfig.log.debug(HttpSessionCollector.class.getSimpleName()
+                    + ": tries to find session by ClientType: " + clientType);
         }
         final ArrayList<HttpSession> returnThis = new ArrayList<HttpSession>();
         /*
