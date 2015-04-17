@@ -38,9 +38,9 @@ public class DatabaseConnection {
             ClassNotFoundException {
         this.props = props;
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log
-                    .debug("DatabaseConnection: new instance [connectionCount= "
-                            + initialConnections + "] " + props.toString());
+            InternalConfig.log.debug(this.getClass().getSimpleName()
+                    + ": new instance [connectionCount= " + initialConnections
+                    + "] " + props.toString());
         }
         this.initConnections(props, initialConnections);
     }
@@ -113,7 +113,7 @@ public class DatabaseConnection {
             this.connections.put(con, Boolean.FALSE);
         }
         if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug("DatabaseConnection: "
+            InternalConfig.log.debug(this.getClass().getSimpleName() + ": "
                     + initialConnections + " Connections etablished");
         }
     }
@@ -128,8 +128,8 @@ public class DatabaseConnection {
         if (this.connections.containsKey(returned)) {
             this.connections.put(returned, Boolean.FALSE);
             if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log
-                        .debug("DatabaseConnection connection returned");
+                InternalConfig.log.debug(this.getClass().getSimpleName()
+                        + ": connection returned");
             }
         }
     }

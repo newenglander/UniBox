@@ -9,10 +9,10 @@ var app = {
 		app.bind();
 		app.login();
 		app.listen();
-		app.initGameTable();
-		app.initRankingTable();
-		app.updateGameTable();
-		app.updateRankingTable();
+		app.initGameData();
+		app.initUserData();
+		app.updateGameData();
+		app.updateUserData();
 		app.gotActiveGame();
 		app.updateFormulars();
 	},
@@ -161,7 +161,7 @@ var app = {
 									swal("Good job!", "Game created!",
 											"success");
 									$('#createGameForm').trigger("reset");
-									app.updateGameTable();
+									app.updateGameData();
 								},
 								error : function(e) {
 									app.newsticker("warning",
@@ -225,6 +225,67 @@ var app = {
 										async : false
 									});
 						});
+		$('#adminControlForm').on('submit', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+		});
+		$('#createUserBtn').on(
+				'click',
+				function(e) {
+					var name = $("#createUserField").val();
+					if (name != "") {
+						console.log(name);
+						var isAdmin = 0;
+						if ($("#isAdminCheckbox").prop('checked')) {
+							isAdmin = 1;
+						}
+						jQuery.ajax({
+							type : "POST",
+							url : app.url + app.dataSource,
+							data : "create=player&name=" + Base64.encode(name) + "&adminrights=" + isAdmin,
+							success : function(data) {
+								console.log(data);
+								swal("Good Job!", "User created..!", "success");
+							},
+							error : function(e) {
+								console.log(e);
+								swal("Ups..", "Could not create user " + name + "..!", "warning");
+							},
+							async : false
+						});
+					} else {
+						swal("Ups..", "Please type a name..", "warning");
+						$('#createUserField').focus();
+					}
+				});
+		$('#deleteUserBtn').on('click', function(e) {
+			var json = {
+				"action" : "delete",
+				"data" : JSON.stringify($("#multiSelectDeleteUser").val())
+			};
+			if (json["data"] != "null") {
+				console.log(json);
+			} else {
+				swal("Ups..", "No user(s) selected..", "warning");
+			}
+		});
+		$('#deleteGameBtn').on('click', function(e) {
+			var json = {
+				"action" : "delete",
+				"data" : JSON.stringify($("#multiSelectDeleteGame").val())
+			};
+			if (json["data"] != "null") {
+				console.log(json);
+			} else {
+				swal("Ups..", "No game(s) selected..", "warning");
+			}
+		});
+		$('#resetScoresBtn').on('click', function(e) {
+			console.log("resetScores");
+		});
+		$('#resetDbBtn').on('click', function(e) {
+			console.log("resetDb");
+		});
 		$('#newGameModal').on('shown.bs.modal', function() {
 			$('#gameNameInput').focus();
 		});
@@ -271,8 +332,8 @@ var app = {
 			type : "success",
 			timer : "2000"
 		});
-		app.updateGameTable();
-		app.updateRankingTable();
+		app.updateGameData();
+		app.updateUserData();
 		app.listen();
 	},
 	login : function() {
@@ -320,7 +381,7 @@ var app = {
 	redirect : function(reason) {
 		window.location.replace("/UniBox/?error=" + reason);
 	},
-	initGameTable : function() {
+	initGameData : function() {
 		var gameTable = $('#gamePanel').dataTable({
 			"pagingType" : "simple",
 			"iDisplayLength" : 10,
@@ -342,7 +403,7 @@ var app = {
 			$("#gamePanel_filter input").keyup()
 		});
 	},
-	updateGameTable : function() {
+	updateGameData : function() {
 		var gameDataTable = $('#gamePanel').DataTable();
 		jQuery.ajax({
 			type : "GET",
@@ -356,8 +417,18 @@ var app = {
 					gameDataTable.row.add([ gameJoinLink, data[i].GameID,
 							data[i].Gametitle, data[i].GameName,
 							data[i].NumberOfPlayers ]);
+					// update admin panel too
+					$("#multiSelectDeleteGame").append(
+							"<option value='" + data[i].GameID + "'>"
+									+ data[i].GameName + "</option>");
+
 				}
 				gameDataTable.draw();
+				// update admin panel too
+				$('#multiSelectDeleteGame').multiselect({
+					includeSelectAllOption : true,
+					enableFiltering : true
+				});
 			},
 			error : function() {
 				app.newsticker("warning", "Could not update game table..!");
@@ -373,7 +444,7 @@ var app = {
 			async : false
 		});
 	},
-	initRankingTable : function() {
+	initUserData : function() {
 		var rankingTable = $('#rankingPanel').dataTable({
 			"pagingType" : "simple",
 			"iDisplayLength" : 10,
@@ -395,7 +466,7 @@ var app = {
 			$("#rankingPanel_filter input").keyup()
 		});
 	},
-	updateRankingTable : function() {
+	updateUserData : function() {
 		var rankingDataTable = $('#rankingPanel').DataTable();
 		jQuery.ajax({
 			type : "GET",
@@ -405,8 +476,18 @@ var app = {
 				for ( var i in data) {
 					rankingDataTable.row.add([ data[i].Rank, data[i].Name,
 							data[i].Score ]);
+					// update admin panel too
+					$("#multiSelectDeleteUser").append(
+							"<option value='" + data[i].ID + "'>"
+									+ data[i].Name + "</option>");
+
 				}
 				rankingDataTable.draw();
+				// update admin panel too
+				$('#multiSelectDeleteUser').multiselect({
+					includeSelectAllOption : true,
+					enableFiltering : true
+				});
 			},
 			error : function() {
 				app.newsticker("warning", "Could not update ranking table..!");
@@ -451,7 +532,7 @@ var app = {
 			type : "GET",
 			url : app.url + "/Game?action=join&gameid=" + id,
 			success : function(data) {
-				app.updateGameTable();
+				app.updateGameData();
 				var linkElement = $("#game-" + id);
 				linkElement
 						.attr("href", "javascript:app.leaveGame(" + id + ")");
@@ -477,7 +558,7 @@ var app = {
 					type : "GET",
 					url : app.url + "/Game?action=leave&gameid=" + id,
 					success : function(data) {
-						app.updateGameTable();
+						app.updateGameData();
 						var linkElement = $("#game-" + id);
 						linkElement.attr("href", "javascript:app.joinGame("
 								+ id + ")");

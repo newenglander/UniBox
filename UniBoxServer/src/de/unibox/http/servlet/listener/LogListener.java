@@ -59,7 +59,8 @@ public class LogListener implements ServletContextListener {
             PropertyConfigurator.configure(prefix + file);
             if (InternalConfig.LOG_AUTHENTIFICATION) {
                 InternalConfig.log
-                        .debug("LogListener: Logging started for application: "
+                        .info(LogListener.class.getSimpleName()
+                                + ": Logging started for application: "
                                 + prefix + file);
             }
         }

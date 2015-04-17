@@ -16,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.sun.media.sound.InvalidFormatException;
 
@@ -87,7 +86,7 @@ public class Communicator extends ProtectedHttpServlet {
     @Override
     public void destroy() {
         if (InternalConfig.LOG_THREADS) {
-            this.log.debug("Communicator: destroyed");
+            this.log.debug(this.getClass().getSimpleName() + ": destroyed");
         }
         Communicator.asyncContextQueue.clear();
         this.notifierThread.interrupt();
@@ -104,19 +103,12 @@ public class Communicator extends ProtectedHttpServlet {
     protected void doGet(final HttpServletRequest req,
             final HttpServletResponse res) throws ServletException, IOException {
 
-        res.setContentType("text/html");
-        res.setHeader("Cache-Control", "private");
-        res.setHeader("Pragma", "no-cache");
-
         req.setAttribute("format", ClientType.PLAIN);
-
-        final HttpSession session = req.getSession();
-        final AbstractUser user = (AbstractUser) session
-                .getAttribute("login.object");
-        user.setSessionId(session.getId());
+        super.thisUser.setSessionId(super.thisSession.getId());
 
         if (InternalConfig.LOG_COMMUNICATION) {
-            this.log.debug("Communicator: Get detected: " + user);
+            this.log.debug(Communicator.class.getSimpleName()
+                    + ": Get detected: " + super.thisUser);
         }
 
         final PrintWriter writer = res.getWriter();
@@ -128,7 +120,8 @@ public class Communicator extends ProtectedHttpServlet {
             @Override
             public void onComplete(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                    Communicator.this.log.debug("Communicator onComplete()");
+                    Communicator.this.log.debug(Communicator.class
+                            .getSimpleName() + " onComplete()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
                 ac.complete();
@@ -137,7 +130,8 @@ public class Communicator extends ProtectedHttpServlet {
             @Override
             public void onError(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                    Communicator.this.log.debug("Communicator onError()");
+                    Communicator.this.log.debug(Communicator.class
+                            .getSimpleName() + " onError()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
                 ac.complete();
@@ -146,14 +140,16 @@ public class Communicator extends ProtectedHttpServlet {
             @Override
             public void onStartAsync(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                    Communicator.this.log.debug("Communicator onStartAsync()");
+                    Communicator.this.log.debug(Communicator.class
+                            .getSimpleName() + " onStartAsync()");
                 }
             }
 
             @Override
             public void onTimeout(final AsyncEvent event) throws IOException {
                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                    Communicator.this.log.debug("Communicator onTimeout()");
+                    Communicator.this.log.debug(Communicator.class
+                            .getSimpleName() + " onTimeout()");
                 }
                 Communicator.asyncContextQueue.remove(ac);
                 ac.complete();
@@ -174,19 +170,15 @@ public class Communicator extends ProtectedHttpServlet {
             final HttpServletResponse res) throws ServletException, IOException {
 
         res.setContentType("text/plain");
-        res.setHeader("Cache-Control", "private");
-        res.setHeader("Pragma", "no-cache");
         req.setAttribute("format", ClientType.PLAIN);
         req.setCharacterEncoding("UTF-8");
 
         final String action = req.getParameter("action");
-        final HttpSession session = req.getSession();
-        final AbstractUser user = (AbstractUser) session
-                .getAttribute("login.object");
 
         if (InternalConfig.LOG_COMMUNICATION) {
-            this.log.debug("Communicator: Detected: POST, Action: " + action
-                    + ", User: " + user);
+            this.log.debug(Communicator.class.getSimpleName()
+                    + ": Detected: POST, Action: " + action + ", User: "
+                    + super.thisUser);
         }
 
         final StringBuilder buffer = new StringBuilder();
@@ -196,7 +188,7 @@ public class Communicator extends ProtectedHttpServlet {
             buffer.append(line);
         }
 
-        this.switchAction(req, res, user, action);
+        this.switchAction(req, res, action);
     }
 
     /**
@@ -225,7 +217,8 @@ public class Communicator extends ProtectedHttpServlet {
         super.init(config);
 
         if (InternalConfig.LOG_THREADS) {
-            this.log.debug("Communicator: deploy new thread");
+            this.log.debug(Communicator.class.getSimpleName()
+                    + ": deploy new thread");
         }
 
         final Runnable notifierRunnable = new Runnable() {
@@ -285,7 +278,9 @@ public class Communicator extends ProtectedHttpServlet {
 
                                 if (InternalConfig.LOG_COMMUNICATION) {
                                     Communicator.this.log
-                                            .debug("Communicator run(): ClientType="
+                                            .debug(Communicator.class
+                                                    .getSimpleName()
+                                                    + " run(): ClientType="
                                                     + remoteType
                                                     + ", MessageType="
                                                     + messageType
@@ -300,7 +295,9 @@ public class Communicator extends ProtectedHttpServlet {
                                                 cMessage.getName())) {
                                             if (InternalConfig.LOG_COMMUNICATION) {
                                                 Communicator.this.log
-                                                        .debug("Communicator run(): NOT REFLECTING JS_COMMAND: ClientType="
+                                                        .debug(Communicator.class
+                                                                .getSimpleName()
+                                                                + " run(): NOT REFLECTING JS_COMMAND: ClientType="
                                                                 + remoteType
                                                                 + ", MessageType="
                                                                 + messageType
@@ -336,7 +333,9 @@ public class Communicator extends ProtectedHttpServlet {
                                             // context
                                             if (InternalConfig.LOG_COMMUNICATION) {
                                                 Communicator.this.log
-                                                        .debug("Communicator skipped message from "
+                                                        .debug(Communicator.class
+                                                                .getSimpleName()
+                                                                + " skipped message from "
                                                                 + cMessage
                                                                         .getName()
                                                                 + " for "
@@ -354,10 +353,14 @@ public class Communicator extends ProtectedHttpServlet {
                                 default:
                                     if (InternalConfig.LOG_COMMUNICATION) {
                                         Communicator.this.log
-                                                .warn("Typeless message detected: "
+                                                .warn(Communicator.class
+                                                        .getSimpleName()
+                                                        + "Typeless message detected: "
                                                         + cMessage.toString());
                                         Communicator.this.log
-                                                .debug("Communicator: Typeless message detected: "
+                                                .debug(Communicator.class
+                                                        .getSimpleName()
+                                                        + ": Typeless message detected: "
                                                         + cMessage.toString());
                                     }
                                     break;
@@ -366,7 +369,9 @@ public class Communicator extends ProtectedHttpServlet {
                             } catch (final IOException e1) {
                                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                                     Communicator.this.log
-                                            .debug("aCommunicator: response already committed. removing: "
+                                            .debug(Communicator.class
+                                                    .getSimpleName()
+                                                    + ": response already committed. removing: "
                                                     + ac);
                                 }
                                 Communicator.asyncContextQueue.remove(ac);
@@ -374,7 +379,9 @@ public class Communicator extends ProtectedHttpServlet {
                             } catch (final IllegalStateException e2) {
                                 if (InternalConfig.LOG_ASYNC_SESSIONS) {
                                     Communicator.this.log
-                                            .debug("Communicator: catched IllegalStateException. Response already committed. removing: "
+                                            .debug(Communicator.class
+                                                    .getSimpleName()
+                                                    + ": catched IllegalStateException. Response already committed. removing: "
                                                     + ac);
                                 }
                                 Communicator.asyncContextQueue.remove(ac);
@@ -384,8 +391,9 @@ public class Communicator extends ProtectedHttpServlet {
                     } catch (final InterruptedException e2) {
                         done = true;
                         if (InternalConfig.LOG_THREADS) {
-                            Communicator.this.log
-                                    .warn("Communicator shutdown and rebooting..");
+                            Communicator.this.log.warn(Communicator.class
+                                    .getSimpleName()
+                                    + " shutdown and rebooting..");
                             e2.printStackTrace();
                         }
                         this.run();
@@ -394,12 +402,19 @@ public class Communicator extends ProtectedHttpServlet {
             }
 
             private void send(final PrintWriter acWriter,
-                    final String concreteMessage) {
+                    final String concreteMessage) throws IOException {
                 if (InternalConfig.LOG_COMMUNICATION) {
-                    Communicator.this.log.debug("Communicator says: "
-                            + concreteMessage);
+                    Communicator.this.log.debug(Communicator.class
+                            .getSimpleName() + " says: " + concreteMessage);
                 }
                 acWriter.println(concreteMessage);
+                /**
+                 * if you got a SocketException traced to this point after
+                 * logout and login in a short period of time, read this:
+                 * https://bz.apache.org/bugzilla/show_bug.cgi?id=57683
+                 *
+                 * It depends on your Tomcat version and can be ignored.
+                 */
                 acWriter.flush();
             }
         };
@@ -433,8 +448,6 @@ public class Communicator extends ProtectedHttpServlet {
      *            the req
      * @param res
      *            the res
-     * @param user
-     *            the user
      * @param action
      *            the action
      * @throws ServletException
@@ -443,14 +456,16 @@ public class Communicator extends ProtectedHttpServlet {
      *             Signals that an I/O exception has occurred.
      */
     protected void switchAction(final HttpServletRequest req,
-            final HttpServletResponse res, final AbstractUser user,
-            final String action) throws ServletException, IOException {
+            final HttpServletResponse res, final String action)
+            throws ServletException, IOException {
 
         if ("connect".equals(action)) {
 
             final CommunicatorMessage notifyMessage = this.generateCommand(
-                    MessageType.SYSTEM, this.getClass().getSimpleName(),
-                    Helper.encodeBase64(user.getName() + " has joined."));
+                    MessageType.SYSTEM,
+                    this.getClass().getSimpleName(),
+                    Helper.encodeBase64(super.thisUser.getName()
+                            + " has joined."));
             this.notify(notifyMessage);
 
             res.setStatus(HttpServletResponse.SC_OK);
@@ -467,13 +482,14 @@ public class Communicator extends ProtectedHttpServlet {
                         .getAttribute("format");
 
                 if (InternalConfig.LOG_COMMUNICATION) {
-                    this.log.debug("Communicator switchAction: " + clientType);
+                    this.log.debug(Communicator.class.getSimpleName()
+                            + " switchAction: " + clientType);
                 }
 
                 switch (clientType) {
                 case JAVASCRIPT:
                     cMessage = this.generateCommand(MessageType.CHAT,
-                            user.getName(), messageString);
+                            super.thisUser.getName(), messageString);
                     break;
                 case SERIAL:
                     cMessage = ObjectSerializerImpl.stringToObject(
@@ -481,13 +497,16 @@ public class Communicator extends ProtectedHttpServlet {
                     break;
                 case PLAIN:
                     if (InternalConfig.LOG_COMMUNICATION) {
-                        this.log.warn("UNHANDLED PLAIN MESSAGE: "
-                                + user.getName() + ": " + messageString);
+                        this.log.warn(Communicator.class.getSimpleName()
+                                + ": UNHANDLED PLAIN MESSAGE: "
+                                + super.thisUser.getName() + ": "
+                                + messageString);
                     }
                     break;
                 default:
                     if (InternalConfig.LOG_COMMUNICATION) {
-                        this.log.warn("Communicator suppressing default message: "
+                        this.log.warn(Communicator.class.getSimpleName()
+                                + " suppressing default message: "
                                 + messageString);
                     }
                     throw new InvalidFormatException(
@@ -499,7 +518,8 @@ public class Communicator extends ProtectedHttpServlet {
                 e.printStackTrace();
             } finally {
                 if (InternalConfig.LOG_COMMUNICATION) {
-                    this.log.debug("Recieving: " + cMessage);
+                    this.log.debug(Communicator.class.getSimpleName()
+                            + ": Recieving: " + cMessage);
                 }
                 this.notify(cMessage);
                 res.setStatus(HttpServletResponse.SC_OK);

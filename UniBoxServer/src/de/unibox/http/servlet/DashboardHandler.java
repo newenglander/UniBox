@@ -8,10 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.unibox.http.servlet.beans.AdminBean;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
-import de.unibox.model.user.AbstractUser;
-import de.unibox.model.user.AdministratorUser;
 
 /**
  * The Class DashboardHandler.
@@ -41,23 +38,7 @@ public class DashboardHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        response.setContentType("text/html");
-
-        final AbstractUser user = (AbstractUser) request.getSession()
-                .getAttribute("login.object");
-
-        if (user instanceof AdministratorUser) {
-            final Object adminObj = request.getSession().getAttribute("admin");
-            AdminBean adminBean = null;
-            if ((adminObj != null) && (adminObj instanceof AdminBean)) {
-                adminBean = (AdminBean) adminObj;
-            } else {
-                adminBean = new AdminBean();
-                request.getSession().setAttribute("admin", adminBean);
-                adminBean
-                        .setAdminMenu("<li><a class='whiteText' id='triggerAdmin' href='#'>Administration</a></li>");
-            }
-        }
+        super.validateUserBean();
 
         final RequestDispatcher rd = request
                 .getRequestDispatcher("/dashboard.jsp");

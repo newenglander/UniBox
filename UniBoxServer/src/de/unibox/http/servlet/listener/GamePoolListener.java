@@ -1,8 +1,11 @@
 package de.unibox.http.servlet.listener;
 
+import java.io.IOException;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import de.unibox.config.InternalConfig;
 import de.unibox.model.game.GamePool;
 
 /**
@@ -38,7 +41,17 @@ public class GamePoolListener implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent event) {
 
         // initialize game pool singleton
-        GamePool.getInstance();
+        try {
+            InternalConfig.log.info(GamePoolListener.class.getSimpleName()
+                    + ": GamePool initialization..");
+            GamePool.getInstance();
+        } catch (final IOException e) {
+            if (InternalConfig.LOG_DATABASE) {
+                InternalConfig.log.warn(GamePoolListener.class.getSimpleName()
+                        + ": GamePool initialization failed!");
+            }
+            e.printStackTrace();
+        }
 
     }
 

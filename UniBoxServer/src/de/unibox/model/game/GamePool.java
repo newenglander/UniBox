@@ -1,5 +1,6 @@
 package de.unibox.model.game;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class GamePool {
     /** The instance. */
     private static GamePool instance;
 
-    public static GamePool getInstance() {
+    public static GamePool getInstance() throws IOException {
         if (GamePool.instance == null) {
             GamePool.instance = new GamePool();
         }
@@ -29,8 +30,11 @@ public class GamePool {
 
     /**
      * Instantiates a new game pool.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    private GamePool() {
+    private GamePool() throws IOException {
         if (InternalConfig.LOG_GAMEPOOL) {
             InternalConfig.log.debug(this.getClass().getSimpleName()
                     + ": constructor()");
@@ -125,8 +129,11 @@ public class GamePool {
 
     /**
      * Initialize.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    private void initialize() {
+    private void initialize() throws IOException {
 
         if (InternalConfig.LOG_GAMEPOOL) {
             InternalConfig.log.debug(this.getClass().getSimpleName()
@@ -158,30 +165,29 @@ public class GamePool {
             }
             transaction.commit();
 
+            if (InternalConfig.LOG_DATABASE) {
+                InternalConfig.log.debug(this.getClass().getSimpleName()
+                        + ": game pool loaded and available!");
+            }
+
         } catch (final SQLException e) {
             if (InternalConfig.LOG_DATABASE) {
                 InternalConfig.log.debug(this.getClass().getSimpleName()
                         + ": Could not query game table.");
             }
             e.printStackTrace();
-        } finally {
-            if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log.debug(this.getClass().getSimpleName()
-                        + ": game pool loaded..");
-            }
-        }
-
-        if (InternalConfig.LOG_GAMEPOOL) {
-            InternalConfig.log.debug(this.getClass().getSimpleName()
-                    + ": available!");
+            throw new IOException("Could not connect to Database!");
         }
 
     }
 
     /**
      * Update.
+     *
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
      */
-    public void update() {
+    public void update() throws IOException {
         this.initialize();
     }
 

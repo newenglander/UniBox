@@ -76,12 +76,11 @@ CREATE TABLE IF NOT EXISTS `unibox`.`Result` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
+/*
 -- -----------------------------------------------------
 -- Table `unibox`.`Queue`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `unibox`.`Queue` ;
-
 CREATE TABLE IF NOT EXISTS `unibox`.`Queue` (
   `QueueID` INT NOT NULL AUTO_INCREMENT,
   `PlayerID` INT NOT NULL,
@@ -94,13 +93,13 @@ CREATE TABLE IF NOT EXISTS `unibox`.`Queue` (
     REFERENCES `unibox`.`Player` (`PlayerID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `FKQueueGame`
+    CONSTRAINT `FKQueueGame`
     FOREIGN KEY (`GameID`)
     REFERENCES `unibox`.`Game` (`GameID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
+*/
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
