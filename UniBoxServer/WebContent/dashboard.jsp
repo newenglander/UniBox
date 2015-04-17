@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<jsp:useBean id="admin" class="de.unibox.http.servlet.beans.AdminBean"
+<jsp:useBean id="userbean" class="de.unibox.http.servlet.beans.UserBean"
 	scope="session" />
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +31,8 @@
 <![endif]-->
 
 <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
-<body>
+<body
+	id="SESSION-<jsp:getProperty name="userbean" property="session" />">
 	<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
@@ -46,10 +47,12 @@
 			</div>
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav">
+					<li><a class="whiteText userName" href="#">Hey, <jsp:getProperty
+								name="userbean" property="username" /></a></li>
 					<li><a class="whiteText btnActive" id="triggerDashboard"
 						href="#">Dashboard</a></li>
 					<li><a class="whiteText" id="triggerChat" href="#">Chat</a></li>
-					<jsp:getProperty name="admin" property="adminMenu" />
+					<jsp:getProperty name="userbean" property="adminMenu" />
 					<li class="dropdown"><a href="#" class="dropdown-toggle"
 						data-toggle="dropdown" role="button">Options <b class="caret"></b></a>
 						<ul class="dropdown-menu">

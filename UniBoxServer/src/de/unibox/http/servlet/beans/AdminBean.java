@@ -11,31 +11,25 @@ public class AdminBean implements Serializable {
     private static final long serialVersionUID = 6856231816699516062L;
 
     /** The admin menu. */
-    private String adminMenu = "";
+    private String adminMenu;
 
-    /** The admin url. */
-    private String adminUrl = "";
+    public AdminBean() {
+        super();
+    }
 
     /**
      * Instantiates a new admin bean.
      */
-    public AdminBean() {
+    public AdminBean(boolean isAdmin) {
+        if (isAdmin) {
+            this.adminMenu = "<li><a class='whiteText' id='triggerAdmin' href='#'>Administration</a></li>";
+        } else {
+            this.adminMenu = "";
+        }
     }
 
     public String getAdminMenu() {
         return this.adminMenu;
-    }
-
-    public String getAdminUrl() {
-        return this.adminUrl;
-    }
-
-    public void setAdminMenu(final String adminMenu) {
-        this.adminMenu = adminMenu;
-    }
-
-    public void setAdminUrl(final String adminUrl) {
-        this.adminUrl = adminUrl;
     }
 
 }

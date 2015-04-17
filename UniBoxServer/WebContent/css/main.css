@@ -29,6 +29,11 @@ body, .jumbotron {
 	background-color: #E2001A;
 }
 
+.navbar-header, ul.nav.navbar-nav li a.userName:hover {
+	background-color: #666666;
+	cursor: default;
+}
+
 .navbar-inverse .navbar-toggle:hover {
 	background-color: white;
 	border-color: #E2001A;

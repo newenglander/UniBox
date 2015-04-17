@@ -76,30 +76,30 @@ CREATE TABLE IF NOT EXISTS `unibox`.`Result` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
+/*
 -- -----------------------------------------------------
 -- Table `unibox`.`Queue`
 -- -----------------------------------------------------
---DROP TABLE IF EXISTS `unibox`.`Queue` ;
---CREATE TABLE IF NOT EXISTS `unibox`.`Queue` (
---  `QueueID` INT NOT NULL AUTO_INCREMENT,
---  `PlayerID` INT NOT NULL,
---  `GameID` INT NOT NULL,
---  PRIMARY KEY (`QueueID`),
---  INDEX `FKQueuePlayer_idx` (`PlayerID` ASC),
---  INDEX `FKQueueGame_idx` (`GameID` ASC),
---  CONSTRAINT `FKQueuePlayer`
---    FOREIGN KEY (`PlayerID`)
---    REFERENCES `unibox`.`Player` (`PlayerID`)
---    ON DELETE NO ACTION
---    ON UPDATE NO ACTION,
---  CONSTRAINT `FKQueueGame`
---    FOREIGN KEY (`GameID`)
---    REFERENCES `unibox`.`Game` (`GameID`)
---    ON DELETE NO ACTION
---    ON UPDATE NO ACTION)
---ENGINE = InnoDB;
-
+DROP TABLE IF EXISTS `unibox`.`Queue` ;
+CREATE TABLE IF NOT EXISTS `unibox`.`Queue` (
+  `QueueID` INT NOT NULL AUTO_INCREMENT,
+  `PlayerID` INT NOT NULL,
+  `GameID` INT NOT NULL,
+  PRIMARY KEY (`QueueID`),
+  INDEX `FKQueuePlayer_idx` (`PlayerID` ASC),
+  INDEX `FKQueueGame_idx` (`GameID` ASC),
+  CONSTRAINT `FKQueuePlayer`
+    FOREIGN KEY (`PlayerID`)
+    REFERENCES `unibox`.`Player` (`PlayerID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `FKQueueGame`
+    FOREIGN KEY (`GameID`)
+    REFERENCES `unibox`.`Game` (`GameID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+*/
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

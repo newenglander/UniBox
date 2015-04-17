@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.provider.Helper;
+import de.unibox.http.servlet.beans.UserBean;
 import de.unibox.model.database.DatabaseQuery;
 import de.unibox.model.user.AbstractUser;
 import de.unibox.model.user.AdministratorUser;
@@ -307,6 +308,26 @@ public class ProtectedHttpServlet extends HttpServlet {
         } catch (final ServletException e) {
             response.getWriter().write("Access forbidden!");
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Validate user bean.
+     */
+    protected void validateUserBean() {
+        final Object obj = thisSession.getAttribute("user.bean");
+        UserBean userBean = null;
+        if ((obj != null) && (obj instanceof UserBean)) {
+            userBean = (UserBean) obj;
+        } else {
+            if (thisUser instanceof AdministratorUser) {
+                userBean = new UserBean(thisUser.getName(),
+                        thisUser.getSessionId(), true);
+            } else {
+                userBean = new UserBean(thisUser.getName(),
+                        thisUser.getSessionId(), false);
+            }
+            thisSession.setAttribute("userbean", userBean);
         }
     }
 }
