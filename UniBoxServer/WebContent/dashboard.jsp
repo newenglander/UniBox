@@ -116,6 +116,7 @@
 														<th>Game</th>
 														<th>Name</th>
 														<th>Places</th>
+														<th>Joined</th>
 													</tr>
 												</thead>
 												<tbody id="gameTableBody">
@@ -127,6 +128,7 @@
 														<th>Game</th>
 														<th>Name</th>
 														<th>Places</th>
+														<th>Joined</th>
 													</tr>
 												</tfoot>
 											</table>

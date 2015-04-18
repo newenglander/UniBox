@@ -101,8 +101,34 @@ public class Game {
         return this.numberOfPlayers;
     }
 
+    /**
+     * Gets the player list.
+     *
+     * @return the player list
+     */
     public ArrayList<AbstractUser> getPlayerList() {
         return this.playerList;
+    }
+
+    /**
+     * Player to string.
+     *
+     * @return the string
+     */
+    public String playerToString() {
+        StringBuilder returnThis = new StringBuilder("");
+        int i = 1;
+        for (AbstractUser user : this.playerList) {
+            System.out.println(i);
+            System.out.println(this.playerList.size());
+            if (i == this.playerList.size()) {
+                returnThis.append(user.getName());
+            } else {
+                returnThis.append(user.getName() + ", ");
+            }
+            i++;
+        }
+        return returnThis.toString();
     }
 
     /**

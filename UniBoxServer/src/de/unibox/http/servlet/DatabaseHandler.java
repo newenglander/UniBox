@@ -185,9 +185,13 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         final JSONObject obj = jsonArray.getJSONObject(i);
                         final Game game = GamePool.getInstance().getGame(
                                 obj.getInt("GameID"));
+                        // add joined/available player count
                         obj.put("NumberOfPlayers",
                                 "" + game.getPlayerList().size() + "/"
                                         + game.getNumberOfPlayers());
+                        // add joined player names
+                        obj.put("Players",
+                                "" + game.playerToString());
                     }
                 }
 
