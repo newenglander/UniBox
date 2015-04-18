@@ -16,6 +16,7 @@ import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
 import de.unibox.model.database.objects.CategoryInsert;
 import de.unibox.model.database.objects.PlayerInsert;
+import de.unibox.model.user.UserFactory;
 
 /**
  * The Class AdminHandler.
@@ -72,6 +73,8 @@ public class AdminHandler extends AdminHttpServlet {
         boolean doInsert = false;
         Integer result = null;
 
+        String errorMessage = "illegal_Request";
+
         DatabaseAction<Integer> query = null;
 
         if (action != null) {
@@ -84,15 +87,21 @@ public class AdminHandler extends AdminHttpServlet {
 
                 final String thisName = Helper.decodeBase64(request
                         .getParameter("name"));
-                final int thisAdminRights = Integer.parseInt(request
+                final Integer thisAdminRights = Integer.parseInt(request
                         .getParameter("adminRights"));
 
                 // NOTE: avoid hardcoded default password
                 final String thisPassword = "3022443b7e33a6a68756047e46b81bea";
 
-                query = new PlayerInsert(thisAdminRights, thisName,
-                        thisPassword);
-                doInsert = true;
+                if (thisName != null && thisAdminRights != null) {
+                    query = new PlayerInsert(thisAdminRights, thisName,
+                            thisPassword);
+                    if (UserFactory.getUserByName(thisName) != null) {
+                        doInsert = true;
+                    } else {
+                        errorMessage = "duplicate:user_exists";
+                    }
+                }
 
             } else if (action.equals("createCategory")) {
 
@@ -102,15 +111,20 @@ public class AdminHandler extends AdminHttpServlet {
                 }
 
                 final String thisGameTitle = request.getParameter("gameTitle");
-                final int thisNumberOfPlayers = Integer.parseInt(request
+                final Integer thisNumberOfPlayers = Integer.parseInt(request
                         .getParameter("numberOfPlayers"));
 
-                query = new CategoryInsert(thisGameTitle, thisNumberOfPlayers);
-                doInsert = true;
+                if (thisGameTitle != null && thisNumberOfPlayers != null) {
+                    query = new CategoryInsert(thisGameTitle,
+                            thisNumberOfPlayers);
+                    doInsert = true;
+                }
 
             }
 
             if (doInsert && (query != null)) {
+
+                boolean isComplete = true;
 
                 try {
 
@@ -130,16 +144,24 @@ public class AdminHandler extends AdminHttpServlet {
                                 + query.getSqlString());
                     }
                     e.printStackTrace();
+                    errorMessage = "SQL_error";
+                    isComplete = false;
                 }
 
-                response.setContentType("text/html");
-                response.setStatus(HttpServletResponse.SC_CREATED);
-                final PrintWriter out = response.getWriter();
-                out.print("database updated with state: " + result);
-                out.flush();
+                if (isComplete) {
+
+                    response.setContentType("text/html");
+                    response.setStatus(HttpServletResponse.SC_CREATED);
+                    final PrintWriter out = response.getWriter();
+                    out.print("database updated with state: " + result);
+                    out.flush();
+
+                } else {
+                    super.serviceDenied(request, response, errorMessage);
+                }
 
             } else {
-                super.serviceDenied(request, response);
+                super.serviceDenied(request, response, errorMessage);
             }
         } else {
             super.invalidRequest(request, response);

@@ -249,6 +249,8 @@ public class DatabaseHandler extends ProtectedHttpServlet {
         boolean doInsert = false;
         Integer result = null;
 
+        String errorMessage = "illegal_Request";
+
         DatabaseAction<Integer> query = null;
 
         if (action != null) {
@@ -260,11 +262,13 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 }
 
                 final String thisGameName = request.getParameter("gameName");
-                final int thisCatID = Integer.parseInt(request
+                final Integer thisCatID = Integer.parseInt(request
                         .getParameter("catId"));
 
-                query = new GameInsert(thisGameName, thisCatID);
-                doInsert = true;
+                if (thisGameName != null && thisCatID != null) {
+                    query = new GameInsert(thisGameName, thisCatID);
+                    doInsert = true;
+                }
 
             } else if (action.equals("createResult")) {
 
@@ -273,19 +277,25 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                             + ": update result table..");
                 }
 
-                final int thisGameID = Integer.parseInt(request
+                final Integer thisGameID = Integer.parseInt(request
                         .getParameter("gameId"));
-                final int thisPlayerID = Integer.parseInt(request
+                final Integer thisPlayerId = Integer.parseInt(request
                         .getParameter("playerId"));
-                final int thisScoring = Integer.parseInt(request
+                final Integer thisScoring = Integer.parseInt(request
                         .getParameter("scoring"));
 
-                query = new ResultInsert(thisGameID, thisPlayerID, thisScoring);
-                doInsert = true;
+                if (thisGameID != null && thisPlayerId != null
+                        && thisScoring != null) {
+                    query = new ResultInsert(thisGameID, thisPlayerId,
+                            thisScoring);
+                    doInsert = true;
+                }
 
             }
 
             if (doInsert && (query != null)) {
+
+                boolean isComplete = true;
 
                 try {
 
@@ -310,13 +320,21 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                                 + query.getSqlString());
                     }
                     e.printStackTrace();
+                    errorMessage = "SQL_error";
+                    isComplete = false;
                 }
 
-                response.setContentType("text/html");
-                response.setStatus(HttpServletResponse.SC_CREATED);
-                final PrintWriter out = response.getWriter();
-                out.print("database updated with state: " + result);
-                out.flush();
+                if (isComplete) {
+
+                    response.setContentType("text/html");
+                    response.setStatus(HttpServletResponse.SC_CREATED);
+                    final PrintWriter out = response.getWriter();
+                    out.print("database updated with state: " + result);
+                    out.flush();
+
+                } else {
+                    super.serviceDenied(request, response, errorMessage);
+                }
 
             } else {
                 super.serviceDenied(request, response);

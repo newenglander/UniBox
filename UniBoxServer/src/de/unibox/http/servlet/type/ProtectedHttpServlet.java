@@ -310,6 +310,32 @@ public class ProtectedHttpServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
+    
+
+    /**
+     * Service denied.
+     *
+     * @param request
+     *            the request
+     * @param response
+     *            the response
+     * @param message
+     *            the message
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    protected void serviceDenied(final HttpServletRequest request,
+            final HttpServletResponse response, String message) throws IOException {
+        response.setContentType("text/html");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        try {
+            request.getRequestDispatcher("/login.html").include(request,
+                    response);
+        } catch (final ServletException e) {
+            response.getWriter().write(message);
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Validate user bean.

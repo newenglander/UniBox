@@ -47,92 +47,84 @@ public class GameHandler extends ProtectedHttpServlet {
 
         final PrintWriter out = response.getWriter();
 
-        String action = null;
-        int gameId = 0;
+        String action = request.getParameter("action");
+        Integer gameId = null;
         Game game = null;
 
-        try {
-            action = request.getParameter("action");
+        boolean done = false;
 
-            if (!action.equals("whichGame")) {
+        String errorMessage = "unknown_error";
+
+        if (action != null) {
+
+            if (action.equals("whichGame")) {
+                game = GamePool.getInstance().getGameByPlayer(super.thisUser);
+                if (game != null) {
+                    gameId = game.getGameId();
+                } else {
+                    gameId = null;
+                }
+                done = true;
+
+            } else {
+
                 gameId = Integer.parseInt(request.getParameter("gameId"));
                 game = GamePool.getInstance().getGame(gameId);
 
-                if (null == game) {
-                    throw new Exception("Could not find game with id: "
-                            + gameId);
-                }
-            }
-
-        } catch (final Exception e) {
-
-            this.log.debug(this.getClass().getSimpleName()
-                    + ": could not retrieve relevant game");
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            out.print("invalid request\n");
-            e.printStackTrace();
-
-        } finally {
-
-            if (InternalConfig.LOG_GAMEPOOL) {
-                if (game == null) {
-                    this.log.debug(this.getClass().getSimpleName()
-                            + ": switching " + super.thisUser.getName()
-                            + " with " + action);
-                } else {
-                    this.log.debug(this.getClass().getSimpleName()
-                            + ": switching " + super.thisUser.getName()
-                            + " with " + action + " for " + game);
-                }
-            }
-
-            String errorMessage = "unknown_error";
-            Integer gameid = null;
-
-            boolean done = false;
-            switch (action) {
-            case "joinGame":
-                GamePool.getInstance();
-                final Game prevGame = GamePool.getInstance().getGameByPlayer(
-                        super.thisUser);
-                if (prevGame == null) {
-                    done = game.addPlayer(super.thisUser);
-                    this.sendUpdateBroadcast(super.thisUser);
-                } else if (prevGame != game) {
-                    prevGame.removePlayer(super.thisUser);
-                    done = game.addPlayer(super.thisUser);
-                    this.sendUpdateBroadcast(super.thisUser);
-                } else {
-                    errorMessage = "skipped:already_joined";
-                }
-                break;
-            case "leaveGame":
-                done = game.removePlayer(super.thisUser);
-                this.sendUpdateBroadcast(super.thisUser);
-                break;
-            case "whichGame":
-                game = GamePool.getInstance().getGameByPlayer(super.thisUser);
                 if (game != null) {
-                    gameid = game.getGameId();
+                    
+                    if (action.equals("joinGame")) {
+
+                        this.log.debug(this.getClass().getSimpleName()
+                                + ": switching " + super.thisUser.getName()
+                                + " with " + action + " for " + game);
+
+                        final Game prevGame = GamePool.getInstance()
+                                .getGameByPlayer(super.thisUser);
+                        if (prevGame == null) {
+                            done = game.addPlayer(super.thisUser);
+                            this.sendUpdateBroadcast(super.thisUser);
+                        } else if (prevGame != game) {
+                            prevGame.removePlayer(super.thisUser);
+                            done = game.addPlayer(super.thisUser);
+                            this.sendUpdateBroadcast(super.thisUser);
+                        } else {
+                            errorMessage = "already_joined";
+                        }
+
+                    } else if (action.equals("leaveGame")) {
+
+                        if (InternalConfig.LOG_GAMEPOOL) {
+                            this.log.debug(this.getClass().getSimpleName()
+                                    + ": switching " + super.thisUser.getName()
+                                    + " with " + action);
+                        }
+
+                        done = game.removePlayer(super.thisUser);
+                        this.sendUpdateBroadcast(super.thisUser);
+
+                    } else {
+                        if (InternalConfig.LOG_GAMEPOOL) {
+                            this.log.debug(this.getClass().getSimpleName()
+                                    + ": could not retrieve relevant game");
+                        }
+                    }
+
                 } else {
-                    gameid = null;
+                    serviceDenied(request, response, "invalid_GameID");
                 }
-                done = true;
-                break;
-            default:
-                break;
+
             }
 
             if (done) {
                 response.setStatus(HttpServletResponse.SC_OK);
-                if (gameid == null) {
+                if (gameId == null) {
                     out.print("success");
                 } else {
-                    out.print("gameid:" + gameid);
+                    out.print("gameId:" + gameId);
                 }
             } else {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                out.print(errorMessage);
+                serviceDenied(request, response, errorMessage);
             }
 
             if (InternalConfig.LOG_GAMEPOOL) {
@@ -141,10 +133,13 @@ public class GameHandler extends ProtectedHttpServlet {
                             + game);
                 }
             }
-        }
 
-        out.flush();
-        out.close();
+            out.flush();
+            out.close();
+
+        } else {
+            serviceDenied(request, response);
+        }
 
     }
 
