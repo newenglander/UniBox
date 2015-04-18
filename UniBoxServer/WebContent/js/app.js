@@ -7,7 +7,7 @@ var app = {
 	authSource : '/Auth',
 	adminSource : '/Admin',
 	initialize : function() {
-		app.bind();
+		app.bindEventHandles();
 		app.login();
 		app.listen();
 		app.initGameTable();
@@ -22,12 +22,12 @@ var app = {
 		jQuery.ajax({
 			type : "GET",
 			url : app.url + app.dataSource,
-			data : "request=categories",
+			data : "action=getCategories",
 			success : function(data) {
 				$.each(data, function(index, value) {
 					$("#gameTypeInput").append(
 							'<option value="' + value.CatID + '">'
-									+ value.Gametitle + '</option>');
+									+ value.GameTitle + '</option>');
 				});
 			},
 			error : function(e) {
@@ -120,7 +120,7 @@ var app = {
 		$(".adminFrame").removeClass("hidden");
 		$("body").addClass("no-scroll");
 	},
-	bind : function() {
+	bindEventHandles : function() {
 		$('#messengerInputForm').keypress(function(e) {
 			if (e.which == 13) {
 				var formContent = $('#messengerInputForm');
@@ -153,8 +153,8 @@ var app = {
 							.ajax({
 								type : "POST",
 								url : app.url + app.dataSource,
-								data : "create=game&gamename=" + gameName
-										+ "&catid=" + gameType + "&descr="
+								data : "action=createGame&gameName=" + gameName
+										+ "&catId=" + gameType + "&descr="
 										+ gameDescription,
 								success : function(result) {
 									app.newsticker("success",
@@ -244,9 +244,9 @@ var app = {
 								.ajax({
 									type : "POST",
 									url : app.url + app.adminSource,
-									data : "create=player&name="
+									data : "action=createPlayer&name="
 											+ Base64.encode(name)
-											+ "&adminrights=" + isAdmin,
+											+ "&adminRights=" + isAdmin,
 									success : function(data) {
 										console.log(data);
 										swal("Good Job!", "User created..!",
@@ -413,7 +413,7 @@ var app = {
 		var gameDataTable = $('#gamePanel').DataTable();
 		jQuery.ajax({
 			type : "GET",
-			url : app.url + app.dataSource + "?request=games",
+			url : app.url + app.dataSource + "?action=getGames",
 			success : function(data) {
 				gameDataTable.clear().draw();
 				for ( var i in data) {
@@ -421,7 +421,7 @@ var app = {
 							+ '" href="javascript:app.joinGame('
 							+ data[i].GameID + ')">Join</a>';
 					gameDataTable.row.add([ gameJoinLink, data[i].GameID,
-							data[i].Gametitle, data[i].GameName,
+							data[i].GameTitle, data[i].GameName,
 							data[i].NumberOfPlayers, data[i].Players ]);
 					// update admin panel too
 					$("#multiSelectDeleteGame").append(
@@ -478,23 +478,14 @@ var app = {
 		var rankingDataTable = $('#rankingPanel').DataTable();
 		jQuery.ajax({
 			type : "GET",
-			url : app.url + app.dataSource + "?request=ranking",
+			url : app.url + app.dataSource + "?action=getRanking",
 			success : function(data) {
 				rankingDataTable.clear().draw();
 				for ( var i in data) {
 					rankingDataTable.row.add([ data[i].Rank, data[i].Name,
 							data[i].Score ]);
-					// update admin panel too
-					$("#multiSelectDeleteUser").append(
-							"<option value='" + data[i].ID + "'>"
-									+ data[i].Name + "</option>");
 				}
 				rankingDataTable.draw();
-				// update admin panel too
-				$('#multiSelectDeleteUser').multiselect({
-					includeSelectAllOption : true,
-					enableFiltering : true
-				});
 			},
 			error : function() {
 				app.newsticker("warning", "Could not update ranking table..!");
@@ -513,7 +504,7 @@ var app = {
 	updateUsersSelection : function() {
 		jQuery.ajax({
 			type : "GET",
-			url : app.url + app.dataSource + "?request=users",
+			url : app.url + app.dataSource + "?action=getUsers",
 			success : function(data) {
 				for ( var i in data) {
 					$("#multiSelectDeleteUser").append(
@@ -566,7 +557,7 @@ var app = {
 	joinGame : function(id) {
 		jQuery.ajax({
 			type : "GET",
-			url : app.url + "/Game?action=join&gameid=" + id,
+			url : app.url + "/Game?action=joinGame&gameId=" + id,
 			success : function(data) {
 				app.updateGameTable();
 				var linkElement = $("#game-" + id);
@@ -592,7 +583,7 @@ var app = {
 		jQuery
 				.ajax({
 					type : "GET",
-					url : app.url + "/Game?action=leave&gameid=" + id,
+					url : app.url + "/Game?action=leaveGame&gameId=" + id,
 					success : function(data) {
 						app.updateGameTable();
 						var linkElement = $("#game-" + id);
@@ -617,9 +608,9 @@ var app = {
 	gotActiveGame : function() {
 		jQuery.ajax({
 			type : "GET",
-			url : app.url + "/Game?action=whichgame",
+			url : app.url + "/Game?action=whichGame",
 			success : function(data) {
-				var id = data.replace("gameid:", "");
+				var id = data.replace("gameId:", "");
 				var linkElement = $("#game-" + id);
 				linkElement
 						.attr("href", "javascript:app.leaveGame(" + id + ")");

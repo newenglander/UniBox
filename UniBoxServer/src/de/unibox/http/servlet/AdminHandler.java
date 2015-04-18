@@ -68,14 +68,14 @@ public class AdminHandler extends AdminHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        final String createData = request.getParameter("create");
+        final String action = request.getParameter("action");
         boolean doInsert = false;
         Integer result = null;
 
         DatabaseAction<Integer> query = null;
 
-        if (createData != null) {
-            if (createData.equals("player")) {
+        if (action != null) {
+            if (action.equals("createPlayer")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
@@ -85,7 +85,7 @@ public class AdminHandler extends AdminHttpServlet {
                 final String thisName = Helper.decodeBase64(request
                         .getParameter("name"));
                 final int thisAdminRights = Integer.parseInt(request
-                        .getParameter("adminrights"));
+                        .getParameter("adminRights"));
 
                 // NOTE: avoid hardcoded default password
                 final String thisPassword = "3022443b7e33a6a68756047e46b81bea";
@@ -94,33 +94,19 @@ public class AdminHandler extends AdminHttpServlet {
                         thisPassword);
                 doInsert = true;
 
-            } else if (createData.equals("category")) {
+            } else if (action.equals("createCategory")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": update category table..");
                 }
 
-                final String thisGametitle = request.getParameter("gametitle");
+                final String thisGameTitle = request.getParameter("gameTitle");
                 final int thisNumberOfPlayers = Integer.parseInt(request
-                        .getParameter("numberofplayers"));
+                        .getParameter("numberOfPlayers"));
 
-                query = new CategoryInsert(thisGametitle, thisNumberOfPlayers);
+                query = new CategoryInsert(thisGameTitle, thisNumberOfPlayers);
                 doInsert = true;
-
-                // } else if (createData.equals("queue")) {
-                //
-                // if (InternalConfig.LOG_DATABASE) {
-                // this.log.debug("DatabaseHandler: update game table..");
-                // }
-                //
-                // final int thisPlayerID = Integer.parseInt(request
-                // .getParameter("playerid"));
-                // final int thisGameID = Integer.parseInt(request
-                // .getParameter("gameid"));
-                //
-                // query = new QueueInsert(thisPlayerID, thisGameID);
-                // doInsert = true;
 
             }
 
@@ -135,11 +121,6 @@ public class AdminHandler extends AdminHttpServlet {
                     result = query.execute();
 
                     transaction.commit();
-
-                    // /** update model */
-                    // if (createData.equals("game")) {
-                    // GamePool.getInstance().update();
-                    // }
 
                 } catch (final SQLException e) {
 

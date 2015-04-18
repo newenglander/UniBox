@@ -125,14 +125,14 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        final String requestedData = request.getParameter("request");
+        final String action = request.getParameter("action");
         boolean doQuery = false;
 
         SelectionQuery query = null;
 
-        if (requestedData != null) {
+        if (action != null) {
 
-            if (requestedData.equals("ranking")) {
+            if (action.equals("getRanking")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
@@ -142,27 +142,26 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         "SELECT @curRank := @curRank + 1 AS Rank, Name, Score, ID FROM (SELECT Name, player.PlayerID AS ID, SUM(Scoring) AS Score FROM player INNER JOIN result WHERE player.PlayerID=result.PlayerID GROUP BY Name ORDER BY Score DESC) AS ranking, (SELECT @curRank := 0) r;");
                 doQuery = true;
 
-            } else if (requestedData.equals("games")) {
+            } else if (action.equals("getGames")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": select game table..");
                 }
                 query = new SelectionQuery(
-                        "SELECT GameID, GameName, Gametitle, NumberOfPlayers FROM game INNER JOIN category WHERE game.CatID=category.CatID;");
+                        "SELECT GameID, GameName, GameTitle, NumberOfPlayers FROM game INNER JOIN category WHERE game.CatID=category.CatID;");
                 doQuery = true;
 
-            } else if (requestedData.equals("users")) {
+            } else if (action.equals("getUsers")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": select users table..");
                 }
-                query = new SelectionQuery(
-                        "SELECT PlayerID, Name FROM player;");
+                query = new SelectionQuery("SELECT PlayerID, Name FROM player;");
                 doQuery = true;
 
-            } else if (requestedData.equals("categories")) {
+            } else if (action.equals("getCategories")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
@@ -190,7 +189,9 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 transaction.commit();
 
                 // refine data output for Places = joinedPlayer/maxPlayer
-                if (requestedData.equals("games")) {
+                if (action.equals("getGames")) {
+                    // update games from database before parsing model
+                    GamePool.getInstance().update();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         final JSONObject obj = jsonArray.getJSONObject(i);
                         final Game game = GamePool.getInstance().getGame(
@@ -200,8 +201,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                                 "" + game.getPlayerList().size() + "/"
                                         + game.getNumberOfPlayers());
                         // add joined player names
-                        obj.put("Players",
-                                "" + game.playerToString());
+                        obj.put("Players", "" + game.playerToString());
                     }
                 }
 
@@ -245,43 +245,28 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        final String createData = request.getParameter("create");
+        final String action = request.getParameter("action");
         boolean doInsert = false;
         Integer result = null;
 
         DatabaseAction<Integer> query = null;
 
-        if (createData != null) {
-            if (createData.equals("game")) {
+        if (action != null) {
+            if (action.equals("createGame")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": update game table..");
                 }
 
-                final String thisGameName = request.getParameter("gamename");
+                final String thisGameName = request.getParameter("gameName");
                 final int thisCatID = Integer.parseInt(request
-                        .getParameter("catid"));
+                        .getParameter("catId"));
 
                 query = new GameInsert(thisGameName, thisCatID);
                 doInsert = true;
 
-                // } else if (createData.equals("queue")) {
-                //
-                // if (InternalConfig.LOG_DATABASE) {
-                // this.log.debug(this.getClass().getSimpleName() +
-                // ": update game table..");
-                // }
-                //
-                // final int thisPlayerID = Integer.parseInt(request
-                // .getParameter("playerid"));
-                // final int thisGameID = Integer.parseInt(request
-                // .getParameter("gameid"));
-                //
-                // query = new QueueInsert(thisPlayerID, thisGameID);
-                // doInsert = true;
-
-            } else if (createData.equals("result")) {
+            } else if (action.equals("createResult")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
@@ -289,9 +274,9 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 }
 
                 final int thisGameID = Integer.parseInt(request
-                        .getParameter("gameid"));
+                        .getParameter("gameId"));
                 final int thisPlayerID = Integer.parseInt(request
-                        .getParameter("playerid"));
+                        .getParameter("playerId"));
                 final int thisScoring = Integer.parseInt(request
                         .getParameter("scoring"));
 
@@ -313,7 +298,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                     transaction.commit();
 
                     /** update model */
-                    if (createData.equals("game")) {
+                    if (action.equals("game")) {
                         GamePool.getInstance().update();
                     }
 

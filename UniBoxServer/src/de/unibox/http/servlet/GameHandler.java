@@ -54,8 +54,8 @@ public class GameHandler extends ProtectedHttpServlet {
         try {
             action = request.getParameter("action");
 
-            if (!action.equals("whichgame")) {
-                gameId = Integer.parseInt(request.getParameter("gameid"));
+            if (!action.equals("whichGame")) {
+                gameId = Integer.parseInt(request.getParameter("gameId"));
                 game = GamePool.getInstance().getGame(gameId);
 
                 if (null == game) {
@@ -91,7 +91,7 @@ public class GameHandler extends ProtectedHttpServlet {
 
             boolean done = false;
             switch (action) {
-            case "join":
+            case "joinGame":
                 GamePool.getInstance();
                 final Game prevGame = GamePool.getInstance().getGameByPlayer(
                         super.thisUser);
@@ -106,11 +106,11 @@ public class GameHandler extends ProtectedHttpServlet {
                     errorMessage = "skipped:already_joined";
                 }
                 break;
-            case "leave":
+            case "leaveGame":
                 done = game.removePlayer(super.thisUser);
                 this.sendUpdateBroadcast(super.thisUser);
                 break;
-            case "whichgame":
+            case "whichGame":
                 game = GamePool.getInstance().getGameByPlayer(super.thisUser);
                 if (game != null) {
                     gameid = game.getGameId();
