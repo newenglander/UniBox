@@ -117,16 +117,18 @@ public class Game {
      */
     public String playerToString() {
         StringBuilder returnThis = new StringBuilder("");
-        int i = 1;
-        for (AbstractUser user : this.playerList) {
-            System.out.println(i);
-            System.out.println(this.playerList.size());
-            if (i == this.playerList.size()) {
-                returnThis.append(user.getName());
-            } else {
-                returnThis.append(user.getName() + ", ");
+        if (this.playerList.size() == 0) {
+            returnThis.append("none");
+        } else {
+            int i = 1;
+            for (AbstractUser user : this.playerList) {
+                if (i == this.playerList.size()) {
+                    returnThis.append(user.getName());
+                } else {
+                    returnThis.append(user.getName() + ", ");
+                }
+                i++;
             }
-            i++;
         }
         return returnThis.toString();
     }
