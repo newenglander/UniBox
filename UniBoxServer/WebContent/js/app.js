@@ -240,20 +240,25 @@ var app = {
 						if ($("#isAdminCheckbox").prop('checked')) {
 							isAdmin = 1;
 						}
-						jQuery.ajax({
-							type : "POST",
-							url : app.url + app.adminSource,
-							data : "create=player&name=" + Base64.encode(name) + "&adminrights=" + isAdmin,
-							success : function(data) {
-								console.log(data);
-								swal("Good Job!", "User created..!", "success");
-							},
-							error : function(e) {
-								console.log(e);
-								swal("Ups..", "Could not create user " + name + "..!", "warning");
-							},
-							async : false
-						});
+						jQuery
+								.ajax({
+									type : "POST",
+									url : app.url + app.adminSource,
+									data : "create=player&name="
+											+ Base64.encode(name)
+											+ "&adminrights=" + isAdmin,
+									success : function(data) {
+										console.log(data);
+										swal("Good Job!", "User created..!",
+												"success");
+									},
+									error : function(e) {
+										console.log(e);
+										swal("Ups..", "Could not create user "
+												+ name + "..!", "warning");
+									},
+									async : false
+								});
 					} else {
 						swal("Ups..", "Please type a name..", "warning");
 						$('#createUserField').focus();
@@ -468,6 +473,8 @@ var app = {
 		});
 	},
 	updateRankingTable : function() {
+		// if ranking table should be updated, user table should be updated too
+		app.updateUsersSelection();
 		var rankingDataTable = $('#rankingPanel').DataTable();
 		jQuery.ajax({
 			type : "GET",
@@ -481,7 +488,6 @@ var app = {
 					$("#multiSelectDeleteUser").append(
 							"<option value='" + data[i].ID + "'>"
 									+ data[i].Name + "</option>");
-
 				}
 				rankingDataTable.draw();
 				// update admin panel too
@@ -492,6 +498,35 @@ var app = {
 			},
 			error : function() {
 				app.newsticker("warning", "Could not update ranking table..!");
+			},
+			statusCode : {
+				403 : function() {
+					app.redirect("forbidden");
+				},
+				0 : function() {
+					app.redirect("server_offline");
+				}
+			},
+			async : false
+		});
+	},
+	updateUsersSelection : function() {
+		jQuery.ajax({
+			type : "GET",
+			url : app.url + app.dataSource + "?request=users",
+			success : function(data) {
+				for ( var i in data) {
+					$("#multiSelectDeleteUser").append(
+							"<option value='" + data[i].PlayerID + "'>"
+									+ data[i].Name + "</option>");
+				}
+				$('#multiSelectDeleteUser').multiselect({
+					includeSelectAllOption : true,
+					enableFiltering : true
+				});
+			},
+			error : function() {
+				app.newsticker("warning", "Could not update users data..!");
 			},
 			statusCode : {
 				403 : function() {

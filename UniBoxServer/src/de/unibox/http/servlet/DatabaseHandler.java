@@ -152,6 +152,16 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         "SELECT GameID, GameName, Gametitle, NumberOfPlayers FROM game INNER JOIN category WHERE game.CatID=category.CatID;");
                 doQuery = true;
 
+            } else if (requestedData.equals("users")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": select users table..");
+                }
+                query = new SelectionQuery(
+                        "SELECT PlayerID, Name FROM player;");
+                doQuery = true;
+
             } else if (requestedData.equals("categories")) {
 
                 if (InternalConfig.LOG_DATABASE) {
