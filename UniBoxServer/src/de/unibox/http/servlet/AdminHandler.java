@@ -58,88 +58,95 @@ public class AdminHandler extends AdminHttpServlet {
 
         DatabaseAction<Integer> query = null;
 
-        if (action.equals("deleteGame")) {
+        if (action != null) {
 
-            if (InternalConfig.LOG_DATABASE) {
-                this.log.debug(this.getClass().getSimpleName()
-                        + ": delete row of game table..");
-            }
+            if (action.equals("deleteGame")) {
 
-            final Integer thisGameId = Integer.parseInt(request
-                    .getParameter("gameId"));
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": delete row of game table..");
+                }
 
-            if (thisGameId != null) {
-                query = new AdminStatement(super.thisUser,
-                        "DELETE FROM game WHERE GameID = ? LIMIT 1;");
-                try {
-                    final DatabaseQuery transaction = new DatabaseQuery();
+                final Integer thisGameId = Integer.parseInt(request
+                        .getParameter("gameId"));
 
-                    transaction.connect();
-                    query.attach(transaction);
-                    query.getStatement().setInt(1, thisGameId);
-                    result = query.execute();
-                    transaction.commit();
+                if (thisGameId != null) {
+                    query = new AdminStatement(super.thisUser,
+                            "DELETE FROM game WHERE GameID = ? LIMIT 1;");
+                    try {
+                        final DatabaseQuery transaction = new DatabaseQuery();
 
-                    // send game update broadcast
-                    Communicator.getMessagequeue().add(
-                            new CommunicatorMessage(MessageType.JS_Command,
-                                    "ALL",
-                                    "window.parent.app.updateGameTable();"));
+                        transaction.connect();
+                        query.attach(transaction);
+                        query.getStatement().setInt(1, thisGameId);
+                        result = query.execute();
+                        transaction.commit();
 
-                } catch (final SQLException e) {
-                    if (InternalConfig.LOG_DATABASE) {
-                        this.log.debug(this.getClass().getSimpleName()
-                                + ": Could not update database: "
-                                + query.getSqlString());
-                        e.printStackTrace();
+                        // send game update broadcast
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_Command, "ALL",
+                                        "window.parent.app.updateGameTable();"));
+
+                    } catch (final SQLException e) {
+                        if (InternalConfig.LOG_DATABASE) {
+                            this.log.debug(this.getClass().getSimpleName()
+                                    + ": Could not update database: "
+                                    + query.getSqlString());
+                            e.printStackTrace();
+                        }
+                        isComplete = false;
                     }
-                    isComplete = false;
+                }
+            } else if (action.equals("deleteUser")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": delete row of player table..");
+                }
+
+                final Integer thisPlayerId = Integer.parseInt(request
+                        .getParameter("userId"));
+
+                if (thisPlayerId != null) {
+                    query = new AdminStatement(super.thisUser,
+                            "DELETE FROM player WHERE PlayerID = ? LIMIT 1;");
+                    try {
+                        final DatabaseQuery transaction = new DatabaseQuery();
+
+                        transaction.connect();
+                        query.attach(transaction);
+                        query.getStatement().setInt(1, thisPlayerId);
+                        result = query.execute();
+                        transaction.commit();
+
+                    } catch (final SQLException e) {
+                        if (InternalConfig.LOG_DATABASE) {
+                            this.log.debug(this.getClass().getSimpleName()
+                                    + ": Could not update database: "
+                                    + query.getSqlString());
+                            e.printStackTrace();
+                        }
+                        isComplete = false;
+                    }
                 }
             }
-        } else if (action.equals("deleteUser")) {
 
-            if (InternalConfig.LOG_DATABASE) {
-                this.log.debug(this.getClass().getSimpleName()
-                        + ": delete row of player table..");
+            if (isComplete) {
+
+                response.setContentType("text/html");
+                response.setStatus(HttpServletResponse.SC_CREATED);
+                final PrintWriter out = response.getWriter();
+                out.print("affected_rows:" + result);
+                out.flush();
+
+            } else {
+                super.serviceErrorMessage(response, errorMessage);
             }
-
-            final Integer thisPlayerId = Integer.parseInt(request
-                    .getParameter("userId"));
-
-            if (thisPlayerId != null) {
-                query = new AdminStatement(super.thisUser,
-                        "DELETE FROM player WHERE PlayerID = ? LIMIT 1;");
-                try {
-                    final DatabaseQuery transaction = new DatabaseQuery();
-
-                    transaction.connect();
-                    query.attach(transaction);
-                    query.getStatement().setInt(1, thisPlayerId);
-                    result = query.execute();
-                    transaction.commit();
-
-                } catch (final SQLException e) {
-                    if (InternalConfig.LOG_DATABASE) {
-                        this.log.debug(this.getClass().getSimpleName()
-                                + ": Could not update database: "
-                                + query.getSqlString());
-                        e.printStackTrace();
-                    }
-                    isComplete = false;
-                }
-            }
-        }
-
-        if (isComplete) {
-
-            response.setContentType("text/html");
-            response.setStatus(HttpServletResponse.SC_CREATED);
-            final PrintWriter out = response.getWriter();
-            out.print("affected_rows:" + result);
-            out.flush();
 
         } else {
-            super.serviceErrorMessage(response, errorMessage);
+            super.serviceDenied(request, response);
         }
 
     }
