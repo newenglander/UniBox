@@ -2,6 +2,7 @@ package de.unibox.model.database.objects;
 
 import java.sql.SQLException;
 
+import de.unibox.config.InternalConfig;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
 import de.unibox.model.user.AbstractUser;
@@ -38,7 +39,7 @@ public class AdminStatement extends DatabaseAction<Integer> {
      */
     @Override
     public void attach(final DatabaseQuery transaction) throws SQLException {
-        // not needed here
+        super.attachUpdate(transaction);
     }
 
     /*
@@ -50,12 +51,24 @@ public class AdminStatement extends DatabaseAction<Integer> {
     public Integer execute() throws SQLException, IllegalAccessError {
         if (this.user != null) {
             if (this.user instanceof AdministratorUser) {
+                if (InternalConfig.LOG_DATABASE) {
+                    InternalConfig.log.info(AdminStatement.class
+                            .getSimpleName() + ": execute " + this);
+                }
                 return super.executeUpdate();
             } else {
+                if (InternalConfig.LOG_DATABASE) {
+                    InternalConfig.log.info(AdminStatement.class
+                            .getSimpleName() + ": denied access for " + this);
+                }
                 this.noPrivilegs("no admin privilegs for: "
                         + super.getStatement());
             }
         } else {
+            if (InternalConfig.LOG_DATABASE) {
+                InternalConfig.log.info(AdminStatement.class.getSimpleName()
+                        + ": denied access for " + this);
+            }
             this.noPrivilegs("user is NULL for: " + super.getStatement());
         }
         return null;
@@ -69,6 +82,16 @@ public class AdminStatement extends DatabaseAction<Integer> {
      */
     private void noPrivilegs(final String errorMessage) {
         throw new IllegalAccessError(errorMessage);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.unibox.model.database.DatabaseAction#toString()
+     */
+    @Override
+    public String toString() {
+        return "AdminStatement [user=" + this.user + "]";
     }
 
 }

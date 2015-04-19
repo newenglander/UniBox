@@ -120,10 +120,20 @@ public abstract class DatabaseAction<T> {
         return returnThis;
     }
 
+    /**
+     * Gets the sql string.
+     *
+     * @return the sql string
+     */
     public final String getSqlString() {
         return this.sqlString;
     }
 
+    /**
+     * Gets the statement.
+     *
+     * @return the statement
+     */
     public final PreparedStatement getStatement() {
         return this.statement;
     }
@@ -177,12 +187,35 @@ public abstract class DatabaseAction<T> {
         return gotNullValues;
     }
 
+    /**
+     * Sets the sql string.
+     *
+     * @param sqlString
+     *            the new sql string
+     */
     public final void setSqlString(final String sqlString) {
         this.sqlString = sqlString;
     }
 
+    /**
+     * Sets the statement.
+     *
+     * @param statement
+     *            the new statement
+     */
     public final void setStatement(final PreparedStatement statement) {
         this.statement = statement;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "DatabaseAction [log=" + this.log + ", sqlString="
+                + this.sqlString + ", statement=" + this.statement + "]";
     }
 
 }

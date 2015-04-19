@@ -10,12 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.unibox.config.InternalConfig;
+import de.unibox.core.network.object.CommunicatorMessage;
+import de.unibox.core.network.object.CommunicatorMessage.MessageType;
 import de.unibox.core.provider.Helper;
+import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.AdminHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
+import de.unibox.model.database.objects.AdminStatement;
 import de.unibox.model.database.objects.CategoryInsert;
 import de.unibox.model.database.objects.PlayerInsert;
+import de.unibox.model.user.UserFactory;
 
 /**
  * The Class AdminHandler.
@@ -45,14 +50,104 @@ public class AdminHandler extends AdminHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        final PrintWriter out = response.getWriter();
+        final String action = request.getParameter("action");
+        boolean isComplete = true;
+        int result = 0;
 
-        out.print("OK");
+        final String errorMessage = "illegal_Request";
 
-        out.flush();
-        out.close();
+        DatabaseAction<Integer> query = null;
 
-        // TODO implement functions displayed on the admin dashboard.
+        if (action != null) {
+
+            if (action.equals("deleteGame")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": delete row of game table..");
+                }
+
+                final Integer thisGameId = Integer.parseInt(request
+                        .getParameter("gameId"));
+
+                if (thisGameId != null) {
+                    query = new AdminStatement(super.thisUser,
+                            "DELETE FROM game WHERE GameID = ? LIMIT 1;");
+                    try {
+                        final DatabaseQuery transaction = new DatabaseQuery();
+
+                        transaction.connect();
+                        query.attach(transaction);
+                        query.getStatement().setInt(1, thisGameId);
+                        result = query.execute();
+                        transaction.commit();
+
+                        // send game update broadcast
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_Command, "ALL",
+                                        "window.parent.app.updateGameTable();"));
+
+                    } catch (final SQLException e) {
+                        if (InternalConfig.LOG_DATABASE) {
+                            this.log.debug(this.getClass().getSimpleName()
+                                    + ": Could not update database: "
+                                    + query.getSqlString());
+                            e.printStackTrace();
+                        }
+                        isComplete = false;
+                    }
+                }
+            } else if (action.equals("deleteUser")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": delete row of player table..");
+                }
+
+                final Integer thisPlayerId = Integer.parseInt(request
+                        .getParameter("userId"));
+
+                if (thisPlayerId != null) {
+                    query = new AdminStatement(super.thisUser,
+                            "DELETE FROM player WHERE PlayerID = ? LIMIT 1;");
+                    try {
+                        final DatabaseQuery transaction = new DatabaseQuery();
+
+                        transaction.connect();
+                        query.attach(transaction);
+                        query.getStatement().setInt(1, thisPlayerId);
+                        result = query.execute();
+                        transaction.commit();
+
+                    } catch (final SQLException e) {
+                        if (InternalConfig.LOG_DATABASE) {
+                            this.log.debug(this.getClass().getSimpleName()
+                                    + ": Could not update database: "
+                                    + query.getSqlString());
+                            e.printStackTrace();
+                        }
+                        isComplete = false;
+                    }
+                }
+            }
+
+            if (isComplete) {
+
+                response.setContentType("text/html");
+                response.setStatus(HttpServletResponse.SC_CREATED);
+                final PrintWriter out = response.getWriter();
+                out.print("affected_rows:" + result);
+                out.flush();
+
+            } else {
+                super.serviceErrorMessage(response, errorMessage);
+            }
+
+        } else {
+            super.serviceDenied(request, response);
+        }
 
     }
 
@@ -68,14 +163,16 @@ public class AdminHandler extends AdminHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        final String createData = request.getParameter("create");
+        final String action = request.getParameter("action");
         boolean doInsert = false;
         Integer result = null;
 
+        String errorMessage = "illegal_Request";
+
         DatabaseAction<Integer> query = null;
 
-        if (createData != null) {
-            if (createData.equals("player")) {
+        if (action != null) {
+            if (action.equals("createPlayer")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
@@ -84,47 +181,48 @@ public class AdminHandler extends AdminHttpServlet {
 
                 final String thisName = Helper.decodeBase64(request
                         .getParameter("name"));
-                final int thisAdminRights = Integer.parseInt(request
-                        .getParameter("adminrights"));
+                final Integer thisAdminRights = Integer.parseInt(request
+                        .getParameter("adminRights"));
+
+                System.out.println(thisName);
+                System.out.println(thisAdminRights);
 
                 // NOTE: avoid hardcoded default password
                 final String thisPassword = "3022443b7e33a6a68756047e46b81bea";
 
-                query = new PlayerInsert(thisAdminRights, thisName,
-                        thisPassword);
-                doInsert = true;
+                if ((thisName != null) && (thisAdminRights != null)) {
+                    query = new PlayerInsert(thisAdminRights, thisName,
+                            thisPassword);
+                    // test if username exists
+                    if (UserFactory.getUserByName(thisName) == null) {
+                        doInsert = true;
+                    } else {
+                        errorMessage = "duplicate:user_exists";
+                    }
+                }
 
-            } else if (createData.equals("category")) {
+            } else if (action.equals("createCategory")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": update category table..");
                 }
 
-                final String thisGametitle = request.getParameter("gametitle");
-                final int thisNumberOfPlayers = Integer.parseInt(request
-                        .getParameter("numberofplayers"));
+                final String thisGameTitle = request.getParameter("gameTitle");
+                final Integer thisNumberOfPlayers = Integer.parseInt(request
+                        .getParameter("numberOfPlayers"));
 
-                query = new CategoryInsert(thisGametitle, thisNumberOfPlayers);
-                doInsert = true;
-
-                // } else if (createData.equals("queue")) {
-                //
-                // if (InternalConfig.LOG_DATABASE) {
-                // this.log.debug("DatabaseHandler: update game table..");
-                // }
-                //
-                // final int thisPlayerID = Integer.parseInt(request
-                // .getParameter("playerid"));
-                // final int thisGameID = Integer.parseInt(request
-                // .getParameter("gameid"));
-                //
-                // query = new QueueInsert(thisPlayerID, thisGameID);
-                // doInsert = true;
+                if ((thisGameTitle != null) && (thisNumberOfPlayers != null)) {
+                    query = new CategoryInsert(thisGameTitle,
+                            thisNumberOfPlayers);
+                    doInsert = true;
+                }
 
             }
 
             if (doInsert && (query != null)) {
+
+                boolean isComplete = true;
 
                 try {
 
@@ -136,11 +234,6 @@ public class AdminHandler extends AdminHttpServlet {
 
                     transaction.commit();
 
-                    // /** update model */
-                    // if (createData.equals("game")) {
-                    // GamePool.getInstance().update();
-                    // }
-
                 } catch (final SQLException e) {
 
                     if (InternalConfig.LOG_DATABASE) {
@@ -149,16 +242,24 @@ public class AdminHandler extends AdminHttpServlet {
                                 + query.getSqlString());
                     }
                     e.printStackTrace();
+                    errorMessage = "SQL_error";
+                    isComplete = false;
                 }
 
-                response.setContentType("text/html");
-                response.setStatus(HttpServletResponse.SC_CREATED);
-                final PrintWriter out = response.getWriter();
-                out.print("database updated with state: " + result);
-                out.flush();
+                if (isComplete) {
+
+                    response.setContentType("text/html");
+                    response.setStatus(HttpServletResponse.SC_CREATED);
+                    final PrintWriter out = response.getWriter();
+                    out.print("affected_rows:" + result);
+                    out.flush();
+
+                } else {
+                    super.serviceErrorMessage(response, errorMessage);
+                }
 
             } else {
-                super.serviceDenied(request, response);
+                super.serviceErrorMessage(response, errorMessage);
             }
         } else {
             super.invalidRequest(request, response);

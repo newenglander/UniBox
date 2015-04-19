@@ -6,7 +6,10 @@ import java.io.PrintWriter;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.AsyncEvent;
@@ -25,9 +28,6 @@ import de.unibox.core.network.object.CommunicatorMessage.MessageType;
 import de.unibox.core.provider.Helper;
 import de.unibox.core.provider.ObjectSerializerImpl;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
-import de.unibox.model.game.GamePool;
-import de.unibox.model.user.AbstractUser;
-import de.unibox.model.user.UserFactory;
 
 /**
  * The Class Communicator.
@@ -51,6 +51,10 @@ public class Communicator extends ProtectedHttpServlet {
     /** The Constant queue. */
     protected static final Queue<AsyncContext> asyncContextQueue = new ConcurrentLinkedQueue<AsyncContext>();
 
+    public static Queue<AsyncContext> getAsyncContextQueue() {
+        return Communicator.asyncContextQueue;
+    }
+
     /** The Constant messageQueue. */
     private static final BlockingQueue<CommunicatorMessage> messageQueue = new LinkedBlockingQueue<CommunicatorMessage>();
 
@@ -63,6 +67,8 @@ public class Communicator extends ProtectedHttpServlet {
 
     /** The notifier thread. */
     protected Thread notifierThread = null;
+
+    protected ScheduledExecutorService keepAliveService = null;
 
     /**
      * Adds the context.
@@ -221,205 +227,19 @@ public class Communicator extends ProtectedHttpServlet {
                     + ": deploy new thread");
         }
 
-        final Runnable notifierRunnable = new Runnable() {
+        this.notifierThread = new Thread(new RunnableNotifier());
+        this.notifierThread.start();
+
+        this.keepAliveService = Executors.newSingleThreadScheduledExecutor();
+        this.keepAliveService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-
-                boolean done = false;
-
-                while (!done) {
-
-                    CommunicatorMessage cMessage = null;
-
-                    /**
-                     * This is a simple helper class to find and remove unused
-                     * contexts from the productive queue e.g. verify the used
-                     * contexts.
-                     */
-                    AsyncContextParser.init();
-                    for (final AsyncContext ac : Communicator.asyncContextQueue) {
-                        new AsyncContextParser(ac);
-                    }
-                    AsyncContextParser.verify();
-
-                    try {
-
-                        cMessage = Communicator.messageQueue.take();
-
-                        if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                            for (final AsyncContext ac : Communicator.asyncContextQueue) {
-                                Communicator.this.log.debug(Communicator.class
-                                        .getSimpleName() + ": " + ac);
-                            }
-                        }
-
-                        for (final AsyncContext ac : Communicator.asyncContextQueue) {
-
-                            try {
-
-                                final HttpServletRequest req = (HttpServletRequest) ac
-                                        .getRequest();
-
-                                final ClientType remoteType = (ClientType) req
-                                        .getAttribute("format");
-                                final MessageType messageType = cMessage
-                                        .getType();
-                                final String sessionId = req.getSession()
-                                        .getId();
-                                final AbstractUser receiver = (AbstractUser) req
-                                        .getSession().getAttribute(
-                                                "login.object");
-
-                                final AbstractUser sender = UserFactory
-                                        .getUserByName(cMessage.getName());
-
-                                final PrintWriter acWriter = ac.getResponse()
-                                        .getWriter();
-
-                                if (InternalConfig.LOG_COMMUNICATION) {
-                                    Communicator.this.log
-                                            .debug(Communicator.class
-                                                    .getSimpleName()
-                                                    + " run(): ClientType="
-                                                    + remoteType
-                                                    + ", MessageType="
-                                                    + messageType
-                                                    + ", session=" + sessionId);
-                                }
-
-                                switch (remoteType) {
-                                case JAVASCRIPT:
-                                    // ignore GAME messages for webinterface
-                                    if (messageType == MessageType.JS_Command) {
-                                        if (receiver.getName().equals(
-                                                cMessage.getName())) {
-                                            if (InternalConfig.LOG_COMMUNICATION) {
-                                                Communicator.this.log
-                                                        .debug(Communicator.class
-                                                                .getSimpleName()
-                                                                + " run(): NOT REFLECTING JS_COMMAND: ClientType="
-                                                                + remoteType
-                                                                + ", MessageType="
-                                                                + messageType
-                                                                + ", session="
-                                                                + sessionId);
-                                            }
-                                            break;
-                                        }
-                                    }
-                                    if (messageType != MessageType.GAME) {
-                                        this.send(acWriter,
-                                                cMessage.toJavaScript());
-                                    }
-                                    break;
-                                case SERIAL:
-                                    // ignore CHAT messages for java clients
-                                    if (messageType != MessageType.CHAT) {
-
-                                        // decide if message is relevant for
-                                        // this client
-                                        final boolean isParticipant = GamePool
-                                                .getInstance().areMembers(
-                                                        sender, receiver);
-
-                                        // send message
-                                        if (isParticipant) {
-                                            this.send(
-                                                    acWriter,
-                                                    ObjectSerializerImpl
-                                                            .objectToString(cMessage));
-                                        } else {
-                                            // message belongs NOT to this
-                                            // context
-                                            if (InternalConfig.LOG_COMMUNICATION) {
-                                                Communicator.this.log
-                                                        .debug(Communicator.class
-                                                                .getSimpleName()
-                                                                + " skipped message from "
-                                                                + cMessage
-                                                                        .getName()
-                                                                + " for "
-                                                                + receiver
-                                                                        .getName());
-                                            }
-                                            continue;
-                                        }
-                                    }
-                                    break;
-                                case PLAIN:
-                                    // broadcast plain messages strictly
-                                    this.send(acWriter, cMessage.toString());
-                                    break;
-                                default:
-                                    if (InternalConfig.LOG_COMMUNICATION) {
-                                        Communicator.this.log
-                                                .warn(Communicator.class
-                                                        .getSimpleName()
-                                                        + "Typeless message detected: "
-                                                        + cMessage.toString());
-                                        Communicator.this.log
-                                                .debug(Communicator.class
-                                                        .getSimpleName()
-                                                        + ": Typeless message detected: "
-                                                        + cMessage.toString());
-                                    }
-                                    break;
-                                }
-
-                            } catch (final IOException e1) {
-                                if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                                    Communicator.this.log
-                                            .debug(Communicator.class
-                                                    .getSimpleName()
-                                                    + ": response already committed. removing: "
-                                                    + ac);
-                                }
-                                Communicator.asyncContextQueue.remove(ac);
-                                e1.printStackTrace();
-                            } catch (final IllegalStateException e2) {
-                                if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                                    Communicator.this.log
-                                            .debug(Communicator.class
-                                                    .getSimpleName()
-                                                    + ": catched IllegalStateException. Response already committed. removing: "
-                                                    + ac);
-                                }
-                                Communicator.asyncContextQueue.remove(ac);
-                                // e2.printStackTrace();
-                            }
-                        }
-                    } catch (final InterruptedException e2) {
-                        done = true;
-                        if (InternalConfig.LOG_THREADS) {
-                            Communicator.this.log.warn(Communicator.class
-                                    .getSimpleName()
-                                    + " shutdown and rebooting..");
-                            e2.printStackTrace();
-                        }
-                        this.run();
-                    }
-                }
+                Communicator.getMessagequeue().add(
+                        new CommunicatorMessage(MessageType.PING, "ALL",
+                                "."));
             }
+        }, 0, 60, TimeUnit.SECONDS);
 
-            private void send(final PrintWriter acWriter,
-                    final String concreteMessage) throws IOException {
-                if (InternalConfig.LOG_COMMUNICATION) {
-                    Communicator.this.log.debug(Communicator.class
-                            .getSimpleName() + " says: " + concreteMessage);
-                }
-                acWriter.println(concreteMessage);
-                /**
-                 * if you got a SocketException traced to this point after
-                 * logout and login in a short period of time, read this:
-                 * https://bz.apache.org/bugzilla/show_bug.cgi?id=57683
-                 *
-                 * It depends on your Tomcat version and can be ignored.
-                 */
-                acWriter.flush();
-            }
-        };
-        this.notifierThread = new Thread(notifierRunnable);
-        this.notifierThread.start();
     }
 
     /**
@@ -463,7 +283,7 @@ public class Communicator extends ProtectedHttpServlet {
 
             final CommunicatorMessage notifyMessage = this.generateCommand(
                     MessageType.SYSTEM,
-                    this.getClass().getSimpleName(),
+                    "SYSTEM",
                     Helper.encodeBase64(super.thisUser.getName()
                             + " has joined."));
             this.notify(notifyMessage);
