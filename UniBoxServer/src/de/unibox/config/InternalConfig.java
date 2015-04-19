@@ -52,9 +52,6 @@ public class InternalConfig {
     /** The Constant MESSAGE_REFLECTION. */
     public static final boolean MESSAGE_REFLECTION = false;
 
-    /** The Constant LOG_MESSAGES_IFRAME. */
-    public static final boolean LOG_MESSAGES_IFRAME = false;
-
     /** The Constant PROTOCOL. */
     public static final String PROTOCOL = "jdbc:mysql:";
 }

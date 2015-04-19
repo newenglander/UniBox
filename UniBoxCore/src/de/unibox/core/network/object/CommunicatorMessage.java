@@ -285,7 +285,7 @@ public class CommunicatorMessage implements Serializable {
                         + this.getName()
                         + "\",message:\""
                         + this.getMessage()
-                        + "\"});var e=document.getElementsByTagName(\"script\");"
+                        + "\"});window.parent.app.listening=true;var e=document.getElementsByTagName(\"script\");"
                         + "for(i=e.length-1;i>=0;i--){e[i].parentNode.removeChild(e[i]);}"
                         + "</script>";
             }

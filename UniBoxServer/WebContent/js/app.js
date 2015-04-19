@@ -6,6 +6,7 @@ var app = {
 	dataSource : '/Database',
 	authSource : '/Auth',
 	adminSource : '/Admin',
+	listening : true,
 	initialize : function() {
 		app.bindEventHandles();
 		app.login();
@@ -423,15 +424,30 @@ var app = {
 	},
 	post : function(message) {
 		if (message) {
-			jQuery.ajax({
-				type : "POST",
-				url : app.url + app.cometSource,
-				data : "action=post&message=" + Base64.encode(message),
-				error : function() {
-					app.redirect("post");
-				},
-				async : false
-			});
+			jQuery
+					.ajax({
+						type : "POST",
+						url : app.url + app.cometSource,
+						data : "action=post&message=" + Base64.encode(message),
+						success : function() {
+							// tiny dirty hack for mobile devices in order of
+							// the missing onResum() method to prevent offline
+							// states in the chat overlay
+							if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+									.test(navigator.userAgent)) {
+								app.listening = false;
+								setTimeout(function() {
+									if (!app.listening) {
+										app.reconnectDialog();
+									}
+								}, 1000);
+							}
+						},
+						error : function() {
+							app.redirect("post");
+						},
+						async : false
+					});
 		}
 	},
 	message : function(data) {
