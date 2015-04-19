@@ -19,16 +19,16 @@ public class CategoryInsert extends DatabaseAction<Integer> {
     /**
      * Instantiates a new category insert.
      *
-     * @param thisGametitle
-     *            the this gametitle
+     * @param thisGameTitle
+     *            the this gameTitle
      * @param thisNumberOfPlayers
      *            the this number of players
      */
-    public CategoryInsert(final String thisGametitle,
+    public CategoryInsert(final String thisGameTitle,
             final int thisNumberOfPlayers) {
         super(
-                "INSERT INTO `unibox`.`Category` (`Gametitle`, `NumberOfPlayers`) VALUES (?, ?);");
-        this.gameTitle = thisGametitle;
+                "INSERT INTO `unibox`.`Category` (`GameTitle`, `NumberOfPlayers`) VALUES (?, ?);");
+        this.gameTitle = thisGameTitle;
         this.numberOfPlayers = thisNumberOfPlayers;
     }
 

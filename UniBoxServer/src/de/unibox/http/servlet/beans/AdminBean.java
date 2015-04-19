@@ -13,14 +13,20 @@ public class AdminBean implements Serializable {
     /** The admin menu. */
     private String adminMenu;
 
+    /**
+     * Instantiates a new admin bean.
+     */
     public AdminBean() {
         super();
     }
 
     /**
      * Instantiates a new admin bean.
+     *
+     * @param isAdmin
+     *            the is admin
      */
-    public AdminBean(boolean isAdmin) {
+    public AdminBean(final boolean isAdmin) {
         if (isAdmin) {
             this.adminMenu = "<li><a class='whiteText' id='triggerAdmin' href='#'>Administration</a></li>";
         } else {
@@ -28,6 +34,11 @@ public class AdminBean implements Serializable {
         }
     }
 
+    /**
+     * Gets the admin menu.
+     *
+     * @return the admin menu
+     */
     public String getAdminMenu() {
         return this.adminMenu;
     }

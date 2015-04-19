@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `unibox`.`Category` ;
 
 CREATE TABLE IF NOT EXISTS `unibox`.`Category` (
   `CatID` INT NOT NULL AUTO_INCREMENT,
-  `Gametitle` VARCHAR(45) NOT NULL,
+  `GameTitle` VARCHAR(45) NOT NULL,
   `NumberOfPlayers` INT NOT NULL,
   PRIMARY KEY (`CatID`))
 ENGINE = InnoDB;

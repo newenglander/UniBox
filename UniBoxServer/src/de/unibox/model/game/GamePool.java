@@ -158,7 +158,7 @@ public class GamePool {
             while (resultSet.next()) {
                 final int gameId = resultSet.getInt("GameID");
                 final String gameName = resultSet.getString("GameName");
-                final String gameTitle = resultSet.getString("Gametitle");
+                final String gameTitle = resultSet.getString("GameTitle");
                 final int numberOfPlayers = resultSet.getInt("NumberOfPlayers");
                 this.addGameToPool(new Game(gameId, gameName, gameTitle,
                         numberOfPlayers));

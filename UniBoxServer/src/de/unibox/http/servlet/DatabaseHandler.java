@@ -16,6 +16,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.unibox.config.InternalConfig;
+import de.unibox.core.network.object.CommunicatorMessage;
+import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
@@ -125,14 +128,14 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        final String requestedData = request.getParameter("request");
+        final String action = request.getParameter("action");
         boolean doQuery = false;
 
         SelectionQuery query = null;
 
-        if (requestedData != null) {
+        if (action != null) {
 
-            if (requestedData.equals("ranking")) {
+            if (action.equals("getRanking")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
@@ -142,17 +145,26 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         "SELECT @curRank := @curRank + 1 AS Rank, Name, Score, ID FROM (SELECT Name, player.PlayerID AS ID, SUM(Scoring) AS Score FROM player INNER JOIN result WHERE player.PlayerID=result.PlayerID GROUP BY Name ORDER BY Score DESC) AS ranking, (SELECT @curRank := 0) r;");
                 doQuery = true;
 
-            } else if (requestedData.equals("games")) {
+            } else if (action.equals("getGames")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": select game table..");
                 }
                 query = new SelectionQuery(
-                        "SELECT GameID, GameName, Gametitle, NumberOfPlayers FROM game INNER JOIN category WHERE game.CatID=category.CatID;");
+                        "SELECT GameID, GameName, GameTitle, NumberOfPlayers FROM game INNER JOIN category WHERE game.CatID=category.CatID;");
                 doQuery = true;
 
-            } else if (requestedData.equals("categories")) {
+            } else if (action.equals("getUsers")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": select users table..");
+                }
+                query = new SelectionQuery("SELECT PlayerID, Name FROM player;");
+                doQuery = true;
+
+            } else if (action.equals("getCategories")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
@@ -180,14 +192,19 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 transaction.commit();
 
                 // refine data output for Places = joinedPlayer/maxPlayer
-                if (requestedData.equals("games")) {
+                if (action.equals("getGames")) {
+                    // update games from database before parsing model
+                    GamePool.getInstance().update();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         final JSONObject obj = jsonArray.getJSONObject(i);
                         final Game game = GamePool.getInstance().getGame(
                                 obj.getInt("GameID"));
+                        // add joined/available player count
                         obj.put("NumberOfPlayers",
                                 "" + game.getPlayerList().size() + "/"
                                         + game.getNumberOfPlayers());
+                        // add joined player names
+                        obj.put("Players", "" + game.playerToString());
                     }
                 }
 
@@ -231,62 +248,57 @@ public class DatabaseHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        final String createData = request.getParameter("create");
+        final String action = request.getParameter("action");
         boolean doInsert = false;
         Integer result = null;
 
+        String errorMessage = "illegal_Request";
+
         DatabaseAction<Integer> query = null;
 
-        if (createData != null) {
-            if (createData.equals("game")) {
+        if (action != null) {
+            if (action.equals("createGame")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": update game table..");
                 }
 
-                final String thisGameName = request.getParameter("gamename");
-                final int thisCatID = Integer.parseInt(request
-                        .getParameter("catid"));
+                final String thisGameName = request.getParameter("gameName");
+                final Integer thisCatID = Integer.parseInt(request
+                        .getParameter("catId"));
 
-                query = new GameInsert(thisGameName, thisCatID);
-                doInsert = true;
+                if ((thisGameName != null) && (thisCatID != null)) {
+                    query = new GameInsert(thisGameName, thisCatID);
+                    doInsert = true;
+                }
 
-                // } else if (createData.equals("queue")) {
-                //
-                // if (InternalConfig.LOG_DATABASE) {
-                // this.log.debug(this.getClass().getSimpleName() +
-                // ": update game table..");
-                // }
-                //
-                // final int thisPlayerID = Integer.parseInt(request
-                // .getParameter("playerid"));
-                // final int thisGameID = Integer.parseInt(request
-                // .getParameter("gameid"));
-                //
-                // query = new QueueInsert(thisPlayerID, thisGameID);
-                // doInsert = true;
-
-            } else if (createData.equals("result")) {
+            } else if (action.equals("createResult")) {
 
                 if (InternalConfig.LOG_DATABASE) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": update result table..");
                 }
 
-                final int thisGameID = Integer.parseInt(request
-                        .getParameter("gameid"));
-                final int thisPlayerID = Integer.parseInt(request
-                        .getParameter("playerid"));
-                final int thisScoring = Integer.parseInt(request
+                final Integer thisGameID = Integer.parseInt(request
+                        .getParameter("gameId"));
+                final Integer thisPlayerId = Integer.parseInt(request
+                        .getParameter("playerId"));
+                final Integer thisScoring = Integer.parseInt(request
                         .getParameter("scoring"));
 
-                query = new ResultInsert(thisGameID, thisPlayerID, thisScoring);
-                doInsert = true;
+                if ((thisGameID != null) && (thisPlayerId != null)
+                        && (thisScoring != null)) {
+                    query = new ResultInsert(thisGameID, thisPlayerId,
+                            thisScoring);
+                    doInsert = true;
+                }
 
             }
 
             if (doInsert && (query != null)) {
+
+                boolean isComplete = true;
 
                 try {
 
@@ -299,8 +311,23 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                     transaction.commit();
 
                     /** update model */
-                    if (createData.equals("game")) {
+                    if (action.equals("createGame")) {
                         GamePool.getInstance().update();
+
+                        // send game update broadcast
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_Command, "ALL",
+                                        "window.parent.app.updateGameTable();"));
+                    }
+                    if (action.equals("createResult")) {
+                        // send game update broadcast
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_Command, "ALL",
+                                        "window.parent.app.updateRankingTable();"));
                     }
 
                 } catch (final SQLException e) {
@@ -311,13 +338,21 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                                 + query.getSqlString());
                     }
                     e.printStackTrace();
+                    errorMessage = "SQL_error";
+                    isComplete = false;
                 }
 
-                response.setContentType("text/html");
-                response.setStatus(HttpServletResponse.SC_CREATED);
-                final PrintWriter out = response.getWriter();
-                out.print("database updated with state: " + result);
-                out.flush();
+                if (isComplete) {
+
+                    response.setContentType("text/html");
+                    response.setStatus(HttpServletResponse.SC_CREATED);
+                    final PrintWriter out = response.getWriter();
+                    out.print("affected_rows:" + result);
+                    out.flush();
+
+                } else {
+                    super.serviceErrorMessage(response, errorMessage);
+                }
 
             } else {
                 super.serviceDenied(request, response);

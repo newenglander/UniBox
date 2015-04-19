@@ -8,26 +8,52 @@ public class UserBean extends AdminBean {
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -256128157289188446L;
 
-    private String username = null;
-
+    /** The session. */
     private String session = null;
 
-    public UserBean(String username, String session, boolean isAdmin) {
+    /** The username. */
+    private String username = null;
+
+    /**
+     * Instantiates a new user bean.
+     */
+    public UserBean() {
+        super();
+    }
+
+    /**
+     * Instantiates a new user bean.
+     *
+     * @param username
+     *            the username
+     * @param session
+     *            the session
+     * @param isAdmin
+     *            the is admin
+     */
+    public UserBean(final String username, final String session,
+            final boolean isAdmin) {
         super(isAdmin);
         this.username = username;
         this.session = session;
     }
 
-    public UserBean() {
-        super();
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
+    /**
+     * Gets the session.
+     *
+     * @return the session
+     */
     public String getSession() {
-        return session;
+        return this.session;
+    }
+
+    /**
+     * Gets the username.
+     *
+     * @return the username
+     */
+    public String getUsername() {
+        return this.username;
     }
 
 }

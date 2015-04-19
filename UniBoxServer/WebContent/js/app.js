@@ -5,14 +5,16 @@ var app = {
 	cometSource : '/Communicator/JavaScript',
 	dataSource : '/Database',
 	authSource : '/Auth',
+	adminSource : '/Admin',
+	listening : true,
 	initialize : function() {
-		app.bind();
+		app.bindEventHandles();
 		app.login();
 		app.listen();
-		app.initGameData();
-		app.initUserData();
-		app.updateGameData();
-		app.updateUserData();
+		app.initGameTable();
+		app.initRankingTable();
+		app.updateGameTable();
+		app.updateRankingTable();
 		app.gotActiveGame();
 		app.updateFormulars();
 	},
@@ -21,12 +23,12 @@ var app = {
 		jQuery.ajax({
 			type : "GET",
 			url : app.url + app.dataSource,
-			data : "request=categories",
+			data : "action=getCategories",
 			success : function(data) {
 				$.each(data, function(index, value) {
 					$("#gameTypeInput").append(
 							'<option value="' + value.CatID + '">'
-									+ value.Gametitle + '</option>');
+									+ value.GameTitle + '</option>');
 				});
 			},
 			error : function(e) {
@@ -38,7 +40,12 @@ var app = {
 		});
 	},
 	listen : function() {
-		$('#comet-frame').attr("src", app.url + app.cometSource + '?1').load(
+		$('#comet-frame').on("readystatechange", function() {
+			console.log("ARGH");
+			console.log(this.readyState);
+		});
+		$('#comet-frame').attr("src", app.url + app.cometSource + '?1').on(
+				"load",
 				function() {
 					console
 							.log("reconnect listener after timeout.. Listened "
@@ -97,12 +104,12 @@ var app = {
 		setTimeout(function() {
 			$(".messengerFrame").addClass("hidden");
 		}, 200);
-		$("body").removeClass("no-scroll");
+		$("html").removeClass("no-scroll");
 	},
 	showChat : function() {
 		$(".messengerFrame").removeClass("out");
 		$(".messengerFrame").removeClass("hidden");
-		$("body").addClass("no-scroll");
+		$("html").addClass("no-scroll");
 		setTimeout(function() {
 			$("#messengerInputForm").focus();
 		}, 100);
@@ -112,14 +119,12 @@ var app = {
 		setTimeout(function() {
 			$(".adminFrame").addClass("hidden");
 		}, 200);
-		$("body").removeClass("no-scroll");
 	},
 	showAdmin : function() {
 		$(".adminFrame").removeClass("out");
 		$(".adminFrame").removeClass("hidden");
-		$("body").addClass("no-scroll");
 	},
-	bind : function() {
+	bindEventHandles : function() {
 		$('#messengerInputForm').keypress(function(e) {
 			if (e.which == 13) {
 				var formContent = $('#messengerInputForm');
@@ -152,8 +157,8 @@ var app = {
 							.ajax({
 								type : "POST",
 								url : app.url + app.dataSource,
-								data : "create=game&gamename=" + gameName
-										+ "&catid=" + gameType + "&descr="
+								data : "action=createGame&gameName=" + gameName
+										+ "&catId=" + gameType + "&descr="
 										+ gameDescription,
 								success : function(result) {
 									app.newsticker("success",
@@ -161,7 +166,7 @@ var app = {
 									swal("Good job!", "Game created!",
 											"success");
 									$('#createGameForm').trigger("reset");
-									app.updateGameData();
+									app.updateGameTable();
 								},
 								error : function(e) {
 									app.newsticker("warning",
@@ -229,57 +234,146 @@ var app = {
 			e.preventDefault();
 			e.stopPropagation();
 		});
-		$('#createUserBtn').on(
+		$('#createUserBtn')
+				.on(
+						'click',
+						function(e) {
+							var name = $("#createUserField").val();
+							if (name != "") {
+								var isAdmin = 0;
+								if ($("#isAdminCheckbox").prop('checked')) {
+									isAdmin = 1;
+								}
+								jQuery
+										.ajax({
+											type : "POST",
+											url : app.url + app.adminSource,
+											data : "action=createPlayer&name="
+													+ Base64.encode(name)
+													+ "&adminRights=" + isAdmin,
+											success : function(data) {
+												console.log(data);
+												swal("Good Job!",
+														"User created..!",
+														"success");
+												$('#adminControlForm').trigger(
+														"reset");
+												$("#createUserField").focus();
+											},
+											error : function(e) {
+												console.log(e);
+												swal("Ups..",
+														"Could not create user "
+																+ name + "..!",
+														"warning");
+												$('#adminControlForm').trigger(
+														"reset");
+												$("#createUserField").focus();
+											},
+											async : false
+										});
+							} else {
+								swal("Ups..", "Please type a name..", "warning");
+								$('#createUserField').focus();
+							}
+						});
+		$('#deleteUserBtn').on(
 				'click',
 				function(e) {
-					var name = $("#createUserField").val();
-					if (name != "") {
-						console.log(name);
-						var isAdmin = 0;
-						if ($("#isAdminCheckbox").prop('checked')) {
-							isAdmin = 1;
-						}
-						jQuery.ajax({
-							type : "POST",
-							url : app.url + app.dataSource,
-							data : "create=player&name=" + Base64.encode(name) + "&adminrights=" + isAdmin,
-							success : function(data) {
-								console.log(data);
-								swal("Good Job!", "User created..!", "success");
-							},
-							error : function(e) {
-								console.log(e);
-								swal("Ups..", "Could not create user " + name + "..!", "warning");
-							},
-							async : false
+
+					var result = {
+						"success" : [],
+						"failed" : []
+					};
+					var json = {
+						"data" : JSON.stringify($("#multiSelectDeleteUser")
+								.val())
+					};
+					if (json["data"] != "null") {
+						$("#multiSelectDeleteUser").val().forEach(function(id) {
+							jQuery.ajax({
+								type : "GET",
+								url : app.url + app.adminSource,
+								data : "action=deleteUser&userId=" + id,
+								success : function(data) {
+									result["success"].push(id);
+									$('#adminControlForm').trigger("reset");
+								},
+								error : function(e) {
+									console.log(e);
+									result["failed"].push({
+										"id" : id,
+										"error" : e
+									});
+									$('#adminControlForm').trigger("reset");
+								},
+								async : false
+							});
 						});
+						if (result["success"] == "") {
+							result["success"] = "none";
+						}
+						if (result["failed"] == "") {
+							result["failed"] = "none";
+						}
+						swal("Good Job!", "IDs of deletetd users: "
+								+ result["success"]
+								+ ", IDs of not deleted users: "
+								+ result["failed"], "info");
+
+						app.updateUsersSelection();
 					} else {
-						swal("Ups..", "Please type a name..", "warning");
-						$('#createUserField').focus();
+						swal("Ups..", "No user(s) selected..", "warning");
 					}
 				});
-		$('#deleteUserBtn').on('click', function(e) {
-			var json = {
-				"action" : "delete",
-				"data" : JSON.stringify($("#multiSelectDeleteUser").val())
-			};
-			if (json["data"] != "null") {
-				console.log(json);
-			} else {
-				swal("Ups..", "No user(s) selected..", "warning");
-			}
-		});
-		$('#deleteGameBtn').on('click', function(e) {
-			var json = {
-				"action" : "delete",
-				"data" : JSON.stringify($("#multiSelectDeleteGame").val())
-			};
-			if (json["data"] != "null") {
-				console.log(json);
-			} else {
-				swal("Ups..", "No game(s) selected..", "warning");
-			}
-		});
+		$('#deleteGameBtn').on(
+				'click',
+				function(e) {
+					var result = {
+						"success" : [],
+						"failed" : []
+					};
+					var json = {
+						"data" : JSON.stringify($("#multiSelectDeleteGame")
+								.val())
+					};
+					if (json["data"] != "null") {
+						$("#multiSelectDeleteGame").val().forEach(function(id) {
+							jQuery.ajax({
+								type : "GET",
+								url : app.url + app.adminSource,
+								data : "action=deleteGame&gameId=" + id,
+								success : function(data) {
+									result["success"].push(id);
+									$('#adminControlForm').trigger("reset");
+								},
+								error : function(e) {
+									console.log(e);
+									result["failed"].push({
+										"id" : id,
+										"error" : e
+									});
+									$('#adminControlForm').trigger("reset");
+								},
+								async : false
+							});
+						});
+						if (result["success"] == "") {
+							result["success"] = "none";
+						}
+						if (result["failed"] == "") {
+							result["failed"] = "none";
+						}
+						swal("Good Job!", "IDs of deleted games: "
+								+ result["success"]
+								+ ", IDs of not deleted games: "
+								+ result["failed"], "info");
+
+						app.updateGameTable();
+					} else {
+						swal("Ups..", "No game(s) selected..", "warning");
+					}
+				});
 		$('#resetScoresBtn').on('click', function(e) {
 			console.log("resetScores");
 		});
@@ -301,28 +395,6 @@ var app = {
 				}
 			}
 		});
-		// $('.navbar-collapse').on('hidden.bs.collapse', function() {
-		// console.log("HI");
-		// $(".navbar-toggle").blur();
-		// });
-		// $(".navbar-toggle").focusout(function() {
-		// console.log("IH");
-		// if ($(".navbar-collapse").hasClass("in")) {
-		// $(this).click();
-		// }
-		// });
-		/**
-		 * DEMO for status panel
-		 * 
-		 * $('.alert') .click( function() { // DEMO app.newsticker("info",
-		 * "Info: UniBox connects your Java Games.."); setTimeout( function() {
-		 * app .newsticker("warning", "Warning: It´s boring.. UniBox is
-		 * idling.."); }, 4000); setTimeout( function() { app
-		 * .newsticker("danger", "Danger: UniBox is almost fell asleep..
-		 * zzZZzz.."); }, 8000); setTimeout( function() { app
-		 * .newsticker("success", "Success: ..How are you? UniBox is ready to
-		 * conquer!"); }, 12000); });
-		 */
 	},
 	reload : function() {
 		swal({
@@ -332,8 +404,8 @@ var app = {
 			type : "success",
 			timer : "2000"
 		});
-		app.updateGameData();
-		app.updateUserData();
+		app.updateGameTable();
+		app.updateRankingTable();
 		app.listen();
 	},
 	login : function() {
@@ -352,15 +424,30 @@ var app = {
 	},
 	post : function(message) {
 		if (message) {
-			jQuery.ajax({
-				type : "POST",
-				url : app.url + app.cometSource,
-				data : "action=post&message=" + Base64.encode(message),
-				error : function() {
-					app.redirect("post");
-				},
-				async : false
-			});
+			jQuery
+					.ajax({
+						type : "POST",
+						url : app.url + app.cometSource,
+						data : "action=post&message=" + Base64.encode(message),
+						success : function() {
+							// tiny dirty hack for mobile devices in order of
+							// the missing onResum() method to prevent offline
+							// states in the chat overlay
+							if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+									.test(navigator.userAgent)) {
+								app.listening = false;
+								setTimeout(function() {
+									if (!app.listening) {
+										app.reconnectDialog();
+									}
+								}, 1000);
+							}
+						},
+						error : function() {
+							app.redirect("post");
+						},
+						async : false
+					});
 		}
 	},
 	message : function(data) {
@@ -381,7 +468,7 @@ var app = {
 	redirect : function(reason) {
 		window.location.replace("/UniBox/?error=" + reason);
 	},
-	initGameData : function() {
+	initGameTable : function() {
 		var gameTable = $('#gamePanel').dataTable({
 			"pagingType" : "simple",
 			"iDisplayLength" : 10,
@@ -403,21 +490,23 @@ var app = {
 			$("#gamePanel_filter input").keyup()
 		});
 	},
-	updateGameData : function() {
+	updateGameTable : function() {
 		var gameDataTable = $('#gamePanel').DataTable();
 		jQuery.ajax({
 			type : "GET",
-			url : app.url + app.dataSource + "?request=games",
+			url : app.url + app.dataSource + "?action=getGames",
 			success : function(data) {
 				gameDataTable.clear().draw();
+				$("#multiSelectDeleteGame").empty();
 				for ( var i in data) {
 					var gameJoinLink = '<a id="game-' + data[i].GameID
 							+ '" href="javascript:app.joinGame('
 							+ data[i].GameID + ')">Join</a>';
 					gameDataTable.row.add([ gameJoinLink, data[i].GameID,
-							data[i].Gametitle, data[i].GameName,
-							data[i].NumberOfPlayers ]);
+							data[i].GameTitle, data[i].GameName,
+							data[i].NumberOfPlayers, data[i].Players ]);
 					// update admin panel too
+
 					$("#multiSelectDeleteGame").append(
 							"<option value='" + data[i].GameID + "'>"
 									+ data[i].GameName + "</option>");
@@ -429,6 +518,7 @@ var app = {
 					includeSelectAllOption : true,
 					enableFiltering : true
 				});
+				$('#multiSelectDeleteGame').multiselect('rebuild');
 			},
 			error : function() {
 				app.newsticker("warning", "Could not update game table..!");
@@ -444,7 +534,7 @@ var app = {
 			async : false
 		});
 	},
-	initUserData : function() {
+	initRankingTable : function() {
 		var rankingTable = $('#rankingPanel').dataTable({
 			"pagingType" : "simple",
 			"iDisplayLength" : 10,
@@ -466,31 +556,54 @@ var app = {
 			$("#rankingPanel_filter input").keyup()
 		});
 	},
-	updateUserData : function() {
+	updateRankingTable : function() {
+		// if ranking table should be updated, user table should be updated too
+		app.updateUsersSelection();
 		var rankingDataTable = $('#rankingPanel').DataTable();
 		jQuery.ajax({
 			type : "GET",
-			url : app.url + app.dataSource + "?request=ranking",
+			url : app.url + app.dataSource + "?action=getRanking",
 			success : function(data) {
 				rankingDataTable.clear().draw();
 				for ( var i in data) {
 					rankingDataTable.row.add([ data[i].Rank, data[i].Name,
 							data[i].Score ]);
-					// update admin panel too
-					$("#multiSelectDeleteUser").append(
-							"<option value='" + data[i].ID + "'>"
-									+ data[i].Name + "</option>");
-
 				}
 				rankingDataTable.draw();
-				// update admin panel too
+			},
+			error : function() {
+				app.newsticker("warning", "Could not update ranking table..!");
+			},
+			statusCode : {
+				403 : function() {
+					app.redirect("forbidden");
+				},
+				0 : function() {
+					app.redirect("server_offline");
+				}
+			},
+			async : false
+		});
+	},
+	updateUsersSelection : function() {
+		$("#multiSelectDeleteUser").empty();
+		jQuery.ajax({
+			type : "GET",
+			url : app.url + app.dataSource + "?action=getUsers",
+			success : function(data) {
+				for ( var i in data) {
+					$("#multiSelectDeleteUser").append(
+							"<option value='" + data[i].PlayerID + "'>"
+									+ data[i].Name + "</option>");
+				}
 				$('#multiSelectDeleteUser').multiselect({
 					includeSelectAllOption : true,
 					enableFiltering : true
 				});
+				$('#multiSelectDeleteUser').multiselect('rebuild');
 			},
 			error : function() {
-				app.newsticker("warning", "Could not update ranking table..!");
+				app.newsticker("warning", "Could not update users data..!");
 			},
 			statusCode : {
 				403 : function() {
@@ -530,9 +643,9 @@ var app = {
 	joinGame : function(id) {
 		jQuery.ajax({
 			type : "GET",
-			url : app.url + "/Game?action=join&gameid=" + id,
+			url : app.url + "/Game?action=joinGame&gameId=" + id,
 			success : function(data) {
-				app.updateGameData();
+				app.updateGameTable();
 				var linkElement = $("#game-" + id);
 				linkElement
 						.attr("href", "javascript:app.leaveGame(" + id + ")");
@@ -556,9 +669,9 @@ var app = {
 		jQuery
 				.ajax({
 					type : "GET",
-					url : app.url + "/Game?action=leave&gameid=" + id,
+					url : app.url + "/Game?action=leaveGame&gameId=" + id,
 					success : function(data) {
-						app.updateGameData();
+						app.updateGameTable();
 						var linkElement = $("#game-" + id);
 						linkElement.attr("href", "javascript:app.joinGame("
 								+ id + ")");
@@ -581,9 +694,9 @@ var app = {
 	gotActiveGame : function() {
 		jQuery.ajax({
 			type : "GET",
-			url : app.url + "/Game?action=whichgame",
+			url : app.url + "/Game?action=whichGame",
 			success : function(data) {
-				var id = data.replace("gameid:", "");
+				var id = data.replace("gameId:", "");
 				var linkElement = $("#game-" + id);
 				linkElement
 						.attr("href", "javascript:app.leaveGame(" + id + ")");

@@ -32,6 +32,9 @@ public class CommunicatorMessage implements Serializable {
         /** The J s_ command. */
         JS_Command,
 
+        /** The ping. */
+        PING,
+
         /** The system. */
         SYSTEM
     }
@@ -75,8 +78,8 @@ public class CommunicatorMessage implements Serializable {
     /** The checksum. */
     private String checksum;
 
-    /** The debug. */
-    final boolean DEBUG = true;
+    /** The debug client side. */
+    private final boolean DEBUG_CLIENT_SIDE = false;
 
     /** The message. */
     private String message;
@@ -267,8 +270,10 @@ public class CommunicatorMessage implements Serializable {
         if (this.type == MessageType.JS_Command) {
             returnThis = "<script type='text/javascript'>" + this.getMessage()
                     + "</script>";
+        } else if (this.type == MessageType.PING) {
+            returnThis = this.getMessage();
         } else {
-            if (this.DEBUG) {
+            if (this.DEBUG_CLIENT_SIDE) {
                 returnThis = "<script type='text/javascript'>window.parent.app.message({name:\""
                         + this.getName()
                         + "\",message:\""
@@ -280,7 +285,7 @@ public class CommunicatorMessage implements Serializable {
                         + this.getName()
                         + "\",message:\""
                         + this.getMessage()
-                        + "\"});var e=document.getElementsByTagName(\"script\");"
+                        + "\"});window.parent.app.listening=true;var e=document.getElementsByTagName(\"script\");"
                         + "for(i=e.length-1;i>=0;i--){e[i].parentNode.removeChild(e[i]);}"
                         + "</script>";
             }
