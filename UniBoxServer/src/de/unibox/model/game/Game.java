@@ -116,12 +116,12 @@ public class Game {
      * @return the string
      */
     public String playerToString() {
-        StringBuilder returnThis = new StringBuilder("");
+        final StringBuilder returnThis = new StringBuilder("");
         if (this.playerList.size() == 0) {
             returnThis.append("none");
         } else {
             int i = 1;
-            for (AbstractUser user : this.playerList) {
+            for (final AbstractUser user : this.playerList) {
                 if (i == this.playerList.size()) {
                     returnThis.append(user.getName());
                 } else {

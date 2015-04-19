@@ -230,62 +230,146 @@ var app = {
 			e.preventDefault();
 			e.stopPropagation();
 		});
-		$('#createUserBtn').on(
+		$('#createUserBtn')
+				.on(
+						'click',
+						function(e) {
+							var name = $("#createUserField").val();
+							if (name != "") {
+								var isAdmin = 0;
+								if ($("#isAdminCheckbox").prop('checked')) {
+									isAdmin = 1;
+								}
+								jQuery
+										.ajax({
+											type : "POST",
+											url : app.url + app.adminSource,
+											data : "action=createPlayer&name="
+													+ Base64.encode(name)
+													+ "&adminRights=" + isAdmin,
+											success : function(data) {
+												console.log(data);
+												swal("Good Job!",
+														"User created..!",
+														"success");
+												$('#adminControlForm').trigger(
+														"reset");
+												$("#createUserField").focus();
+											},
+											error : function(e) {
+												console.log(e);
+												swal("Ups..",
+														"Could not create user "
+																+ name + "..!",
+														"warning");
+												$('#adminControlForm').trigger(
+														"reset");
+												$("#createUserField").focus();
+											},
+											async : false
+										});
+							} else {
+								swal("Ups..", "Please type a name..", "warning");
+								$('#createUserField').focus();
+							}
+						});
+		$('#deleteUserBtn').on(
 				'click',
 				function(e) {
-					var name = $("#createUserField").val();
-					if (name != "") {
-						console.log(name);
-						var isAdmin = 0;
-						if ($("#isAdminCheckbox").prop('checked')) {
-							isAdmin = 1;
+
+					var result = {
+						"success" : [],
+						"failed" : []
+					};
+					var json = {
+						"data" : JSON.stringify($("#multiSelectDeleteUser")
+								.val())
+					};
+					if (json["data"] != "null") {
+						$("#multiSelectDeleteUser").val().forEach(function(id) {
+							jQuery.ajax({
+								type : "GET",
+								url : app.url + app.adminSource,
+								data : "action=deleteUser&userId=" + id,
+								success : function(data) {
+									result["success"].push(id);
+									$('#adminControlForm').trigger("reset");
+								},
+								error : function(e) {
+									console.log(e);
+									result["failed"].push({
+										"id" : id,
+										"error" : e
+									});
+									$('#adminControlForm').trigger("reset");
+								},
+								async : false
+							});
+						});
+						if (result["success"] == "") {
+							result["success"] = "none";
 						}
-						jQuery
-								.ajax({
-									type : "POST",
-									url : app.url + app.adminSource,
-									data : "action=createPlayer&name="
-											+ Base64.encode(name)
-											+ "&adminRights=" + isAdmin,
-									success : function(data) {
-										console.log(data);
-										swal("Good Job!", "User created..!",
-												"success");
-									},
-									error : function(e) {
-										console.log(e);
-										swal("Ups..", "Could not create user "
-												+ name + "..!", "warning");
-									},
-									async : false
-								});
+						if (result["failed"] == "") {
+							result["failed"] = "none";
+						}
+						swal("Good Job!", "IDs of deletetd users: "
+								+ result["success"]
+								+ ", IDs of not deleted users: "
+								+ result["failed"], "info");
+
+						app.updateUsersSelection();
 					} else {
-						swal("Ups..", "Please type a name..", "warning");
-						$('#createUserField').focus();
+						swal("Ups..", "No user(s) selected..", "warning");
 					}
 				});
-		$('#deleteUserBtn').on('click', function(e) {
-			var json = {
-				"action" : "delete",
-				"data" : JSON.stringify($("#multiSelectDeleteUser").val())
-			};
-			if (json["data"] != "null") {
-				console.log(json);
-			} else {
-				swal("Ups..", "No user(s) selected..", "warning");
-			}
-		});
-		$('#deleteGameBtn').on('click', function(e) {
-			var json = {
-				"action" : "delete",
-				"data" : JSON.stringify($("#multiSelectDeleteGame").val())
-			};
-			if (json["data"] != "null") {
-				console.log(json);
-			} else {
-				swal("Ups..", "No game(s) selected..", "warning");
-			}
-		});
+		$('#deleteGameBtn').on(
+				'click',
+				function(e) {
+					var result = {
+						"success" : [],
+						"failed" : []
+					};
+					var json = {
+						"data" : JSON.stringify($("#multiSelectDeleteGame")
+								.val())
+					};
+					if (json["data"] != "null") {
+						$("#multiSelectDeleteGame").val().forEach(function(id) {
+							jQuery.ajax({
+								type : "GET",
+								url : app.url + app.adminSource,
+								data : "action=deleteGame&gameId=" + id,
+								success : function(data) {
+									result["success"].push(id);
+									$('#adminControlForm').trigger("reset");
+								},
+								error : function(e) {
+									console.log(e);
+									result["failed"].push({
+										"id" : id,
+										"error" : e
+									});
+									$('#adminControlForm').trigger("reset");
+								},
+								async : false
+							});
+						});
+						if (result["success"] == "") {
+							result["success"] = "none";
+						}
+						if (result["failed"] == "") {
+							result["failed"] = "none";
+						}
+						swal("Good Job!", "IDs of deleted games: "
+								+ result["success"]
+								+ ", IDs of not deleted games: "
+								+ result["failed"], "info");
+
+						app.updateGameTable();
+					} else {
+						swal("Ups..", "No game(s) selected..", "warning");
+					}
+				});
 		$('#resetScoresBtn').on('click', function(e) {
 			console.log("resetScores");
 		});
@@ -307,28 +391,6 @@ var app = {
 				}
 			}
 		});
-		// $('.navbar-collapse').on('hidden.bs.collapse', function() {
-		// console.log("HI");
-		// $(".navbar-toggle").blur();
-		// });
-		// $(".navbar-toggle").focusout(function() {
-		// console.log("IH");
-		// if ($(".navbar-collapse").hasClass("in")) {
-		// $(this).click();
-		// }
-		// });
-		/**
-		 * DEMO for status panel
-		 * 
-		 * $('.alert') .click( function() { // DEMO app.newsticker("info",
-		 * "Info: UniBox connects your Java Games.."); setTimeout( function() {
-		 * app .newsticker("warning", "Warning: It´s boring.. UniBox is
-		 * idling.."); }, 4000); setTimeout( function() { app
-		 * .newsticker("danger", "Danger: UniBox is almost fell asleep..
-		 * zzZZzz.."); }, 8000); setTimeout( function() { app
-		 * .newsticker("success", "Success: ..How are you? UniBox is ready to
-		 * conquer!"); }, 12000); });
-		 */
 	},
 	reload : function() {
 		swal({
@@ -416,6 +478,7 @@ var app = {
 			url : app.url + app.dataSource + "?action=getGames",
 			success : function(data) {
 				gameDataTable.clear().draw();
+				$("#multiSelectDeleteGame").empty();
 				for ( var i in data) {
 					var gameJoinLink = '<a id="game-' + data[i].GameID
 							+ '" href="javascript:app.joinGame('
@@ -424,6 +487,7 @@ var app = {
 							data[i].GameTitle, data[i].GameName,
 							data[i].NumberOfPlayers, data[i].Players ]);
 					// update admin panel too
+
 					$("#multiSelectDeleteGame").append(
 							"<option value='" + data[i].GameID + "'>"
 									+ data[i].GameName + "</option>");
@@ -435,6 +499,7 @@ var app = {
 					includeSelectAllOption : true,
 					enableFiltering : true
 				});
+				$('#multiSelectDeleteGame').multiselect('rebuild');
 			},
 			error : function() {
 				app.newsticker("warning", "Could not update game table..!");
@@ -502,6 +567,7 @@ var app = {
 		});
 	},
 	updateUsersSelection : function() {
+		$("#multiSelectDeleteUser").empty();
 		jQuery.ajax({
 			type : "GET",
 			url : app.url + app.dataSource + "?action=getUsers",
@@ -515,6 +581,7 @@ var app = {
 					includeSelectAllOption : true,
 					enableFiltering : true
 				});
+				$('#multiSelectDeleteUser').multiselect('rebuild');
 			},
 			error : function() {
 				app.newsticker("warning", "Could not update users data..!");

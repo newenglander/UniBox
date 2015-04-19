@@ -310,13 +310,10 @@ public class ProtectedHttpServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
-    
 
     /**
-     * Service denied.
+     * Service error message.
      *
-     * @param request
-     *            the request
      * @param response
      *            the response
      * @param message
@@ -324,36 +321,32 @@ public class ProtectedHttpServlet extends HttpServlet {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    protected void serviceDenied(final HttpServletRequest request,
-            final HttpServletResponse response, String message) throws IOException {
+    protected void serviceErrorMessage(final HttpServletResponse response,
+            final String message) throws IOException {
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        try {
-            request.getRequestDispatcher("/login.html").include(request,
-                    response);
-        } catch (final ServletException e) {
-            response.getWriter().write(message);
-            e.printStackTrace();
-        }
+        response.getWriter().write(message);
+        response.getWriter().flush();
+        response.getWriter().close();
     }
 
     /**
      * Validate user bean.
      */
     protected void validateUserBean() {
-        final Object obj = thisSession.getAttribute("user.bean");
+        final Object obj = this.thisSession.getAttribute("user.bean");
         UserBean userBean = null;
         if ((obj != null) && (obj instanceof UserBean)) {
             userBean = (UserBean) obj;
         } else {
-            if (thisUser instanceof AdministratorUser) {
-                userBean = new UserBean(thisUser.getName(),
-                        thisUser.getSessionId(), true);
+            if (this.thisUser instanceof AdministratorUser) {
+                userBean = new UserBean(this.thisUser.getName(),
+                        this.thisUser.getSessionId(), true);
             } else {
-                userBean = new UserBean(thisUser.getName(),
-                        thisUser.getSessionId(), false);
+                userBean = new UserBean(this.thisUser.getName(),
+                        this.thisUser.getSessionId(), false);
             }
-            thisSession.setAttribute("userbean", userBean);
+            this.thisSession.setAttribute("userbean", userBean);
         }
     }
 }

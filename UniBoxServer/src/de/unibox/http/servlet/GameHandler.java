@@ -47,7 +47,7 @@ public class GameHandler extends ProtectedHttpServlet {
 
         final PrintWriter out = response.getWriter();
 
-        String action = request.getParameter("action");
+        final String action = request.getParameter("action");
         Integer gameId = null;
         Game game = null;
 
@@ -72,7 +72,7 @@ public class GameHandler extends ProtectedHttpServlet {
                 game = GamePool.getInstance().getGame(gameId);
 
                 if (game != null) {
-                    
+
                     if (action.equals("joinGame")) {
 
                         this.log.debug(this.getClass().getSimpleName()
@@ -111,7 +111,7 @@ public class GameHandler extends ProtectedHttpServlet {
                     }
 
                 } else {
-                    serviceDenied(request, response, "invalid_GameID");
+                    this.serviceErrorMessage(response, "invalid_GameID");
                 }
 
             }
@@ -124,7 +124,7 @@ public class GameHandler extends ProtectedHttpServlet {
                     out.print("gameId:" + gameId);
                 }
             } else {
-                serviceDenied(request, response, errorMessage);
+                this.serviceErrorMessage(response, errorMessage);
             }
 
             if (InternalConfig.LOG_GAMEPOOL) {
@@ -138,7 +138,7 @@ public class GameHandler extends ProtectedHttpServlet {
             out.close();
 
         } else {
-            serviceDenied(request, response);
+            this.serviceDenied(request, response);
         }
 
     }

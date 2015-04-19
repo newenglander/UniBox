@@ -16,6 +16,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.unibox.config.InternalConfig;
+import de.unibox.core.network.object.CommunicatorMessage;
+import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
@@ -265,7 +268,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 final Integer thisCatID = Integer.parseInt(request
                         .getParameter("catId"));
 
-                if (thisGameName != null && thisCatID != null) {
+                if ((thisGameName != null) && (thisCatID != null)) {
                     query = new GameInsert(thisGameName, thisCatID);
                     doInsert = true;
                 }
@@ -284,8 +287,8 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 final Integer thisScoring = Integer.parseInt(request
                         .getParameter("scoring"));
 
-                if (thisGameID != null && thisPlayerId != null
-                        && thisScoring != null) {
+                if ((thisGameID != null) && (thisPlayerId != null)
+                        && (thisScoring != null)) {
                     query = new ResultInsert(thisGameID, thisPlayerId,
                             thisScoring);
                     doInsert = true;
@@ -308,8 +311,23 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                     transaction.commit();
 
                     /** update model */
-                    if (action.equals("game")) {
+                    if (action.equals("createGame")) {
                         GamePool.getInstance().update();
+
+                        // send game update broadcast
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_Command, "ALL",
+                                        "window.parent.app.updateGameTable();"));
+                    }
+                    if (action.equals("createResult")) {
+                        // send game update broadcast
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_Command, "ALL",
+                                        "window.parent.app.updateRankingTable();"));
                     }
 
                 } catch (final SQLException e) {
@@ -329,11 +347,11 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                     response.setContentType("text/html");
                     response.setStatus(HttpServletResponse.SC_CREATED);
                     final PrintWriter out = response.getWriter();
-                    out.print("database updated with state: " + result);
+                    out.print("affected_rows:" + result);
                     out.flush();
 
                 } else {
-                    super.serviceDenied(request, response, errorMessage);
+                    super.serviceErrorMessage(response, errorMessage);
                 }
 
             } else {
