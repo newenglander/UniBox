@@ -39,7 +39,12 @@ var app = {
 		});
 	},
 	listen : function() {
-		$('#comet-frame').attr("src", app.url + app.cometSource + '?1').load(
+		$('#comet-frame').on("readystatechange", function() {
+			console.log("ARGH");
+			console.log(this.readyState);
+		});
+		$('#comet-frame').attr("src", app.url + app.cometSource + '?1').on(
+				"load",
 				function() {
 					console
 							.log("reconnect listener after timeout.. Listened "
@@ -98,12 +103,12 @@ var app = {
 		setTimeout(function() {
 			$(".messengerFrame").addClass("hidden");
 		}, 200);
-		$("body").removeClass("no-scroll");
+		$("html").removeClass("no-scroll");
 	},
 	showChat : function() {
 		$(".messengerFrame").removeClass("out");
 		$(".messengerFrame").removeClass("hidden");
-		$("body").addClass("no-scroll");
+		$("html").addClass("no-scroll");
 		setTimeout(function() {
 			$("#messengerInputForm").focus();
 		}, 100);
@@ -113,12 +118,10 @@ var app = {
 		setTimeout(function() {
 			$(".adminFrame").addClass("hidden");
 		}, 200);
-		$("body").removeClass("no-scroll");
 	},
 	showAdmin : function() {
 		$(".adminFrame").removeClass("out");
 		$(".adminFrame").removeClass("hidden");
-		$("body").addClass("no-scroll");
 	},
 	bindEventHandles : function() {
 		$('#messengerInputForm').keypress(function(e) {
