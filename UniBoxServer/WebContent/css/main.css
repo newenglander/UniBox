@@ -126,7 +126,11 @@ body, .jumbotron {
 }
 
 .divider {
-	border-color: #666666;
+	border-color: #C7C7C7;
+}
+
+.ul {
+	text-decoration: underline;
 }
 
 .whiteText li a {
@@ -253,7 +257,8 @@ ul.pagination {
 	padding-top: 50px;
 }
 
-.adminControlForm fieldset div.form-group div div.btn-group, .adminControlForm fieldset div.form-group div div.btn-group button {
+.adminControlForm fieldset div.form-group div div.btn-group,
+	.adminControlForm fieldset div.form-group div div.btn-group button {
 	width: 100%;
 }
 
@@ -272,7 +277,7 @@ ul.pagination {
 }
 
 .adminContainer {
-	background-color: #EBEBEC; 
+	background-color: #EBEBEC;
 }
 
 .messengerInput {

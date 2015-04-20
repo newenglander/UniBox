@@ -12,8 +12,11 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import de.unibox.client.events.CommunicationEvent;
+import de.unibox.client.events.DatabaseEvent;
+import de.unibox.client.events.DatabaseEvent.RequestType;
 import de.unibox.client.thread.ThreadEngine;
 import de.unibox.client.thread.worker.RunnableCometListener;
+import de.unibox.client.thread.worker.RunnableDatabaseAgent;
 import de.unibox.client.thread.worker.RunnableLoginAgent;
 import de.unibox.client.thread.worker.RunnableMessageMediator;
 import de.unibox.client.thread.worker.RunnableMessageSender;
@@ -32,11 +35,17 @@ public class ClientProvider {
     /** The cookie. */
     private static String cookie = null;
 
+    /** The database url. */
+    private static String databaseURL = "/Database";
+
     /** The incoming messages. */
     private static BlockingQueue<CommunicatorMessage> incomingMessages = new LinkedBlockingQueue<CommunicatorMessage>();
 
     /** The log. */
     private static Logger log = Logger.getLogger("UniBoxLogger");
+
+    /** The outgoing database events. */
+    private static BlockingQueue<DatabaseEvent> outgoingDatabaseEvents = new LinkedBlockingQueue<DatabaseEvent>();
 
     /** The outgoing messages. */
     private static BlockingQueue<CommunicatorMessage> outgoingMessages = new LinkedBlockingQueue<CommunicatorMessage>();
@@ -96,6 +105,10 @@ public class ClientProvider {
             ClientProvider.log.debug(ClientProvider.class.getSimpleName()
                     + ": RunnableCometListener started..");
 
+            ThreadEngine.getInstance().run(new RunnableDatabaseAgent());
+            ClientProvider.log.debug(ClientProvider.class.getSimpleName()
+                    + ": RunnableDatabaseAgent started..");
+
         } catch (final Exception e) {
             ClientProvider.log.error(ClientProvider.class.getSimpleName()
                     + ": Could not initialize or run ThreadEngine..");
@@ -119,6 +132,15 @@ public class ClientProvider {
      */
     public static String getCookie() {
         return ClientProvider.cookie;
+    }
+
+    /**
+     * Gets the database url.
+     *
+     * @return the database url
+     */
+    public static String getDatabaseURL() {
+        return ClientProvider.databaseURL;
     }
 
     /**
@@ -156,6 +178,15 @@ public class ClientProvider {
         ClientProvider.log.debug(ClientProvider.class.getSimpleName()
                 + ": take() outgoing message..");
         return ClientProvider.getOutgoingMessages().take();
+    }
+
+    /**
+     * Gets the outgoing database events.
+     *
+     * @return the outgoing database events
+     */
+    public static BlockingQueue<DatabaseEvent> getOutgoingDatabaseEvents() {
+        return ClientProvider.outgoingDatabaseEvents;
     }
 
     /**
@@ -228,6 +259,30 @@ public class ClientProvider {
         ClientProvider.log.debug(ClientProvider.class.getSimpleName()
                 + ": received message: " + message);
         ClientProvider.getIncomingMessages().add(message);
+    }
+
+    /**
+     * Report draw result.
+     */
+    public static void reportDrawResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
+                RequestType.METHOD_POST, "action=createResult&status=draw"));
+    }
+
+    /**
+     * Report lose result.
+     */
+    public static void reportLoseResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
+                RequestType.METHOD_POST, "action=createResult&status=lose"));
+    }
+
+    /**
+     * Report win result.
+     */
+    public static void reportWinResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
+                RequestType.METHOD_POST, "action=createResult&status=win"));
     }
 
     /**
@@ -307,6 +362,26 @@ public class ClientProvider {
     }
 
     /**
+     * Sets the full url.
+     *
+     * @param url
+     *            the new full url
+     */
+    public static final void setFullUrl(final String url) {
+        ClientProvider.url = url;
+    }
+
+    /**
+     * Sets the ip.
+     *
+     * @param ip
+     *            the new ip
+     */
+    public static final void setIp(final String ip) {
+        ClientProvider.url = "http://" + ip + ":8080/UniBox";
+    }
+
+    /**
      * Sets the password.
      *
      * @param password
@@ -324,29 +399,10 @@ public class ClientProvider {
     }
 
     /**
-     * Sets the url.
-     *
-     * @param url
-     *            the new url
-     */
-    public static final void setFullUrl(final String url) {
-        ClientProvider.url = url;
-    }
-    
-    /**
-     * Sets the ip.
-     *
-     * @param ip the new ip
-     */
-    public static final void setIp(final String ip) {
-    	ClientProvider.url = "http://" + ip + ":8080/UniBox";
-    }
-
-    /**
      * Setup scanner.
      */
     public static final void setupScanner() {
-        Scanner s = new Scanner(System.in);
+        final Scanner s = new Scanner(System.in);
         System.out.print("ServerIP:");
         ClientProvider.setFullUrl("http://" + s.next() + ":8080/UniBox");
         System.out.print("Username:");

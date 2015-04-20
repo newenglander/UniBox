@@ -27,6 +27,7 @@ import de.unibox.model.database.objects.ResultInsert;
 import de.unibox.model.database.objects.SelectionQuery;
 import de.unibox.model.game.Game;
 import de.unibox.model.game.GamePool;
+import de.unibox.model.game.GamePool.ScoringType;
 
 /**
  * The Class DatabaseHandler.
@@ -133,6 +134,11 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
         SelectionQuery query = null;
 
+        if (InternalConfig.LOG_DATABASE) {
+            this.log.debug(this.getClass().getSimpleName() + ": doGet with: "
+                    + action);
+        }
+
         if (action != null) {
 
             if (action.equals("getRanking")) {
@@ -175,7 +181,6 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 doQuery = true;
 
             }
-
         }
 
         if (doQuery && (query != null)) {
@@ -254,6 +259,11 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
         String errorMessage = "illegal_Request";
 
+        if (InternalConfig.LOG_DATABASE) {
+            this.log.debug(this.getClass().getSimpleName() + ": doPost with: "
+                    + action);
+        }
+
         DatabaseAction<Integer> query = null;
 
         if (action != null) {
@@ -280,20 +290,33 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                             + ": update result table..");
                 }
 
-                final Integer thisGameID = Integer.parseInt(request
-                        .getParameter("gameId"));
-                final Integer thisPlayerId = Integer.parseInt(request
-                        .getParameter("playerId"));
-                final Integer thisScoring = Integer.parseInt(request
-                        .getParameter("scoring"));
+                final Integer thisGameID = GamePool.getInstance()
+                        .getGameByPlayer(super.thisUser).getGameId();
+                final Integer thisPlayerId = super.thisUser.getPlayerId();
+                final String thisScoringString = request.getParameter("status");
 
-                if ((thisGameID != null) && (thisPlayerId != null)
-                        && (thisScoring != null)) {
-                    query = new ResultInsert(thisGameID, thisPlayerId,
-                            thisScoring);
-                    doInsert = true;
+                ScoringType thisScore = null;
+
+                switch (thisScoringString) {
+                case "win":
+                    thisScore = GamePool.ScoringType.WIN;
+                    break;
+                case "draw":
+                    thisScore = GamePool.ScoringType.DRAW;
+                    break;
+                case "lose":
+                    thisScore = GamePool.ScoringType.LOSE;
+                    break;
+                default:
+                    break;
                 }
 
+                if ((thisGameID != null) && (thisPlayerId != null)
+                        && (thisScore != null)) {
+                    query = new ResultInsert(thisGameID, thisPlayerId,
+                            thisScore.getScore());
+                    doInsert = true;
+                }
             }
 
             if (doInsert && (query != null)) {
@@ -318,7 +341,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_Command, "ALL",
+                                        MessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateGameTable();"));
                     }
                     if (action.equals("createResult")) {
@@ -326,7 +349,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_Command, "ALL",
+                                        MessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateRankingTable();"));
                     }
 

@@ -15,9 +15,57 @@ import de.unibox.model.user.AbstractUser;
  */
 public class GamePool {
 
+    /**
+     * The Enum ScoringType.
+     */
+    public enum ScoringType {
+
+        /** The win. */
+        WIN(1), /** The draw. */
+        DRAW(0), /** The lose. */
+        LOSE(-1);
+
+        /** The score. */
+        private final int score;
+
+        /**
+         * Instantiates a new scoring type.
+         *
+         * @param thisScore
+         *            the this score
+         */
+        private ScoringType(final int thisScore) {
+            this.score = thisScore;
+        }
+
+        /**
+         * Gets the text.
+         *
+         * @return the text
+         */
+        public int getScore() {
+            return score;
+        }
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see java.lang.Enum#toString()
+         */
+        @Override
+        public String toString() {
+            return this.score + "";
+        }
+    }
+
     /** The instance. */
     private static GamePool instance;
 
+    /**
+     * Gets the instance.
+     *
+     * @return the instance
+     */
     public static GamePool getInstance() throws IOException {
         if (GamePool.instance == null) {
             GamePool.instance = new GamePool();
@@ -123,6 +171,11 @@ public class GamePool {
         return returnThis;
     }
 
+    /**
+     * Gets the game list.
+     *
+     * @return the game list
+     */
     public ArrayList<Game> getGameList() {
         return this.gameList;
     }

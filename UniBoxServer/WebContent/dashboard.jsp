@@ -240,8 +240,9 @@
 										<select id="multiSelectDeleteUser"
 											name="multiSelectDeleteUser[]" class="form-control"
 											multiple="multiple">
-										</select> <span class="help-block">..be patient by using the
-											"all" option!</span>
+										</select> <span class="help-block">..be patient deleting Admin
+											Users! "Reset Database" is able to restore the default Admin
+											Account!</span>
 									</div>
 								</div>
 								<div class="form-group">
@@ -286,8 +287,12 @@
 									<div class="col-md-4">
 										<button id="resetDbBtn" name="resetDbBtn"
 											class="btn btn-danger">Reset</button>
-										<span class="help-block">..drop all and create new
-											tables.</span>
+										<span class="help-block">..drop all tables and create
+											new ones with default values defined in WEB-INF/database.<br>
+											<br> <b><span class="ul">WARNING:</span></b> All <b>clients</b>
+											except you <b>will be automatically disconnected</b> as
+											consquence of invalid credentials and gamestates.
+										</span>
 									</div>
 								</div>
 							</fieldset>

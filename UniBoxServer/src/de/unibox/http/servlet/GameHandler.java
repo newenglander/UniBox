@@ -166,7 +166,7 @@ public class GameHandler extends ProtectedHttpServlet {
     private void sendUpdateBroadcast(final AbstractUser user) {
         // send update game table broadcast
         Communicator.getMessagequeue().add(
-                new CommunicatorMessage(MessageType.JS_Command, user.getName(),
+                new CommunicatorMessage(MessageType.JS_COMMAND, user.getName(),
                         "window.parent.app.updateGameTable();"));
     }
 

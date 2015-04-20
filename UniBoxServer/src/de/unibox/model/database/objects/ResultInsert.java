@@ -59,30 +59,63 @@ public class ResultInsert extends DatabaseAction<Integer> {
     public Integer execute() throws SQLException {
         super.getStatement().setInt(1, this.gameID);
         super.getStatement().setInt(2, this.playerID);
-        super.getStatement().setInt(2, this.scoring);
+        super.getStatement().setInt(3, this.scoring);
         return super.executeUpdate();
     }
 
+    /**
+     * Gets the game id.
+     *
+     * @return the game id
+     */
     public final Integer getGameID() {
         return this.gameID;
     }
 
+    /**
+     * Gets the player id.
+     *
+     * @return the player id
+     */
     public final Integer getPlayerID() {
         return this.playerID;
     }
 
+    /**
+     * Gets the scoring.
+     *
+     * @return the scoring
+     */
     public final Integer getScoring() {
         return this.scoring;
     }
 
+    /**
+     * Sets the game id.
+     *
+     * @param gameID
+     *            the new game id
+     */
     public final void setGameID(final Integer gameID) {
         this.gameID = gameID;
     }
 
+    /**
+     * Sets the player id.
+     *
+     * @param playerID
+     *            the new player id
+     */
     public final void setPlayerID(final Integer playerID) {
         this.playerID = playerID;
     }
 
+    /**
+     * Sets the scoring.
+     *
+     * @param scoring
+     *            the new scoring
+     */
     public final void setScoring(final Integer scoring) {
         this.scoring = scoring;
     }

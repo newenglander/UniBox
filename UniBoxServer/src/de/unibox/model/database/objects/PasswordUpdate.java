@@ -66,7 +66,6 @@ public class PasswordUpdate extends DatabaseAction<Integer> {
      */
     @Override
     public Integer execute() throws SQLException {
-        System.out.println(this);
         if (this.inputPasswordMD5.equals(this.inputPasswordConfirmMD5)) {
             super.getStatement().setString(1, this.inputPasswordMD5);
             super.getStatement().setInt(2, this.playerId);
@@ -75,34 +74,78 @@ public class PasswordUpdate extends DatabaseAction<Integer> {
         return super.executeUpdate();
     }
 
+    /**
+     * Gets the input password confirm m d5.
+     *
+     * @return the input password confirm m d5
+     */
     public String getInputPasswordConfirmMD5() {
         return this.inputPasswordConfirmMD5;
     }
 
+    /**
+     * Gets the input password m d5.
+     *
+     * @return the input password m d5
+     */
     public String getInputPasswordMD5() {
         return this.inputPasswordMD5;
     }
 
+    /**
+     * Gets the old password m d5.
+     *
+     * @return the old password m d5
+     */
     public String getOldPasswordMD5() {
         return this.oldPasswordMD5;
     }
 
+    /**
+     * Gets the player id.
+     *
+     * @return the player id
+     */
     public Integer getPlayerId() {
         return this.playerId;
     }
 
+    /**
+     * Sets the input password confirm m d5.
+     *
+     * @param inputPasswordConfirmMD5
+     *            the new input password confirm m d5
+     */
     public void setInputPasswordConfirmMD5(final String inputPasswordConfirmMD5) {
         this.inputPasswordConfirmMD5 = inputPasswordConfirmMD5;
     }
 
+    /**
+     * Sets the input password m d5.
+     *
+     * @param inputPasswordMD5
+     *            the new input password m d5
+     */
     public void setInputPasswordMD5(final String inputPasswordMD5) {
         this.inputPasswordMD5 = inputPasswordMD5;
     }
 
+    /**
+     * Sets the old password m d5.
+     *
+     * @param oldPasswordMD5
+     *            the new old password m d5
+     */
     public void setOldPasswordMD5(final String oldPasswordMD5) {
         this.oldPasswordMD5 = oldPasswordMD5;
     }
 
+    /**
+     * Sets the player id.
+     *
+     * @param playerId
+     *            the new player id
+     */
     public void setPlayerId(final Integer playerId) {
         this.playerId = playerId;
     }

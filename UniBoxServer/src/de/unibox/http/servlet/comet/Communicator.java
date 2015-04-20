@@ -51,24 +51,30 @@ public class Communicator extends ProtectedHttpServlet {
     /** The Constant queue. */
     protected static final Queue<AsyncContext> asyncContextQueue = new ConcurrentLinkedQueue<AsyncContext>();
 
-    public static Queue<AsyncContext> getAsyncContextQueue() {
-        return Communicator.asyncContextQueue;
-    }
-
     /** The Constant messageQueue. */
     private static final BlockingQueue<CommunicatorMessage> messageQueue = new LinkedBlockingQueue<CommunicatorMessage>();
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -2919167206889576860L;
 
+    /**
+     * Gets the Constant queue.
+     *
+     * @return the Constant queue
+     */
+    public static Queue<AsyncContext> getAsyncContextQueue() {
+        return Communicator.asyncContextQueue;
+    }
+
     public static BlockingQueue<CommunicatorMessage> getMessagequeue() {
         return Communicator.messageQueue;
     }
 
+    /** The keep alive service. */
+    protected ScheduledExecutorService keepAliveService = null;
+
     /** The notifier thread. */
     protected Thread notifierThread = null;
-
-    protected ScheduledExecutorService keepAliveService = null;
 
     /**
      * Adds the context.
@@ -235,8 +241,7 @@ public class Communicator extends ProtectedHttpServlet {
             @Override
             public void run() {
                 Communicator.getMessagequeue().add(
-                        new CommunicatorMessage(MessageType.PING, "ALL",
-                                "."));
+                        new CommunicatorMessage(MessageType.PING, "ALL", "."));
             }
         }, 0, 60, TimeUnit.SECONDS);
 
@@ -283,7 +288,7 @@ public class Communicator extends ProtectedHttpServlet {
 
             final CommunicatorMessage notifyMessage = this.generateCommand(
                     MessageType.SYSTEM,
-                    "SYSTEM",
+                    "System",
                     Helper.encodeBase64(super.thisUser.getName()
                             + " has joined."));
             this.notify(notifyMessage);

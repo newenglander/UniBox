@@ -59,7 +59,8 @@ public class AsyncContextParser {
                             + comSession.getContext());
                 }
                 Communicator.asyncContextQueue.remove(ac);
-                ac.complete();
+                ac.dispatch();
+                //ac.complete();
             } else {
                 asyncSessions.put(id, time);
             }
@@ -128,22 +129,47 @@ public class AsyncContextParser {
         }
     }
 
+    /**
+     * Gets the context.
+     *
+     * @return the context
+     */
     public AsyncContext getContext() {
         return this.context;
     }
 
+    /**
+     * Gets the creation time.
+     *
+     * @return the creation time
+     */
     public long getCreationTime() {
         return this.creationTime;
     }
 
+    /**
+     * Gets the creation time string.
+     *
+     * @return the creation time string
+     */
     public String getCreationTimeString() {
         return this.creationTimeString;
     }
 
+    /**
+     * Gets the id.
+     *
+     * @return the id
+     */
     public String getId() {
         return this.id;
     }
 
+    /**
+     * Gets the session.
+     *
+     * @return the session
+     */
     public HttpSession getSession() {
         return this.session;
     }

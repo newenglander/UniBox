@@ -97,6 +97,11 @@ public class Game {
         return this.gameName;
     }
 
+    /**
+     * Gets the number of players.
+     *
+     * @return the number of players
+     */
     public int getNumberOfPlayers() {
         return this.numberOfPlayers;
     }
