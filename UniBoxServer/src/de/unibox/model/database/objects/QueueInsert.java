@@ -55,18 +55,40 @@ public class QueueInsert extends DatabaseAction<Integer> {
         return super.executeUpdate();
     }
 
+    /**
+     * Gets the game id.
+     *
+     * @return the game id
+     */
     public final Integer getGameID() {
         return this.gameID;
     }
 
+    /**
+     * Gets the player id.
+     *
+     * @return the player id
+     */
     public final Integer getPlayerID() {
         return this.playerID;
     }
 
+    /**
+     * Sets the game id.
+     *
+     * @param gameID
+     *            the new game id
+     */
     public final void setGameID(final Integer gameID) {
         this.gameID = gameID;
     }
 
+    /**
+     * Sets the player id.
+     *
+     * @param playerID
+     *            the new player id
+     */
     public final void setPlayerID(final Integer playerID) {
         this.playerID = playerID;
     }

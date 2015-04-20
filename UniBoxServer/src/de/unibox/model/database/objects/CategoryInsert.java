@@ -56,18 +56,40 @@ public class CategoryInsert extends DatabaseAction<Integer> {
         return super.executeUpdate();
     }
 
+    /**
+     * Gets the game title.
+     *
+     * @return the game title
+     */
     public final String getGameTitle() {
         return this.gameTitle;
     }
 
+    /**
+     * Gets the number of players.
+     *
+     * @return the number of players
+     */
     public final Integer getNumberOfPlayers() {
         return this.numberOfPlayers;
     }
 
+    /**
+     * Sets the game title.
+     *
+     * @param gameTitle
+     *            the new game title
+     */
     public final void setGameTitle(final String gameTitle) {
         this.gameTitle = gameTitle;
     }
 
+    /**
+     * Sets the number of players.
+     *
+     * @param numberOfPlayers
+     *            the new number of players
+     */
     public final void setNumberOfPlayers(final Integer numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
     }

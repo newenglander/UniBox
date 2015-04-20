@@ -46,6 +46,11 @@ public abstract class AbstractUser {
         return this.name;
     }
 
+    /**
+     * Gets the player id.
+     *
+     * @return the player id
+     */
     public int getPlayerId() {
         return this.playerId;
     }
@@ -78,6 +83,12 @@ public abstract class AbstractUser {
         this.name = name;
     }
 
+    /**
+     * Sets the player id.
+     *
+     * @param playerId
+     *            the new player id
+     */
     public void setPlayerId(final int playerId) {
         this.playerId = playerId;
     }

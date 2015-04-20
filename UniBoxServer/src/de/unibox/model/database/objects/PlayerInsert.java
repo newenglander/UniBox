@@ -63,26 +63,59 @@ public class PlayerInsert extends DatabaseAction<Integer> {
         return super.executeUpdate();
     }
 
+    /**
+     * Gets the admin rights.
+     *
+     * @return the admin rights
+     */
     public final Integer getAdminRights() {
         return this.adminRights;
     }
 
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     public final String getName() {
         return this.name;
     }
 
+    /**
+     * Gets the password.
+     *
+     * @return the password
+     */
     public final String getPassword() {
         return this.password;
     }
 
+    /**
+     * Sets the admin rights.
+     *
+     * @param adminRights
+     *            the new admin rights
+     */
     public final void setAdminRights(final Integer adminRights) {
         this.adminRights = adminRights;
     }
 
+    /**
+     * Sets the name.
+     *
+     * @param name
+     *            the new name
+     */
     public final void setName(final String name) {
         this.name = name;
     }
 
+    /**
+     * Sets the password.
+     *
+     * @param password
+     *            the new password
+     */
     public final void setPassword(final String password) {
         this.password = password;
     }

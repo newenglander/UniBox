@@ -17,11 +17,19 @@ import de.unibox.model.game.GamePool;
 import de.unibox.model.user.AbstractUser;
 import de.unibox.model.user.UserFactory;
 
+/**
+ * The Class RunnableNotifier.
+ */
 public class RunnableNotifier implements Runnable {
 
     /** The log. */
     protected Logger log = Logger.getLogger("UniBoxLogger");
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Runnable#run()
+     */
     @Override
     public void run() {
 
@@ -73,16 +81,18 @@ public class RunnableNotifier implements Runnable {
                                 .getWriter();
 
                         if (InternalConfig.LOG_COMMUNICATION) {
-                            this.log.debug(RunnableNotifier.class.getSimpleName()
-                                    + " run(): ClientType=" + remoteType
-                                    + ", MessageType=" + messageType
-                                    + ", session=" + sessionId);
+                            this.log.debug(RunnableNotifier.class
+                                    .getSimpleName()
+                                    + " run(): ClientType="
+                                    + remoteType
+                                    + ", MessageType="
+                                    + messageType + ", session=" + sessionId);
                         }
 
                         switch (remoteType) {
                         case JAVASCRIPT:
                             // ignore GAME messages for webinterface
-                            if (messageType == MessageType.JS_Command) {
+                            if (messageType == MessageType.JS_COMMAND) {
                                 if (receiver.getName().equals(
                                         cMessage.getName())) {
                                     if (InternalConfig.LOG_COMMUNICATION) {
@@ -138,14 +148,16 @@ public class RunnableNotifier implements Runnable {
                             break;
                         default:
                             if (InternalConfig.LOG_COMMUNICATION) {
-                                RunnableNotifier.this.log.warn(Communicator.class
-                                        .getSimpleName()
-                                        + "Typeless message detected: "
-                                        + cMessage.toString());
-                                RunnableNotifier.this.log.debug(Communicator.class
-                                        .getSimpleName()
-                                        + ": Typeless message detected: "
-                                        + cMessage.toString());
+                                RunnableNotifier.this.log
+                                        .warn(Communicator.class
+                                                .getSimpleName()
+                                                + "Typeless message detected: "
+                                                + cMessage.toString());
+                                RunnableNotifier.this.log
+                                        .debug(Communicator.class
+                                                .getSimpleName()
+                                                + ": Typeless message detected: "
+                                                + cMessage.toString());
                             }
                             break;
                         }
@@ -182,6 +194,16 @@ public class RunnableNotifier implements Runnable {
         }
     }
 
+    /**
+     * Send.
+     *
+     * @param acWriter
+     *            the ac writer
+     * @param concreteMessage
+     *            the concrete message
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private void send(final PrintWriter acWriter, final String concreteMessage)
             throws IOException {
         if (InternalConfig.LOG_COMMUNICATION) {

@@ -18,6 +18,11 @@ public class GamePool {
     /** The instance. */
     private static GamePool instance;
 
+    /**
+     * Gets the instance.
+     *
+     * @return the instance
+     */
     public static GamePool getInstance() throws IOException {
         if (GamePool.instance == null) {
             GamePool.instance = new GamePool();
@@ -123,6 +128,11 @@ public class GamePool {
         return returnThis;
     }
 
+    /**
+     * Gets the game list.
+     *
+     * @return the game list
+     */
     public ArrayList<Game> getGameList() {
         return this.gameList;
     }

@@ -49,7 +49,7 @@ public class DatabaseQuery {
     }
 
     /** The con. */
-    private Connection con = null;
+    private Connection connnection = null;
 
     /**
      * Commit.
@@ -58,8 +58,8 @@ public class DatabaseQuery {
      *             the SQL exception
      */
     public void commit() throws SQLException {
-        this.con.commit();
-        DatabaseQuery.pool.returnConnection(this.con);
+        this.connnection.commit();
+        DatabaseQuery.pool.returnConnection(this.connnection);
         if (InternalConfig.LOG_DATABASE) {
             InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": committed");
@@ -74,15 +74,24 @@ public class DatabaseQuery {
      */
     public void connect() throws SQLException {
         try {
-            this.con = DatabaseQuery.pool.getConnection();
+            this.connnection = DatabaseQuery.pool.getConnection();
         } catch (final NullPointerException e) {
             throw new SQLException("SQL Server offline?");
         }
-        this.con.setAutoCommit(false);
+        this.connnection.setAutoCommit(false);
         if (InternalConfig.LOG_DATABASE) {
             InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": connected");
         }
+    }
+
+    /**
+     * Gets the connection.
+     *
+     * @return the connection
+     */
+    public Connection getConnection() {
+        return this.connnection;
     }
 
     /**
@@ -100,7 +109,8 @@ public class DatabaseQuery {
             InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": Preparing Query: " + statement);
         }
-        final PreparedStatement query = this.con.prepareStatement(statement);
+        final PreparedStatement query = this.connnection
+                .prepareStatement(statement);
         return query;
     }
 
@@ -119,7 +129,8 @@ public class DatabaseQuery {
             InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": Preparing Update: " + statement);
         }
-        final PreparedStatement update = this.con.prepareStatement(statement);
+        final PreparedStatement update = this.connnection
+                .prepareStatement(statement);
         return update;
     }
 
@@ -130,8 +141,8 @@ public class DatabaseQuery {
      *             the SQL exception
      */
     public void rollback() throws SQLException {
-        this.con.rollback();
-        DatabaseQuery.pool.returnConnection(this.con);
+        this.connnection.rollback();
+        DatabaseQuery.pool.returnConnection(this.connnection);
         if (InternalConfig.LOG_DATABASE) {
             InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": rollback");

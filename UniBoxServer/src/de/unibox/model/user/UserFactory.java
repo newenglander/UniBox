@@ -56,6 +56,11 @@ public class UserFactory {
         return user;
     }
 
+    /**
+     * Gets the user list.
+     *
+     * @return the user list
+     */
     public static ArrayList<AbstractUser> getUserList() {
         return UserFactory.userList;
     }
