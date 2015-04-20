@@ -47,11 +47,10 @@ var app = {
 		$('#comet-frame').attr("src", app.url + app.cometSource + '?1').on(
 				"load",
 				function() {
-					console
-							.log("reconnect listener after timeout.. Listened "
-									+ Math.floor(Date.now() / 1000)
-									- app.lastTimeStamp)
-							+ " seconds..";
+					var timeDiff = Math.floor(Date.now() / 1000)
+							- app.lastTimeStamp;
+					console.log("reconnect listener after timeout.. Listened "
+							+ timeDiff + " seconds..");
 					app.reconnectDialog();
 				}).on("error", function(error) {
 			app.reconnectDialog();
@@ -60,7 +59,7 @@ var app = {
 	reconnectDialog : function() {
 		swal({
 			title : "Disconnected..",
-			text : "You are disconnected from the server..",
+			text : "You are disconnected from the server.. (Timeout)",
 			type : "warning",
 			showCancelButton : false,
 			confirmButtonColor : "#DD6B55",
@@ -390,21 +389,25 @@ var app = {
 				async : false
 			});
 		});
-		$('#resetDbBtn').on('click', function(e) {
-			jQuery.ajax({
-				type : "GET",
-				url : app.url + app.adminSource,
-				data : "action=resetDatabase",
-				success : function(data) {
-					// ARGH
-					swal("Good job!", "Default database initialized!", "success");
-				},
-				error : function(e) {
-					swal("Ups..", "Could not reset Database..", "warning");
-				},
-				async : false
-			});
-		});
+		$('#resetDbBtn').on(
+				'click',
+				function(e) {
+					jQuery.ajax({
+						type : "GET",
+						url : app.url + app.adminSource,
+						data : "action=resetDatabase",
+						success : function(data) {
+							// ARGH
+							swal("Good job!", "Default database initialized!",
+									"success");
+						},
+						error : function(e) {
+							swal("Ups..", "Could not reset Database..",
+									"warning");
+						},
+						async : false
+					});
+				});
 		$('#newGameModal').on('shown.bs.modal', function() {
 			$('#gameNameInput').focus();
 		});
@@ -541,6 +544,7 @@ var app = {
 
 				}
 				gameDataTable.draw();
+				app.gotActiveGame();
 				// update admin panel too
 				$('#multiSelectDeleteGame').multiselect({
 					includeSelectAllOption : true,
