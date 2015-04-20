@@ -87,11 +87,11 @@ public class AdminHandler extends AdminHttpServlet {
                         result = query.execute();
                         transaction.commit();
 
-                        // send game update broadcast
+                        // force clients to update game list
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_Command, "ALL",
+                                        MessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateGameTable();"));
 
                     } catch (final SQLException e) {
@@ -126,6 +126,13 @@ public class AdminHandler extends AdminHttpServlet {
                         result = query.execute();
                         transaction.commit();
 
+                        // force clients to update ranking table
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_COMMAND, "ALL",
+                                        "window.parent.app.updateRankingTable();"));
+
                     } catch (final SQLException e) {
                         if (InternalConfig.LOG_DATABASE) {
                             this.log.debug(this.getClass().getSimpleName()
@@ -149,7 +156,6 @@ public class AdminHandler extends AdminHttpServlet {
                     final ServletContext context = this.getServletContext();
 
                     transaction.connect();
-
                     // execute sql scripts/files like this
                     final CustomScriptRunner runner = new CustomScriptRunner(
                             transaction.getConnection(), false, false);
@@ -157,18 +163,14 @@ public class AdminHandler extends AdminHttpServlet {
                             .getResourceAsStream("/WEB-INF/database/UniBoxCreate.sql")));
                     runner.runScript(this.getReader(context
                             .getResourceAsStream("/WEB-INF/database/UniBoxInserts.sql")));
-
                     transaction.commit();
 
-                    // send broadcast to force client update
+                    // force all other clients to logout after Database drop
+                    // (not yourself!)
                     Communicator.getMessagequeue().add(
-                            new CommunicatorMessage(MessageType.JS_Command,
-                                    "ALL",
-                                    "window.parent.app.updateGameTable();"));
-                    Communicator.getMessagequeue().add(
-                            new CommunicatorMessage(MessageType.JS_Command,
-                                    "ALL",
-                                    "window.parent.app.updateRankingTable();"));
+                            new CommunicatorMessage(MessageType.JS_COMMAND,
+                                    super.thisUser.getName(),
+                                    "window.parent.app.logout();"));
 
                 } catch (final SQLException e) {
                     if (InternalConfig.LOG_DATABASE) {
@@ -194,13 +196,22 @@ public class AdminHandler extends AdminHttpServlet {
                     transaction.connect();
                     query.attach(transaction);
                     result = query.execute();
-
                     transaction.commit();
 
+                    // force clients to update rankings
                     Communicator.getMessagequeue().add(
-                            new CommunicatorMessage(MessageType.JS_Command,
+                            new CommunicatorMessage(MessageType.JS_COMMAND,
                                     "ALL",
                                     "window.parent.app.updateRankingTable();"));
+
+                    if (action.equals("createPlayer")) {
+                        // update players clientside
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_COMMAND, "ALL",
+                                        "window.parent.app.updateUsersSelection();"));
+                    }
 
                 } catch (final SQLException e) {
                     if (InternalConfig.LOG_DATABASE) {
@@ -264,9 +275,6 @@ public class AdminHandler extends AdminHttpServlet {
                 final Integer thisAdminRights = Integer.parseInt(request
                         .getParameter("adminRights"));
 
-                System.out.println(thisName);
-                System.out.println(thisAdminRights);
-
                 // NOTE: avoid hardcoded default password
                 final String thisPassword = "3022443b7e33a6a68756047e46b81bea";
 
@@ -311,16 +319,23 @@ public class AdminHandler extends AdminHttpServlet {
                     transaction.connect();
                     query.attach(transaction);
                     result = query.execute();
-
                     transaction.commit();
 
                     if (action.equals("createCategory")) {
-                        // update categories clientside
+                        // force clients to update create game formular
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_Command, "ALL",
+                                        MessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateFormulars();"));
+                    }
+                    if (action.equals("createPlayer")) {
+                        // force clients to update users list
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_COMMAND, "ALL",
+                                        "window.parent.app.updateUsersSelection();"));
                     }
 
                 } catch (final SQLException e) {

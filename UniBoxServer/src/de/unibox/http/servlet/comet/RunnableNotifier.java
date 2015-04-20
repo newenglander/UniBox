@@ -92,7 +92,7 @@ public class RunnableNotifier implements Runnable {
                         switch (remoteType) {
                         case JAVASCRIPT:
                             // ignore GAME messages for webinterface
-                            if (messageType == MessageType.JS_Command) {
+                            if (messageType == MessageType.JS_COMMAND) {
                                 if (receiver.getName().equals(
                                         cMessage.getName())) {
                                     if (InternalConfig.LOG_COMMUNICATION) {

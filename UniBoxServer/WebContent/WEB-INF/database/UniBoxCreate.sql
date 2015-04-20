@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `unibox`.`Result` (
   CONSTRAINT `FKResultGame`
     FOREIGN KEY (`GameID`)
     REFERENCES `unibox`.`Game` (`GameID`)
-    ON DELETE CASCADE
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

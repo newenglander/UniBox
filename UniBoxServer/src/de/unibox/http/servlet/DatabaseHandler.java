@@ -318,7 +318,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_Command, "ALL",
+                                        MessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateGameTable();"));
                     }
                     if (action.equals("createResult")) {
@@ -326,7 +326,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_Command, "ALL",
+                                        MessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateRankingTable();"));
                     }
 

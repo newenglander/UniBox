@@ -288,7 +288,7 @@ public class Communicator extends ProtectedHttpServlet {
 
             final CommunicatorMessage notifyMessage = this.generateCommand(
                     MessageType.SYSTEM,
-                    "SYSTEM",
+                    "System",
                     Helper.encodeBase64(super.thisUser.getName()
                             + " has joined."));
             this.notify(notifyMessage);

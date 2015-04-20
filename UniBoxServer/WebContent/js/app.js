@@ -53,7 +53,9 @@ var app = {
 									- app.lastTimeStamp)
 							+ " seconds..";
 					app.reconnectDialog();
-				});
+				}).on("error", function(error) {
+			app.reconnectDialog();
+		});
 	},
 	reconnectDialog : function() {
 		swal({
@@ -395,7 +397,7 @@ var app = {
 				data : "action=resetDatabase",
 				success : function(data) {
 					// ARGH
-					swal("Good job!", "Game created!", "success");
+					swal("Good job!", "Default database initialized!", "success");
 				},
 				error : function(e) {
 					swal("Ups..", "Could not reset Database..", "warning");
@@ -444,6 +446,9 @@ var app = {
 			},
 			async : false
 		});
+	},
+	logout : function() {
+		window.location.replace("/UniBox/Auth?action=logout");
 	},
 	post : function(message) {
 		if (message) {

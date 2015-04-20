@@ -29,8 +29,8 @@ public class CommunicatorMessage implements Serializable {
         /** The game. */
         GAME,
 
-        /** The J s_ command. */
-        JS_Command,
+        /** The js command. */
+        JS_COMMAND,
 
         /** The ping. */
         PING,
@@ -267,7 +267,7 @@ public class CommunicatorMessage implements Serializable {
      */
     public String toJavaScript() {
         String returnThis = "";
-        if (this.type == MessageType.JS_Command) {
+        if (this.type == MessageType.JS_COMMAND) {
             returnThis = "<script type='text/javascript'>" + this.getMessage()
                     + "</script>";
         } else if (this.type == MessageType.PING) {
