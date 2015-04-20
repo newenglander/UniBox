@@ -23,6 +23,77 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
     public boolean enabled = true;
 
     /**
+     * Gets the response as string.
+     *
+     * @param thisInputStream
+     *            the this input stream
+     * @return the response as string
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
+    private String getResponseAsString(final InputStream thisInputStream)
+            throws IOException {
+        final StringBuilder returnThis = new StringBuilder("");
+        final BufferedReader areader = new BufferedReader(
+                new InputStreamReader(thisInputStream));
+
+        for (String line; (line = areader.readLine()) != null;) {
+            ThreadTaskImpl.log.debug("Send Result: " + line);
+            returnThis.append(line);
+        }
+        return returnThis.toString();
+    }
+
+    /**
+     * Handle.
+     *
+     * @param query
+     *            the query
+     */
+    private void handle(final DatabaseEvent query) {
+
+        try {
+            ThreadTaskImpl.log.debug(this.getClass().getSimpleName()
+                    + " preparing query:" + query);
+
+            String result = null;
+
+            try {
+
+                switch (query.getRequestType()) {
+                case METHOD_POST:
+                    result = this.requestPost(query.getParameter());
+                    break;
+                case METHOD_GET:
+                    result = this.requestGet(query.getParameter());
+                    break;
+                default:
+                    throw new IOException("UNKNOWN_REQUEST_TYPE");
+                }
+
+            } catch (final IOException e) {
+                ThreadTaskImpl.log.warn(RunnableDatabaseAgent.class
+                        .getSimpleName()
+                        + ": Fatal error due HTTP transaction.");
+                if (e instanceof ConnectException) {
+                    ThreadTaskImpl.log.warn(RunnableDatabaseAgent.class
+                            .getSimpleName()
+                            + ": maybe server offline? "
+                            + this.url);
+                }
+                e.printStackTrace();
+            }
+
+            ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
+                    .getSimpleName() + ": Result=" + result);
+
+        } finally {
+            ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
+                    .getSimpleName() + ": done.");
+        }
+    }
+
+    /**
      * Checks if is enabled.
      *
      * @return true, if is enabled
@@ -61,55 +132,6 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
     }
 
     /**
-     * Handle.
-     *
-     * @param query
-     *            the query
-     */
-    private void handle(final DatabaseEvent query) {
-
-        try {
-            ThreadTaskImpl.log.debug(this.getClass().getSimpleName()
-                    + " preparing query:" + query);
-
-            String result = null;
-
-            try {
-
-                switch (query.getRequestType()) {
-                case METHOD_POST:
-                    result = requestPost(query.getParameter());
-                    break;
-                case METHOD_GET:
-                    result = requestGet(query.getParameter());
-                    break;
-                default:
-                    throw new IOException("UNKNOWN_REQUESTTYPE");
-                }
-
-            } catch (final IOException e) {
-                ThreadTaskImpl.log.warn(RunnableDatabaseAgent.class
-                        .getSimpleName()
-                        + ": Fatal error due HTTP transaction.");
-                if (e instanceof ConnectException) {
-                    ThreadTaskImpl.log.warn(RunnableDatabaseAgent.class
-                            .getSimpleName()
-                            + ": maybe server offline? "
-                            + this.url);
-                }
-                e.printStackTrace();
-            }
-
-            ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
-                    .getSimpleName() + ": Result=" + result);
-
-        } finally {
-            ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
-                    .getSimpleName() + ": done.");
-        }
-    }
-
-    /**
      * Request get.
      *
      * @param content
@@ -118,7 +140,7 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    private final String requestGet(String content) throws IOException {
+    private final String requestGet(final String content) throws IOException {
 
         final String databaseURL = this.url + ClientProvider.getDatabaseURL();
         this.urlObject = new URL(databaseURL + "/" + content);
@@ -135,7 +157,7 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
                 .addRequestProperty("Cookie", ClientProvider.getCookie());
         this.connection.setRequestProperty("Content-Type", "text/html");
 
-        return getResponseAsString(this.connection.getInputStream());
+        return this.getResponseAsString(this.connection.getInputStream());
     }
 
     /**
@@ -147,7 +169,7 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    private final String requestPost(String content) throws IOException {
+    private final String requestPost(final String content) throws IOException {
 
         final String databaseURL = this.url + ClientProvider.getDatabaseURL();
         this.urlObject = new URL(databaseURL);
@@ -174,29 +196,7 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
         this.writer.flush();
         this.writer.close();
 
-        return getResponseAsString(this.connection.getInputStream());
-    }
-
-    /**
-     * Gets the response as string.
-     *
-     * @param thisInputStream
-     *            the this input stream
-     * @return the response as string
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    private String getResponseAsString(InputStream thisInputStream)
-            throws IOException {
-        StringBuilder returnThis = new StringBuilder("");
-        final BufferedReader areader = new BufferedReader(
-                new InputStreamReader(thisInputStream));
-
-        for (String line; (line = areader.readLine()) != null;) {
-            ThreadTaskImpl.log.debug("Send Result: " + line);
-            returnThis.append(line);
-        }
-        return returnThis.toString();
+        return this.getResponseAsString(this.connection.getInputStream());
     }
 
     /**

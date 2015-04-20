@@ -289,9 +289,9 @@
 											class="btn btn-danger">Reset</button>
 										<span class="help-block">..drop all tables and create
 											new ones with default values defined in WEB-INF/database.<br>
-											<br> <b><span class="ul">WARNING:</span></b> All <b>clients</b> except you <b>will
-												be automatically disconnected</b> as consquence of invalid
-											credentials and gamestates.
+											<br> <b><span class="ul">WARNING:</span></b> All <b>clients</b>
+											except you <b>will be automatically disconnected</b> as
+											consquence of invalid credentials and gamestates.
 										</span>
 									</div>
 								</div>

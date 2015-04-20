@@ -284,7 +284,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         .getGameByPlayer(super.thisUser).getGameId();
                 final Integer thisPlayerId = super.thisUser.getPlayerId();
                 final String thisScoringString = request.getParameter("status");
-                
+
                 ScoringType thisScore = null;
 
                 switch (thisScoringString) {

@@ -35,25 +35,17 @@ public class ClientProvider {
     /** The cookie. */
     private static String cookie = null;
 
+    /** The database url. */
+    private static String databaseURL = "/Database";
+
     /** The incoming messages. */
     private static BlockingQueue<CommunicatorMessage> incomingMessages = new LinkedBlockingQueue<CommunicatorMessage>();
-    
-    /** The outgoing database events. */
-    private static BlockingQueue<DatabaseEvent> outgoingDatabaseEvents = new LinkedBlockingQueue<DatabaseEvent>();
-    
-    
-
-    /**
-     * Gets the outgoing database events.
-     *
-     * @return the outgoing database events
-     */
-    public static BlockingQueue<DatabaseEvent> getOutgoingDatabaseEvents() {
-        return outgoingDatabaseEvents;
-    }
 
     /** The log. */
     private static Logger log = Logger.getLogger("UniBoxLogger");
+
+    /** The outgoing database events. */
+    private static BlockingQueue<DatabaseEvent> outgoingDatabaseEvents = new LinkedBlockingQueue<DatabaseEvent>();
 
     /** The outgoing messages. */
     private static BlockingQueue<CommunicatorMessage> outgoingMessages = new LinkedBlockingQueue<CommunicatorMessage>();
@@ -63,18 +55,6 @@ public class ClientProvider {
 
     /** The reciever url. */
     private static String recieverURL = "/Communicator/Serial";
-
-    /** The database url. */
-    private static String databaseURL = "/Database";
-
-    /**
-     * Gets the database url.
-     *
-     * @return the database url
-     */
-    public static String getDatabaseURL() {
-        return databaseURL;
-    }
 
     /** The url. */
     private static String url = null;
@@ -124,7 +104,7 @@ public class ClientProvider {
             ThreadEngine.getInstance().run(new RunnableCometListener());
             ClientProvider.log.debug(ClientProvider.class.getSimpleName()
                     + ": RunnableCometListener started..");
-            
+
             ThreadEngine.getInstance().run(new RunnableDatabaseAgent());
             ClientProvider.log.debug(ClientProvider.class.getSimpleName()
                     + ": RunnableDatabaseAgent started..");
@@ -152,6 +132,15 @@ public class ClientProvider {
      */
     public static String getCookie() {
         return ClientProvider.cookie;
+    }
+
+    /**
+     * Gets the database url.
+     *
+     * @return the database url
+     */
+    public static String getDatabaseURL() {
+        return ClientProvider.databaseURL;
     }
 
     /**
@@ -189,6 +178,15 @@ public class ClientProvider {
         ClientProvider.log.debug(ClientProvider.class.getSimpleName()
                 + ": take() outgoing message..");
         return ClientProvider.getOutgoingMessages().take();
+    }
+
+    /**
+     * Gets the outgoing database events.
+     *
+     * @return the outgoing database events
+     */
+    public static BlockingQueue<DatabaseEvent> getOutgoingDatabaseEvents() {
+        return ClientProvider.outgoingDatabaseEvents;
     }
 
     /**
@@ -289,6 +287,14 @@ public class ClientProvider {
     }
 
     /**
+     * Send draw result.
+     */
+    public static void sendDrawResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
+                RequestType.METHOD_POST, "action=createResult&status=draw"));
+    }
+
+    /**
      * Send error message.
      *
      * @param message
@@ -315,6 +321,14 @@ public class ClientProvider {
     }
 
     /**
+     * Send lose result.
+     */
+    public static void sendLoseResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
+                RequestType.METHOD_POST, "action=createResult&status=lose"));
+    }
+
+    /**
      * Send system message.
      *
      * @param message
@@ -331,21 +345,8 @@ public class ClientProvider {
      * Send win result.
      */
     public static void sendWinResult() {
-        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(RequestType.METHOD_POST, "action=createResult&status=win"));
-    }
-    
-    /**
-     * Send draw result.
-     */
-    public static void sendDrawResult() {
-        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(RequestType.METHOD_POST, "action=createResult&status=draw"));
-    }
-    
-    /**
-     * Send lose result.
-     */
-    public static void sendLoseResult() {
-        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(RequestType.METHOD_POST, "action=createResult&status=lose"));
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
+                RequestType.METHOD_POST, "action=createResult&status=win"));
     }
 
     /**
@@ -358,23 +359,6 @@ public class ClientProvider {
         ClientProvider.log.debug(ClientProvider.class.getSimpleName()
                 + ": received cookie: " + cookie);
         ClientProvider.cookie = cookie;
-    }
-
-    /**
-     * Sets the password.
-     *
-     * @param password
-     *            the new password
-     */
-    public static final void setPassword(final String password) {
-        try {
-            ClientProvider.password = URLEncoder.encode(
-                    Helper.encodeBase64(password), "UTF-8");
-        } catch (final UnsupportedEncodingException e) {
-            ClientProvider.log.debug(ClientProvider.class.getSimpleName()
-                    + ": Could not able to password.");
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -398,10 +382,27 @@ public class ClientProvider {
     }
 
     /**
+     * Sets the password.
+     *
+     * @param password
+     *            the new password
+     */
+    public static final void setPassword(final String password) {
+        try {
+            ClientProvider.password = URLEncoder.encode(
+                    Helper.encodeBase64(password), "UTF-8");
+        } catch (final UnsupportedEncodingException e) {
+            ClientProvider.log.debug(ClientProvider.class.getSimpleName()
+                    + ": Could not able to password.");
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Setup scanner.
      */
     public static final void setupScanner() {
-        Scanner s = new Scanner(System.in);
+        final Scanner s = new Scanner(System.in);
         System.out.print("ServerIP:");
         ClientProvider.setFullUrl("http://" + s.next() + ":8080/UniBox");
         System.out.print("Username:");

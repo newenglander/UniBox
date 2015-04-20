@@ -19,8 +19,8 @@ public class MessageListenerExample implements EventHandler<CommunicationEvent> 
 
         if (event.getEventType() == CommunicationEvent.INCOMING_MESSAGE) {
             final CommunicatorMessage cMessage = event.getMessageObject();
-            System.out.println("MessageListenerExample: " + cMessage.getName() + ": "
-                    + cMessage.getMessage());
+            System.out.println("MessageListenerExample: " + cMessage.getName()
+                    + ": " + cMessage.getMessage());
         }
 
     }

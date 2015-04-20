@@ -31,7 +31,7 @@ public class DatabaseEvent {
 
         /*
          * (non-Javadoc)
-         *
+         * 
          * @see java.lang.Enum#toString()
          */
         @Override

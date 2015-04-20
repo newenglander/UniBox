@@ -162,15 +162,18 @@ public class Gui {
             // player1 win
             Gui.this.winPopup(Gui.this.getPlayer1() + " wins!");
             ClientProvider.sendGameMessage("Player 1 won!");
+            ClientProvider.sendWinResult();
         }
         if (result[1]) {
             // player2 win
             Gui.this.winPopup(Gui.this.getPlayer2() + " wins!");
             ClientProvider.sendGameMessage("Player 2 won!");
+            ClientProvider.sendLoseResult();
         }
         if (Gui.this.model.isDraw(Gui.this.getMatrixString())) {
             Gui.this.winPopup("Draw!");
             ClientProvider.sendGameMessage("Game is drawn!");
+            ClientProvider.sendDrawResult();
         }
     }
 
@@ -201,6 +204,11 @@ public class Gui {
 
         final EventHandler<MouseEvent> myMouseHandler = new EventHandler<MouseEvent>() {
 
+            /*
+             * (non-Javadoc)
+             * 
+             * @see javafx.event.EventHandler#handle(javafx.event.Event)
+             */
             @Override
             public void handle(final MouseEvent event) {
 
@@ -724,6 +732,12 @@ public class Gui {
 
         final Button restart = new Button("Restart");
         restart.setOnAction(new EventHandler<ActionEvent>() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see javafx.event.EventHandler#handle(javafx.event.Event)
+             */
             @Override
             public void handle(final ActionEvent event) {
 

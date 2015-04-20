@@ -66,8 +66,6 @@ public class Control extends Application {
 
         ClientProvider.sendGameMessage("GameClient connected");
 
-        ClientProvider.sendLoseResult();
-
         // init
         Control.gui = Gui.getInstance();
         Control.gui.initModel();
@@ -96,6 +94,13 @@ public class Control extends Application {
          */
         ClientProvider.bind(primaryStage, new IncomingMessageHandler() {
 
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * de.unibox.client.api.IncomingMessageHandler#handle(java.lang.
+             * String, java.lang.String)
+             */
             @Override
             public void handle(final String user, final String msg) {
 

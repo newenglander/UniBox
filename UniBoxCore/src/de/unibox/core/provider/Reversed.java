@@ -49,16 +49,32 @@ public class Reversed<T> implements Iterable<T> {
                 .size());
 
         return new Iterator<T>() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see java.util.Iterator#hasNext()
+             */
             @Override
             public boolean hasNext() {
                 return i.hasPrevious();
             }
 
+            /*
+             * (non-Javadoc)
+             * 
+             * @see java.util.Iterator#next()
+             */
             @Override
             public T next() {
                 return i.previous();
             }
 
+            /*
+             * (non-Javadoc)
+             * 
+             * @see java.util.Iterator#remove()
+             */
             @Override
             public void remove() {
                 i.remove();
