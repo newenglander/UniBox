@@ -25,7 +25,9 @@ public class RunnableNotifier implements Runnable {
     /** The log. */
     protected Logger log = Logger.getLogger("UniBoxLogger");
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Runnable#run()
      */
     @Override
@@ -79,10 +81,12 @@ public class RunnableNotifier implements Runnable {
                                 .getWriter();
 
                         if (InternalConfig.LOG_COMMUNICATION) {
-                            this.log.debug(RunnableNotifier.class.getSimpleName()
-                                    + " run(): ClientType=" + remoteType
-                                    + ", MessageType=" + messageType
-                                    + ", session=" + sessionId);
+                            this.log.debug(RunnableNotifier.class
+                                    .getSimpleName()
+                                    + " run(): ClientType="
+                                    + remoteType
+                                    + ", MessageType="
+                                    + messageType + ", session=" + sessionId);
                         }
 
                         switch (remoteType) {
@@ -144,14 +148,16 @@ public class RunnableNotifier implements Runnable {
                             break;
                         default:
                             if (InternalConfig.LOG_COMMUNICATION) {
-                                RunnableNotifier.this.log.warn(Communicator.class
-                                        .getSimpleName()
-                                        + "Typeless message detected: "
-                                        + cMessage.toString());
-                                RunnableNotifier.this.log.debug(Communicator.class
-                                        .getSimpleName()
-                                        + ": Typeless message detected: "
-                                        + cMessage.toString());
+                                RunnableNotifier.this.log
+                                        .warn(Communicator.class
+                                                .getSimpleName()
+                                                + "Typeless message detected: "
+                                                + cMessage.toString());
+                                RunnableNotifier.this.log
+                                        .debug(Communicator.class
+                                                .getSimpleName()
+                                                + ": Typeless message detected: "
+                                                + cMessage.toString());
                             }
                             break;
                         }

@@ -146,28 +146,30 @@ public class AdminHandler extends AdminHttpServlet {
                 try {
                     final DatabaseQuery transaction = new DatabaseQuery();
 
-                    ServletContext context = this.getServletContext();
+                    final ServletContext context = this.getServletContext();
 
                     transaction.connect();
 
                     // execute sql scripts/files like this
-                    CustomScriptRunner runner = new CustomScriptRunner(
+                    final CustomScriptRunner runner = new CustomScriptRunner(
                             transaction.getConnection(), false, false);
-                    runner.runScript(getReader(context
+                    runner.runScript(this.getReader(context
                             .getResourceAsStream("/WEB-INF/database/UniBoxCreate.sql")));
-                    runner.runScript(getReader(context
+                    runner.runScript(this.getReader(context
                             .getResourceAsStream("/WEB-INF/database/UniBoxInserts.sql")));
 
                     transaction.commit();
 
                     // send broadcast to force client update
                     Communicator.getMessagequeue().add(
-                            new CommunicatorMessage(MessageType.JS_Command, "ALL",
+                            new CommunicatorMessage(MessageType.JS_Command,
+                                    "ALL",
                                     "window.parent.app.updateGameTable();"));
                     Communicator.getMessagequeue().add(
-                            new CommunicatorMessage(MessageType.JS_Command, "ALL",
+                            new CommunicatorMessage(MessageType.JS_Command,
+                                    "ALL",
                                     "window.parent.app.updateRankingTable();"));
-                    
+
                 } catch (final SQLException e) {
                     if (InternalConfig.LOG_DATABASE) {
                         this.log.debug(this.getClass().getSimpleName()
@@ -186,16 +188,18 @@ public class AdminHandler extends AdminHttpServlet {
                 try {
                     final DatabaseQuery transaction = new DatabaseQuery();
 
-                    query = new AdminStatement(super.thisUser, "TRUNCATE result;");
+                    query = new AdminStatement(super.thisUser,
+                            "TRUNCATE result;");
 
                     transaction.connect();
                     query.attach(transaction);
                     result = query.execute();
 
                     transaction.commit();
-                    
+
                     Communicator.getMessagequeue().add(
-                            new CommunicatorMessage(MessageType.JS_Command, "ALL",
+                            new CommunicatorMessage(MessageType.JS_Command,
+                                    "ALL",
                                     "window.parent.app.updateRankingTable();"));
 
                 } catch (final SQLException e) {
@@ -309,11 +313,13 @@ public class AdminHandler extends AdminHttpServlet {
                     result = query.execute();
 
                     transaction.commit();
-                    
+
                     if (action.equals("createCategory")) {
                         // update categories clientside
-                        Communicator.getMessagequeue().add(
-                                new CommunicatorMessage(MessageType.JS_Command, "ALL",
+                        Communicator
+                                .getMessagequeue()
+                                .add(new CommunicatorMessage(
+                                        MessageType.JS_Command, "ALL",
                                         "window.parent.app.updateFormulars();"));
                     }
 
@@ -359,7 +365,8 @@ public class AdminHandler extends AdminHttpServlet {
      * @throws IOException
      *             Signals that an I/O exception has occurred.
      */
-    private BufferedReader getReader(InputStream thisStream) throws IOException {
+    private BufferedReader getReader(final InputStream thisStream)
+            throws IOException {
         return new BufferedReader(new InputStreamReader(thisStream));
     }
 

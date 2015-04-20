@@ -51,6 +51,12 @@ public class Communicator extends ProtectedHttpServlet {
     /** The Constant queue. */
     protected static final Queue<AsyncContext> asyncContextQueue = new ConcurrentLinkedQueue<AsyncContext>();
 
+    /** The Constant messageQueue. */
+    private static final BlockingQueue<CommunicatorMessage> messageQueue = new LinkedBlockingQueue<CommunicatorMessage>();
+
+    /** The Constant serialVersionUID. */
+    private static final long serialVersionUID = -2919167206889576860L;
+
     /**
      * Gets the Constant queue.
      *
@@ -60,21 +66,15 @@ public class Communicator extends ProtectedHttpServlet {
         return Communicator.asyncContextQueue;
     }
 
-    /** The Constant messageQueue. */
-    private static final BlockingQueue<CommunicatorMessage> messageQueue = new LinkedBlockingQueue<CommunicatorMessage>();
-
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = -2919167206889576860L;
-
     public static BlockingQueue<CommunicatorMessage> getMessagequeue() {
         return Communicator.messageQueue;
     }
 
-    /** The notifier thread. */
-    protected Thread notifierThread = null;
-
     /** The keep alive service. */
     protected ScheduledExecutorService keepAliveService = null;
+
+    /** The notifier thread. */
+    protected Thread notifierThread = null;
 
     /**
      * Adds the context.
@@ -241,8 +241,7 @@ public class Communicator extends ProtectedHttpServlet {
             @Override
             public void run() {
                 Communicator.getMessagequeue().add(
-                        new CommunicatorMessage(MessageType.PING, "ALL",
-                                "."));
+                        new CommunicatorMessage(MessageType.PING, "ALL", "."));
             }
         }, 0, 60, TimeUnit.SECONDS);
 

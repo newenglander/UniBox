@@ -86,6 +86,15 @@ public class DatabaseQuery {
     }
 
     /**
+     * Gets the connection.
+     *
+     * @return the connection
+     */
+    public Connection getConnection() {
+        return this.connnection;
+    }
+
+    /**
      * Drop query.
      *
      * @param statement
@@ -100,7 +109,8 @@ public class DatabaseQuery {
             InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": Preparing Query: " + statement);
         }
-        final PreparedStatement query = this.connnection.prepareStatement(statement);
+        final PreparedStatement query = this.connnection
+                .prepareStatement(statement);
         return query;
     }
 
@@ -119,7 +129,8 @@ public class DatabaseQuery {
             InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": Preparing Update: " + statement);
         }
-        final PreparedStatement update = this.connnection.prepareStatement(statement);
+        final PreparedStatement update = this.connnection
+                .prepareStatement(statement);
         return update;
     }
 
@@ -137,16 +148,5 @@ public class DatabaseQuery {
                     + ": rollback");
         }
     }
-
-    /**
-     * Gets the connection.
-     *
-     * @return the connection
-     */
-    public Connection getConnection() {
-        return connnection;
-    }
-    
-    
 
 }
