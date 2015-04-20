@@ -59,7 +59,7 @@ public class ResultInsert extends DatabaseAction<Integer> {
     public Integer execute() throws SQLException {
         super.getStatement().setInt(1, this.gameID);
         super.getStatement().setInt(2, this.playerID);
-        super.getStatement().setInt(2, this.scoring);
+        super.getStatement().setInt(3, this.scoring);
         return super.executeUpdate();
     }
 

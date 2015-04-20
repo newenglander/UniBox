@@ -2,6 +2,7 @@ package de.unibox.http.servlet.comet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ConcurrentModificationException;
 
 import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +48,24 @@ public class RunnableNotifier implements Runnable {
             for (final AsyncContext ac : Communicator.asyncContextQueue) {
                 new AsyncContextParser(ac);
             }
-            AsyncContextParser.verify();
+
+            try {
+                AsyncContextParser.verify();
+            } catch (ConcurrentModificationException e) {
+                /**
+                 * this exception will appear if the AsyncContextParser is
+                 * working during a new Context will be created by the
+                 * ServletEngine. Basically this exception can be ignored
+                 * because it will be not necessary to delete unused contexts
+                 * instantly. it is okey if they idle till the next run of
+                 * AsyncContextParser.
+                 */
+                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                    this.log.debug(RunnableNotifier.class.getSimpleName()
+                            + " run(): Could not parse Context during list changes.");
+                    e.printStackTrace();
+                }
+            }
 
             try {
 

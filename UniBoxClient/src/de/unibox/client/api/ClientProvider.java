@@ -262,6 +262,30 @@ public class ClientProvider {
     }
 
     /**
+     * Report draw result.
+     */
+    public static void reportDrawResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
+                RequestType.METHOD_POST, "action=createResult&status=draw"));
+    }
+
+    /**
+     * Report lose result.
+     */
+    public static void reportLoseResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
+                RequestType.METHOD_POST, "action=createResult&status=lose"));
+    }
+
+    /**
+     * Report win result.
+     */
+    public static void reportWinResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
+                RequestType.METHOD_POST, "action=createResult&status=win"));
+    }
+
+    /**
      * Send chat message.
      *
      * @param message
@@ -284,14 +308,6 @@ public class ClientProvider {
         ClientProvider.log.debug(ClientProvider.class.getSimpleName()
                 + ": sending message: " + message);
         ClientProvider.getOutgoingMessages().add(message);
-    }
-
-    /**
-     * Send draw result.
-     */
-    public static void sendDrawResult() {
-        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
-                RequestType.METHOD_POST, "action=createResult&status=draw"));
     }
 
     /**
@@ -321,14 +337,6 @@ public class ClientProvider {
     }
 
     /**
-     * Send lose result.
-     */
-    public static void sendLoseResult() {
-        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
-                RequestType.METHOD_POST, "action=createResult&status=lose"));
-    }
-
-    /**
      * Send system message.
      *
      * @param message
@@ -339,14 +347,6 @@ public class ClientProvider {
                 MessageType.SYSTEM, ClientProvider.getUsername(),
                 Helper.encodeBase64(message));
         ClientProvider.sendCustomMessage(cMessage);
-    }
-
-    /**
-     * Send win result.
-     */
-    public static void sendWinResult() {
-        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(
-                RequestType.METHOD_POST, "action=createResult&status=win"));
     }
 
     /**

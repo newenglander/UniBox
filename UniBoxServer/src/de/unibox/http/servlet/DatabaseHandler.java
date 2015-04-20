@@ -134,6 +134,11 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
         SelectionQuery query = null;
 
+        if (InternalConfig.LOG_DATABASE) {
+            this.log.debug(this.getClass().getSimpleName() + ": doGet with: "
+                    + action);
+        }
+
         if (action != null) {
 
             if (action.equals("getRanking")) {
@@ -253,6 +258,11 @@ public class DatabaseHandler extends ProtectedHttpServlet {
         Integer result = null;
 
         String errorMessage = "illegal_Request";
+
+        if (InternalConfig.LOG_DATABASE) {
+            this.log.debug(this.getClass().getSimpleName() + ": doPost with: "
+                    + action);
+        }
 
         DatabaseAction<Integer> query = null;
 

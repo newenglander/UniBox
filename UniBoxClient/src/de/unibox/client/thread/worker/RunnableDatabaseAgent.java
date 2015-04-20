@@ -1,14 +1,15 @@
 package de.unibox.client.thread.worker;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 
 import de.unibox.client.api.ClientProvider;
 import de.unibox.client.events.DatabaseEvent;
@@ -34,13 +35,10 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
     private String getResponseAsString(final InputStream thisInputStream)
             throws IOException {
         final StringBuilder returnThis = new StringBuilder("");
-        final BufferedReader areader = new BufferedReader(
-                new InputStreamReader(thisInputStream));
-
-        for (String line; (line = areader.readLine()) != null;) {
-            ThreadTaskImpl.log.debug("Send Result: " + line);
-            returnThis.append(line);
-        }
+        Reader in = new BufferedReader(new InputStreamReader(thisInputStream,
+                "UTF-8"));
+        for (int c; (c = in.read()) >= 0; returnThis.append(c))
+            ;
         return returnThis.toString();
     }
 
@@ -143,7 +141,7 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
     private final String requestGet(final String content) throws IOException {
 
         final String databaseURL = this.url + ClientProvider.getDatabaseURL();
-        this.urlObject = new URL(databaseURL + "/" + content);
+        this.urlObject = new URL(databaseURL + "?" + content);
 
         ThreadTaskImpl.log
                 .debug(RunnableDatabaseAgent.class.getSimpleName()
@@ -179,6 +177,9 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
                         + ": Try to etablish connection to "
                         + this.urlObject.getPath());
 
+        byte[] postData = content.getBytes(Charset.forName("UTF-8"));
+        int postDataLength = postData.length;
+
         this.connection = (HttpURLConnection) this.urlObject.openConnection();
         this.connection.setRequestMethod("POST");
         this.connection.setDoInput(true);
@@ -186,15 +187,22 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
         this.connection.setUseCaches(false);
         this.connection
                 .addRequestProperty("Cookie", ClientProvider.getCookie());
-        this.connection.setRequestProperty("Content-Type", "text/html");
+        this.connection.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded");
+        this.connection.setRequestProperty("charset", "utf-8");
         this.connection.setRequestProperty("Content-Length",
-                String.valueOf(content.length()));
+                Integer.toString(postDataLength));
 
-        final OutputStream outStream = this.connection.getOutputStream();
-        this.writer = new OutputStreamWriter(outStream);
-        this.writer.write(content);
-        this.writer.flush();
-        this.writer.close();
+        try (DataOutputStream wr = new DataOutputStream(
+                this.connection.getOutputStream())) {
+
+            wr.write(postData);
+
+        } catch (Exception e) {
+            ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
+                    .getSimpleName() + ": Could not write parameters");
+            e.printStackTrace();
+        }
 
         return this.getResponseAsString(this.connection.getInputStream());
     }
