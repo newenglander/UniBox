@@ -48,14 +48,28 @@ import org.apache.log4j.Logger;
  */
 public class CustomScriptRunner {
 
+    /** The Constant DEFAULT_DELIMITER. */
     private static final String DEFAULT_DELIMITER = ";";
+    
+    /** The Constant DELIMITER_LINE_REGEX. */
     private static final String DELIMITER_LINE_REGEX = "(?i)DELIMITER.+";
+    
+    /** The Constant DELIMITER_LINE_SPLIT_REGEX. */
     private static final String DELIMITER_LINE_SPLIT_REGEX = "(?i)DELIMITER";
 
+    /** The connection. */
     private final Connection connection;
+    
+    /** The stop on error. */
     private final boolean stopOnError;
+    
+    /** The auto commit. */
     private final boolean autoCommit;
+    
+    /** The delimiter. */
     private String delimiter = DEFAULT_DELIMITER;
+    
+    /** The full line delimiter. */
     private boolean fullLineDelimiter = false;
     
     /** The log. */
@@ -63,10 +77,13 @@ public class CustomScriptRunner {
 
     /**
      * Default constructor.
-     * 
+     *
      * @param connection
+     *            the connection
      * @param autoCommit
+     *            the auto commit
      * @param stopOnError
+     *            the stop on error
      */
     public CustomScriptRunner(Connection connection, boolean autoCommit,
             boolean stopOnError) {
@@ -76,8 +93,12 @@ public class CustomScriptRunner {
     }
 
     /**
+     * Sets the delimiter.
+     *
      * @param delimiter
+     *            the delimiter
      * @param fullLineDelimiter
+     *            the full line delimiter
      */
     public void setDelimiter(String delimiter, boolean fullLineDelimiter) {
         this.delimiter = delimiter;
@@ -86,13 +107,13 @@ public class CustomScriptRunner {
 
     /**
      * Runs an SQL script (read in using the Reader parameter).
-     * 
+     *
      * @param reader
      *            - the source of the script
-     * @throws SQLException
-     *             if any SQL errors occur
      * @throws IOException
      *             if there is an error reading from the Reader
+     * @throws SQLException
+     *             if any SQL errors occur
      */
     public void runScript(Reader reader) throws IOException, SQLException {
         try {
@@ -117,15 +138,15 @@ public class CustomScriptRunner {
     /**
      * Runs an SQL script (read in using the Reader parameter) using the
      * connection passed in.
-     * 
+     *
      * @param conn
      *            - the connection to use for the script
      * @param reader
      *            - the source of the script
-     * @throws SQLException
-     *             if any SQL errors occur
      * @throws IOException
      *             if there is an error reading from the Reader
+     * @throws SQLException
+     *             if any SQL errors occur
      */
     private void runScript(Connection conn, Reader reader) throws IOException,
             SQLException {

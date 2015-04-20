@@ -19,9 +19,9 @@ import de.unibox.core.network.object.CommunicatorMessage.MessageType;
 import de.unibox.core.provider.Helper;
 import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.AdminHttpServlet;
+import de.unibox.model.database.CustomScriptRunner;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
-import de.unibox.model.database.CustomScriptRunner;
 import de.unibox.model.database.objects.AdminStatement;
 import de.unibox.model.database.objects.CategoryInsert;
 import de.unibox.model.database.objects.PlayerInsert;
@@ -350,6 +350,15 @@ public class AdminHandler extends AdminHttpServlet {
 
     }
 
+    /**
+     * Gets the reader.
+     *
+     * @param thisStream
+     *            the this stream
+     * @return the reader
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private BufferedReader getReader(InputStream thisStream) throws IOException {
         return new BufferedReader(new InputStreamReader(thisStream));
     }

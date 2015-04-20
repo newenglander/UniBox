@@ -26,7 +26,7 @@ public class InternalConfig {
     public static Logger log = Logger.getLogger("UniBoxLogger");
 
     /** The log async sessions. */
-    public static final boolean LOG_ASYNC_SESSIONS = false;
+    public static final boolean LOG_ASYNC_SESSIONS = true;
 
     /** The log authentification. */
     public static final boolean LOG_AUTHENTIFICATION = true;
@@ -35,22 +35,19 @@ public class InternalConfig {
     public static final boolean LOG_COMMUNICATION = true;
 
     /** The log database. */
-    public static final boolean LOG_DATABASE = false;
+    public static final boolean LOG_DATABASE = true;
 
     /** The log gamepool. */
     public static final boolean LOG_GAMEPOOL = true;
 
     /** The log request header. */
-    public static final boolean LOG_REQUEST_HEADER = false;
+    public static final boolean LOG_REQUEST_HEADER = true;
 
     /** The log requested uri. */
     public static final boolean LOG_REQUESTED_URI = false;
 
     /** The log threads. */
-    public static final boolean LOG_THREADS = false;
-
-    /** The Constant MESSAGE_REFLECTION. */
-    public static final boolean MESSAGE_REFLECTION = false;
+    public static final boolean LOG_THREADS = true;
 
     /** The Constant PROTOCOL. */
     public static final String PROTOCOL = "jdbc:mysql:";

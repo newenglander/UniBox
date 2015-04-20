@@ -54,18 +54,40 @@ public class GameInsert extends DatabaseAction<Integer> {
         return super.executeUpdate();
     }
 
+    /**
+     * Gets the cat id.
+     *
+     * @return the cat id
+     */
     public final Integer getCatID() {
         return this.catID;
     }
 
+    /**
+     * Gets the game name.
+     *
+     * @return the game name
+     */
     public final String getGameName() {
         return this.gameName;
     }
 
+    /**
+     * Sets the cat id.
+     *
+     * @param catID
+     *            the new cat id
+     */
     public final void setCatID(final Integer catID) {
         this.catID = catID;
     }
 
+    /**
+     * Sets the game name.
+     *
+     * @param gameName
+     *            the new game name
+     */
     public final void setGameName(final String gameName) {
         this.gameName = gameName;
     }

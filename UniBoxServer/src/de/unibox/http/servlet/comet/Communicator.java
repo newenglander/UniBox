@@ -51,6 +51,11 @@ public class Communicator extends ProtectedHttpServlet {
     /** The Constant queue. */
     protected static final Queue<AsyncContext> asyncContextQueue = new ConcurrentLinkedQueue<AsyncContext>();
 
+    /**
+     * Gets the Constant queue.
+     *
+     * @return the Constant queue
+     */
     public static Queue<AsyncContext> getAsyncContextQueue() {
         return Communicator.asyncContextQueue;
     }
@@ -68,6 +73,7 @@ public class Communicator extends ProtectedHttpServlet {
     /** The notifier thread. */
     protected Thread notifierThread = null;
 
+    /** The keep alive service. */
     protected ScheduledExecutorService keepAliveService = null;
 
     /**

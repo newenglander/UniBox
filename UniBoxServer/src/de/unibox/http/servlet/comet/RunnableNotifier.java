@@ -17,11 +17,17 @@ import de.unibox.model.game.GamePool;
 import de.unibox.model.user.AbstractUser;
 import de.unibox.model.user.UserFactory;
 
+/**
+ * The Class RunnableNotifier.
+ */
 public class RunnableNotifier implements Runnable {
 
     /** The log. */
     protected Logger log = Logger.getLogger("UniBoxLogger");
 
+    /* (non-Javadoc)
+     * @see java.lang.Runnable#run()
+     */
     @Override
     public void run() {
 
@@ -182,6 +188,16 @@ public class RunnableNotifier implements Runnable {
         }
     }
 
+    /**
+     * Send.
+     *
+     * @param acWriter
+     *            the ac writer
+     * @param concreteMessage
+     *            the concrete message
+     * @throws IOException
+     *             Signals that an I/O exception has occurred.
+     */
     private void send(final PrintWriter acWriter, final String concreteMessage)
             throws IOException {
         if (InternalConfig.LOG_COMMUNICATION) {

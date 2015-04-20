@@ -138,6 +138,11 @@ public class DatabaseQuery {
         }
     }
 
+    /**
+     * Gets the connection.
+     *
+     * @return the connection
+     */
     public Connection getConnection() {
         return connnection;
     }
