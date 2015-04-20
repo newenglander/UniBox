@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.unibox.config.InternalConfig;
 
 /**
- * The Class SerialCommunicator.
+ * The Class SerialCommunicator is responsible for all serial messages.
  */
 @WebServlet(urlPatterns = { "/Communicator/Serial" }, asyncSupported = true)
 public class SerialCommunicator extends Communicator {
@@ -37,7 +37,7 @@ public class SerialCommunicator extends Communicator {
 
         super.thisUser.setSessionId(super.thisSession.getId());
 
-        if (InternalConfig.LOG_COMMUNICATION) {
+        if (InternalConfig.isLogCommunication()) {
             this.log.debug(SerialCommunicator.class.getSimpleName()
                     + ": Get detected: " + super.thisUser);
         }
@@ -50,7 +50,7 @@ public class SerialCommunicator extends Communicator {
         ac.addListener(new AsyncListener() {
             @Override
             public void onComplete(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     SerialCommunicator.this.log.debug(SerialCommunicator.class
                             .getSimpleName() + " onComplete()");
                 }
@@ -59,7 +59,7 @@ public class SerialCommunicator extends Communicator {
 
             @Override
             public void onError(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     SerialCommunicator.this.log.debug(SerialCommunicator.class
                             .getSimpleName() + " onError()");
                 }
@@ -68,7 +68,7 @@ public class SerialCommunicator extends Communicator {
 
             @Override
             public void onStartAsync(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     SerialCommunicator.this.log.debug(SerialCommunicator.class
                             .getSimpleName() + " onStartAsync()");
                 }
@@ -76,7 +76,7 @@ public class SerialCommunicator extends Communicator {
 
             @Override
             public void onTimeout(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     SerialCommunicator.this.log.debug(SerialCommunicator.class
                             .getSimpleName() + " onTimeout()");
                 }
@@ -103,7 +103,7 @@ public class SerialCommunicator extends Communicator {
 
         final String action = req.getParameter("action");
 
-        if (InternalConfig.LOG_COMMUNICATION) {
+        if (InternalConfig.isLogCommunication()) {
             this.log.debug(SerialCommunicator.class.getSimpleName()
                     + ": Post detected: " + super.thisUser);
         }

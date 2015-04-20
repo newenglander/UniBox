@@ -2,6 +2,8 @@ package de.unibox.model.database.objects;
 
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
@@ -9,9 +11,12 @@ import de.unibox.model.user.AbstractUser;
 import de.unibox.model.user.AdministratorUser;
 
 /**
- * The Class PasswordUpdate.
+ * The Class AdminStatement.
  */
 public class AdminStatement extends DatabaseAction<Integer> {
+
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
 
     /** The user. */
     private AbstractUser user = null;
@@ -51,22 +56,22 @@ public class AdminStatement extends DatabaseAction<Integer> {
     public Integer execute() throws SQLException, IllegalAccessError {
         if (this.user != null) {
             if (this.user instanceof AdministratorUser) {
-                if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log.info(AdminStatement.class
-                            .getSimpleName() + ": execute " + this);
+                if (InternalConfig.isLogDatabase()) {
+                    this.log.info(AdminStatement.class.getSimpleName()
+                            + ": execute " + this);
                 }
                 return super.executeUpdate();
             } else {
-                if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log.info(AdminStatement.class
-                            .getSimpleName() + ": denied access for " + this);
+                if (InternalConfig.isLogDatabase()) {
+                    this.log.info(AdminStatement.class.getSimpleName()
+                            + ": denied access for " + this);
                 }
                 this.noPrivilegs("no admin privilegs for: "
                         + super.getStatement());
             }
         } else {
-            if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log.info(AdminStatement.class.getSimpleName()
+            if (InternalConfig.isLogDatabase()) {
+                this.log.info(AdminStatement.class.getSimpleName()
                         + ": denied access for " + this);
             }
             this.noPrivilegs("user is NULL for: " + super.getStatement());

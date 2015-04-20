@@ -18,7 +18,8 @@ import de.unibox.core.network.object.CommunicatorMessage;
 import de.unibox.core.provider.ObjectSerializerImpl;
 
 /**
- * The Class RunnableMessageSender.
+ * The Class RunnableMessageSender is a worker to deliver outgoing messages
+ * queued in the ClientProvider.
  */
 public class RunnableMessageSender extends ThreadTaskImpl {
 

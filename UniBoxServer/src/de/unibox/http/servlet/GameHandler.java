@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.core.network.object.MessageType;
 import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.game.Game;
@@ -18,7 +18,7 @@ import de.unibox.model.game.GamePool;
 import de.unibox.model.user.AbstractUser;
 
 /**
- * The Class DashboardHandler.
+ * The Class DashboardHandler defines and handles game tasks.
  */
 @WebServlet("/Game")
 public class GameHandler extends ProtectedHttpServlet {
@@ -94,7 +94,7 @@ public class GameHandler extends ProtectedHttpServlet {
 
                     } else if (action.equals("leaveGame")) {
 
-                        if (InternalConfig.LOG_GAMEPOOL) {
+                        if (InternalConfig.isLogGamepool()) {
                             this.log.debug(this.getClass().getSimpleName()
                                     + ": switching " + super.thisUser.getName()
                                     + " with " + action);
@@ -104,7 +104,7 @@ public class GameHandler extends ProtectedHttpServlet {
                         this.sendUpdateBroadcast(super.thisUser);
 
                     } else {
-                        if (InternalConfig.LOG_GAMEPOOL) {
+                        if (InternalConfig.isLogGamepool()) {
                             this.log.debug(this.getClass().getSimpleName()
                                     + ": could not retrieve relevant game");
                         }
@@ -127,7 +127,7 @@ public class GameHandler extends ProtectedHttpServlet {
                 this.serviceErrorMessage(response, errorMessage);
             }
 
-            if (InternalConfig.LOG_GAMEPOOL) {
+            if (InternalConfig.isLogGamepool()) {
                 if (game != null) {
                     this.log.debug(this.getClass().getSimpleName() + ": "
                             + game);

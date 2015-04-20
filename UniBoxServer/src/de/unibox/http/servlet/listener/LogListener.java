@@ -5,25 +5,19 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.apache.log4j.pattern.LogEvent;
 
 import de.unibox.config.InternalConfig;
 
-/*
- * this class is listening to all jsps able to redirect any loggings to several targets using log4j
- */
 /**
- * The listener interface for receiving log events. The class that is interested
- * in processing a log event implements this interface, and the object created
- * with that class is registered with a component using the component's
- * <code>addLogListener<code> method. When
- * the log event occurs, that object's appropriate
- * method is invoked.
+ * The LogListener Class is able to provide logging features even in JSPs.
  *
- * @see LogEvent
  */
 public class LogListener implements ServletContextListener {
+
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
 
     /*
      * (non-Javadoc)
@@ -57,11 +51,9 @@ public class LogListener implements ServletContextListener {
 
         if (file != null) {
             PropertyConfigurator.configure(prefix + file);
-            if (InternalConfig.LOG_AUTHENTIFICATION) {
-                InternalConfig.log
-                        .info(LogListener.class.getSimpleName()
-                                + ": Logging started for application: "
-                                + prefix + file);
+            if (InternalConfig.isLogAuthentification()) {
+                this.log.info(LogListener.class.getSimpleName()
+                        + ": Logging started for application: " + prefix + file);
             }
         }
 

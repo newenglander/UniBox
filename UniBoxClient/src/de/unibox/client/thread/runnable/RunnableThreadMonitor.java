@@ -5,7 +5,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.log4j.Logger;
 
 /**
- * The Class RunnableThreadMonitor.
+ * The Class RunnableThreadMonitor is able to report the health status of the
+ * ThreadFactory.
  */
 public class RunnableThreadMonitor implements Runnable {
 

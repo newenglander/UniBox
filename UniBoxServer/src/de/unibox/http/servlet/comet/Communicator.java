@@ -20,33 +20,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.sun.media.sound.InvalidFormatException;
-
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.core.network.object.MessageType;
 import de.unibox.core.provider.Helper;
 import de.unibox.core.provider.ObjectSerializerImpl;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 
 /**
- * The Class Communicator.
+ * The Class Communicator implements the most common part of the concrete
+ * communication.
  */
 @WebServlet(urlPatterns = { "/Communicator" }, asyncSupported = true)
 public class Communicator extends ProtectedHttpServlet {
-
-    /**
-     * The Enum ClientType.
-     */
-    public static enum ClientType {
-
-        /** The javascript. */
-        JAVASCRIPT,
-        /** The plain. */
-        PLAIN,
-        /** The serial. */
-        SERIAL
-    }
 
     /** The Constant queue. */
     protected static final Queue<AsyncContext> asyncContextQueue = new ConcurrentLinkedQueue<AsyncContext>();
@@ -83,7 +69,7 @@ public class Communicator extends ProtectedHttpServlet {
      *            the this ac
      */
     protected void addContext(final AsyncContext thisAc) {
-        if (InternalConfig.LOG_COMMUNICATION) {
+        if (InternalConfig.isLogCommunication()) {
             this.log.debug(Communicator.class.getSimpleName()
                     + ": adding context: " + thisAc);
         }
@@ -97,7 +83,7 @@ public class Communicator extends ProtectedHttpServlet {
      */
     @Override
     public void destroy() {
-        if (InternalConfig.LOG_THREADS) {
+        if (InternalConfig.isLogThreads()) {
             this.log.debug(this.getClass().getSimpleName() + ": destroyed");
         }
         Communicator.asyncContextQueue.clear();
@@ -118,7 +104,7 @@ public class Communicator extends ProtectedHttpServlet {
         req.setAttribute("format", ClientType.PLAIN);
         super.thisUser.setSessionId(super.thisSession.getId());
 
-        if (InternalConfig.LOG_COMMUNICATION) {
+        if (InternalConfig.isLogCommunication()) {
             this.log.debug(Communicator.class.getSimpleName()
                     + ": Get detected: " + super.thisUser);
         }
@@ -131,7 +117,7 @@ public class Communicator extends ProtectedHttpServlet {
         ac.addListener(new AsyncListener() {
             @Override
             public void onComplete(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     Communicator.this.log.debug(Communicator.class
                             .getSimpleName() + " onComplete()");
                 }
@@ -141,7 +127,7 @@ public class Communicator extends ProtectedHttpServlet {
 
             @Override
             public void onError(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     Communicator.this.log.debug(Communicator.class
                             .getSimpleName() + " onError()");
                 }
@@ -151,7 +137,7 @@ public class Communicator extends ProtectedHttpServlet {
 
             @Override
             public void onStartAsync(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     Communicator.this.log.debug(Communicator.class
                             .getSimpleName() + " onStartAsync()");
                 }
@@ -159,7 +145,7 @@ public class Communicator extends ProtectedHttpServlet {
 
             @Override
             public void onTimeout(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     Communicator.this.log.debug(Communicator.class
                             .getSimpleName() + " onTimeout()");
                 }
@@ -187,7 +173,7 @@ public class Communicator extends ProtectedHttpServlet {
 
         final String action = req.getParameter("action");
 
-        if (InternalConfig.LOG_COMMUNICATION) {
+        if (InternalConfig.isLogCommunication()) {
             this.log.debug(Communicator.class.getSimpleName()
                     + ": Detected: POST, Action: " + action + ", User: "
                     + super.thisUser);
@@ -228,7 +214,7 @@ public class Communicator extends ProtectedHttpServlet {
     public void init(final ServletConfig config) throws ServletException {
         super.init(config);
 
-        if (InternalConfig.LOG_THREADS) {
+        if (InternalConfig.isLogThreads()) {
             this.log.debug(Communicator.class.getSimpleName()
                     + ": deploy new thread");
         }
@@ -306,7 +292,7 @@ public class Communicator extends ProtectedHttpServlet {
                 final ClientType clientType = (ClientType) req
                         .getAttribute("format");
 
-                if (InternalConfig.LOG_COMMUNICATION) {
+                if (InternalConfig.isLogCommunication()) {
                     this.log.debug(Communicator.class.getSimpleName()
                             + " switchAction: " + clientType);
                 }
@@ -321,7 +307,7 @@ public class Communicator extends ProtectedHttpServlet {
                             messageString, CommunicatorMessage.class);
                     break;
                 case PLAIN:
-                    if (InternalConfig.LOG_COMMUNICATION) {
+                    if (InternalConfig.isLogCommunication()) {
                         this.log.warn(Communicator.class.getSimpleName()
                                 + ": UNHANDLED PLAIN MESSAGE: "
                                 + super.thisUser.getName() + ": "
@@ -329,12 +315,12 @@ public class Communicator extends ProtectedHttpServlet {
                     }
                     break;
                 default:
-                    if (InternalConfig.LOG_COMMUNICATION) {
+                    if (InternalConfig.isLogCommunication()) {
                         this.log.warn(Communicator.class.getSimpleName()
                                 + " suppressing default message: "
                                 + messageString);
                     }
-                    throw new InvalidFormatException(
+                    throw new Exception(
                             "incoming message switched to default type!");
                 }
 
@@ -342,7 +328,7 @@ public class Communicator extends ProtectedHttpServlet {
                 res.sendError(422, "Unprocessable Entity");
                 e.printStackTrace();
             } finally {
-                if (InternalConfig.LOG_COMMUNICATION) {
+                if (InternalConfig.isLogCommunication()) {
                     this.log.debug(Communicator.class.getSimpleName()
                             + ": Recieving: " + cMessage);
                 }

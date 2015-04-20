@@ -1,11 +1,16 @@
 package de.unibox.model.user;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
 
 /**
- * The Class AbstractUser.
+ * The Class AbstractUser is generic user class to provide user basics.
  */
 public abstract class AbstractUser {
+
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
 
     /** The name. */
     private String name;
@@ -28,8 +33,8 @@ public abstract class AbstractUser {
      *            the this session id
      */
     public AbstractUser(final UserType thisType, final String thisSessionId) {
-        if (InternalConfig.LOG_AUTHENTIFICATION) {
-            InternalConfig.log.debug(this.getClass().getSimpleName()
+        if (InternalConfig.isLogAuthentification()) {
+            this.log.debug(this.getClass().getSimpleName()
                     + ": AbstractUser Type: " + thisType + " SessionID: "
                     + this.sessionId);
         }

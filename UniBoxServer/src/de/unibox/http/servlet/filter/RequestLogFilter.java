@@ -12,13 +12,19 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
 
 /**
- * The Class RequestLogFilter.
+ * The Class RequestLogFilter is filter to log and measure any incoming http
+ * request.
  */
 @WebFilter(urlPatterns = { "/LogFilter" }, asyncSupported = true)
 public class RequestLogFilter implements Filter {
+
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
 
     /**
      * Instantiates a new request log filter.
@@ -46,7 +52,7 @@ public class RequestLogFilter implements Filter {
             final ServletResponse response, final FilterChain chain)
             throws IOException, ServletException {
 
-        if (InternalConfig.LOG_REQUESTED_URI) {
+        if (InternalConfig.isLogRequestedUri()) {
 
             final StringBuilder url = new StringBuilder("");
             final StringBuilder query = new StringBuilder("?");
@@ -65,13 +71,13 @@ public class RequestLogFilter implements Filter {
                 status.append(((HttpServletResponse) response).getStatus());
             }
             if (query.toString().equals("?null")) {
-                InternalConfig.log.debug(this.getClass().getSimpleName()
-                        + ": CODE: " + status + ", TIME: " + (aft - bef)
-                        + "ms, TYPE: " + method + ", URL: " + url.toString());
+                this.log.debug(this.getClass().getSimpleName() + ": CODE: "
+                        + status + ", TIME: " + (aft - bef) + "ms, TYPE: "
+                        + method + ", URL: " + url.toString());
             } else {
-                InternalConfig.log.debug(this.getClass().getSimpleName()
-                        + ": CODE: " + status + ", TIME: " + (aft - bef)
-                        + "ms, TYPE: " + method + ", URL: " + url.toString()
+                this.log.debug(this.getClass().getSimpleName() + ": CODE: "
+                        + status + ", TIME: " + (aft - bef) + "ms, TYPE: "
+                        + method + ", URL: " + url.toString()
                         + query.toString());
             }
 

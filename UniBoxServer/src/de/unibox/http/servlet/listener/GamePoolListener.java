@@ -5,20 +5,20 @@ import java.io.IOException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
 import de.unibox.model.game.GamePool;
 
 /**
- * The listener interface for receiving gamePool events. The class that is
- * interested in processing a gamePool event implements this interface, and the
- * object created with that class is registered with a component using the
- * component's <code>addGamePoolListener<code> method. When
- * the gamePool event occurs, that object's appropriate
- * method is invoked.
+ * The Class GamePoolListener is a Listener which init() the GamePool
+ * functionality on startup.
  *
- * @see GamePoolEvent
  */
 public class GamePoolListener implements ServletContextListener {
+
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
 
     /*
      * (non-Javadoc)
@@ -42,12 +42,12 @@ public class GamePoolListener implements ServletContextListener {
 
         // initialize game pool singleton
         try {
-            InternalConfig.log.info(GamePoolListener.class.getSimpleName()
+            this.log.info(GamePoolListener.class.getSimpleName()
                     + ": GamePool initialization..");
             GamePool.getInstance();
         } catch (final IOException e) {
-            if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log.warn(GamePoolListener.class.getSimpleName()
+            if (InternalConfig.isLogDatabase()) {
+                this.log.warn(GamePoolListener.class.getSimpleName()
                         + ": GamePool initialization failed!");
             }
             e.printStackTrace();

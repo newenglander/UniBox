@@ -8,7 +8,7 @@ import javafx.scene.Node;
 import de.unibox.core.network.object.CommunicatorMessage;
 
 /**
- * The Class CommunicationEvent.
+ * The Class CommunicationEvent is defining the custom CommunicationEvent.
  */
 public class CommunicationEvent extends Event {
 

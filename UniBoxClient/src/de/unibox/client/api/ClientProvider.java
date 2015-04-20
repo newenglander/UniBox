@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import de.unibox.client.events.CommunicationEvent;
 import de.unibox.client.events.DatabaseEvent;
-import de.unibox.client.events.DatabaseEvent.RequestType;
+import de.unibox.client.events.RequestType;
 import de.unibox.client.thread.ThreadEngine;
 import de.unibox.client.thread.worker.RunnableCometListener;
 import de.unibox.client.thread.worker.RunnableDatabaseAgent;
@@ -21,11 +21,12 @@ import de.unibox.client.thread.worker.RunnableLoginAgent;
 import de.unibox.client.thread.worker.RunnableMessageMediator;
 import de.unibox.client.thread.worker.RunnableMessageSender;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.core.network.object.MessageType;
 import de.unibox.core.provider.Helper;
 
 /**
- * The Class ClientProvider.
+ * The Class ClientProvider. This Class act as a static Interface for Java
+ * Clients to provide intuitive access to the backend API.
  */
 public class ClientProvider {
 
@@ -38,20 +39,32 @@ public class ClientProvider {
     /** The database url. */
     private static String databaseURL = "/Database";
 
-    /** The incoming messages. */
+    /**
+     * The incoming messages. All incoming messages will arrive in that queue
+     * before they get picked up by a worker thread.
+     */
     private static BlockingQueue<CommunicatorMessage> incomingMessages = new LinkedBlockingQueue<CommunicatorMessage>();
 
     /** The log. */
     private static Logger log = Logger.getLogger("UniBoxLogger");
 
-    /** The outgoing database events. */
+    /**
+     * The outgoing database events. All outgoing database events will arrive in
+     * that queue before they get picked up by a worker thread.
+     */
     private static BlockingQueue<DatabaseEvent> outgoingDatabaseEvents = new LinkedBlockingQueue<DatabaseEvent>();
 
-    /** The outgoing messages. */
+    /**
+     * The outgoing messages. All outgoing messages will arrive in that queue
+     * before they get picked up by a worker thread.
+     */
     private static BlockingQueue<CommunicatorMessage> outgoingMessages = new LinkedBlockingQueue<CommunicatorMessage>();
 
     /** The password. */
     private static String password = null;
+
+    /** The default port. */
+    private static int port = 8080;
 
     /** The reciever url. */
     private static String recieverURL = "/Communicator/Serial";
@@ -63,7 +76,7 @@ public class ClientProvider {
     private static String username = null;
 
     /**
-     * Bind.
+     * This method binds the INCOMING_MESSAGE event to a given node.
      *
      * @param primaryStage
      *            the primary stage
@@ -88,7 +101,7 @@ public class ClientProvider {
     }
 
     /**
-     * Connect.
+     * This method is starting the worker threads to connect to the backend.
      */
     public static void connect() {
         try {
@@ -235,7 +248,8 @@ public class ClientProvider {
     }
 
     /**
-     * Login.
+     * This method is starting the login agent to retrieve a valid cookie for
+     * further authorized requests.
      */
     public static void login() {
         try {
@@ -378,7 +392,8 @@ public class ClientProvider {
      *            the new ip
      */
     public static final void setIp(final String ip) {
-        ClientProvider.url = "http://" + ip + ":8080/UniBox";
+        ClientProvider.url = "http://" + ip + ":" + ClientProvider.port
+                + "/UniBox";
     }
 
     /**
@@ -399,12 +414,13 @@ public class ClientProvider {
     }
 
     /**
-     * Setup scanner.
+     * This method will ask for server ip, username and password.
      */
     public static final void setupScanner() {
         final Scanner s = new Scanner(System.in);
         System.out.print("ServerIP:");
-        ClientProvider.setFullUrl("http://" + s.next() + ":8080/UniBox");
+        ClientProvider.setFullUrl("http://" + s.next() + ":"
+                + ClientProvider.port + "/UniBox");
         System.out.print("Username:");
         ClientProvider.setUsername(s.next());
         System.out.print("Password:");

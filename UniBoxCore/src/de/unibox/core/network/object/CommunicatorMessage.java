@@ -11,33 +11,10 @@ import java.security.NoSuchAlgorithmException;
 import biz.source_code.base64Coder.Base64Coder;
 
 /**
- * The Class CommunicatorMessage.
+ * The Class CommunicatorMessage provides a blueprint of all transmitted
+ * messages.
  */
 public class CommunicatorMessage implements Serializable {
-
-    /**
-     * The Enum MessageType.
-     */
-    public enum MessageType {
-
-        /** The chat. */
-        CHAT,
-
-        /** The error. */
-        ERROR,
-
-        /** The game. */
-        GAME,
-
-        /** The js command. */
-        JS_COMMAND,
-
-        /** The ping. */
-        PING,
-
-        /** The system. */
-        SYSTEM
-    }
 
     /** The Constant serialVersionUID. */
     private static final long serialVersionUID = -4946036413758099605L;

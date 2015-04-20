@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.apache.log4j.Logger;
 
 /**
- * The Class ThreadFactoryImpl.
+ * The abstract Class ThreadFactoryImpl.
  */
 public abstract class ThreadFactoryImpl {
 

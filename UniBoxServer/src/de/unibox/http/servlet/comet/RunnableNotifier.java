@@ -11,15 +11,15 @@ import org.apache.log4j.Logger;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.core.network.object.MessageType;
 import de.unibox.core.provider.ObjectSerializerImpl;
-import de.unibox.http.servlet.comet.Communicator.ClientType;
 import de.unibox.model.game.GamePool;
 import de.unibox.model.user.AbstractUser;
 import de.unibox.model.user.UserFactory;
 
 /**
- * The Class RunnableNotifier.
+ * The Class RunnableNotifier is a Worker Class to handle and feed
+ * AsyncContexts.
  */
 public class RunnableNotifier implements Runnable {
 
@@ -51,7 +51,7 @@ public class RunnableNotifier implements Runnable {
 
             try {
                 AsyncContextParser.verify();
-            } catch (ConcurrentModificationException e) {
+            } catch (final ConcurrentModificationException e) {
                 /**
                  * this exception will appear if the AsyncContextParser is
                  * working during a new Context will be created by the
@@ -60,7 +60,7 @@ public class RunnableNotifier implements Runnable {
                  * instantly. it is okey if they idle till the next run of
                  * AsyncContextParser.
                  */
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     this.log.debug(RunnableNotifier.class.getSimpleName()
                             + " run(): Could not parse Context during list changes.");
                     e.printStackTrace();
@@ -71,7 +71,7 @@ public class RunnableNotifier implements Runnable {
 
                 cMessage = Communicator.getMessagequeue().take();
 
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     for (final AsyncContext ac : Communicator.asyncContextQueue) {
                         this.log.debug(Communicator.class.getSimpleName()
                                 + ": " + ac);
@@ -98,7 +98,7 @@ public class RunnableNotifier implements Runnable {
                         final PrintWriter acWriter = ac.getResponse()
                                 .getWriter();
 
-                        if (InternalConfig.LOG_COMMUNICATION) {
+                        if (InternalConfig.isLogCommunication()) {
                             this.log.debug(RunnableNotifier.class
                                     .getSimpleName()
                                     + " run(): ClientType="
@@ -113,7 +113,7 @@ public class RunnableNotifier implements Runnable {
                             if (messageType == MessageType.JS_COMMAND) {
                                 if (receiver.getName().equals(
                                         cMessage.getName())) {
-                                    if (InternalConfig.LOG_COMMUNICATION) {
+                                    if (InternalConfig.isLogCommunication()) {
                                         RunnableNotifier.this.log
                                                 .debug(Communicator.class
                                                         .getSimpleName()
@@ -148,7 +148,7 @@ public class RunnableNotifier implements Runnable {
                                 } else {
                                     // message belongs NOT to this
                                     // context
-                                    if (InternalConfig.LOG_COMMUNICATION) {
+                                    if (InternalConfig.isLogCommunication()) {
                                         this.log.debug(Communicator.class
                                                 .getSimpleName()
                                                 + " skipped message from "
@@ -165,7 +165,7 @@ public class RunnableNotifier implements Runnable {
                             this.send(acWriter, cMessage.toString());
                             break;
                         default:
-                            if (InternalConfig.LOG_COMMUNICATION) {
+                            if (InternalConfig.isLogCommunication()) {
                                 RunnableNotifier.this.log
                                         .warn(Communicator.class
                                                 .getSimpleName()
@@ -181,7 +181,7 @@ public class RunnableNotifier implements Runnable {
                         }
 
                     } catch (final IOException e1) {
-                        if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                        if (InternalConfig.isLogAsyncSessions()) {
                             RunnableNotifier.this.log
                                     .debug(Communicator.class.getSimpleName()
                                             + ": response already committed. removing: "
@@ -190,7 +190,7 @@ public class RunnableNotifier implements Runnable {
                         Communicator.asyncContextQueue.remove(ac);
                         e1.printStackTrace();
                     } catch (final IllegalStateException e2) {
-                        if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                        if (InternalConfig.isLogAsyncSessions()) {
                             RunnableNotifier.this.log
                                     .debug(Communicator.class.getSimpleName()
                                             + ": catched IllegalStateException. Response already committed. removing: "
@@ -202,7 +202,7 @@ public class RunnableNotifier implements Runnable {
                 }
             } catch (final InterruptedException e2) {
                 done = true;
-                if (InternalConfig.LOG_THREADS) {
+                if (InternalConfig.isLogThreads()) {
                     this.log.warn(Communicator.class.getSimpleName()
                             + " shutdown and rebooting..");
                     e2.printStackTrace();
@@ -224,7 +224,7 @@ public class RunnableNotifier implements Runnable {
      */
     private void send(final PrintWriter acWriter, final String concreteMessage)
             throws IOException {
-        if (InternalConfig.LOG_COMMUNICATION) {
+        if (InternalConfig.isLogCommunication()) {
             this.log.debug(Communicator.class.getSimpleName() + " says: "
                     + concreteMessage);
         }

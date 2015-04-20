@@ -9,7 +9,8 @@ import org.apache.log4j.Logger;
 import de.unibox.client.api.ClientProvider;
 
 /**
- * The Class ThreadTaskImpl.
+ * The abstract Class ThreadTaskImpl is a derived Runnable class to get direct
+ * access to the ConcreteThreadFactory.
  */
 public abstract class ThreadTaskImpl implements Runnable {
 

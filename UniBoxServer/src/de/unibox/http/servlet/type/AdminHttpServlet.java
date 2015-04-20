@@ -11,7 +11,8 @@ import de.unibox.config.InternalConfig;
 import de.unibox.model.user.AdministratorUser;
 
 /**
- * The Class ProtectedHttpServlet.
+ * The Class AdminHttpServlet is a Security Layer for Servlets which should
+ * prevent these from non-administrative access.
  */
 public class AdminHttpServlet extends ProtectedHttpServlet {
 
@@ -37,21 +38,21 @@ public class AdminHttpServlet extends ProtectedHttpServlet {
 
         if (null != super.thisUser) {
 
-            if (InternalConfig.LOG_AUTHENTIFICATION) {
+            if (InternalConfig.isLogAuthentification()) {
                 this.log.debug(AdminHttpServlet.class.getSimpleName() + ": "
                         + super.thisUser.getName()
                         + " requesting AdminHttpServlet.");
             }
 
             if (super.thisUser instanceof AdministratorUser) {
-                if (InternalConfig.LOG_AUTHENTIFICATION) {
+                if (InternalConfig.isLogAuthentification()) {
                     this.log.debug(AdminHttpServlet.class.getSimpleName()
                             + ": Access granted for "
                             + super.thisUser.getName());
                 }
                 this.service(request, response);
             } else {
-                if (InternalConfig.LOG_AUTHENTIFICATION) {
+                if (InternalConfig.isLogAuthentification()) {
                     this.log.debug(AdminHttpServlet.class.getSimpleName()
                             + ": Access denied for " + super.thisUser.getName()
                             + ". Invalidate related session..");
@@ -61,7 +62,7 @@ public class AdminHttpServlet extends ProtectedHttpServlet {
                 this.serviceDenied(request, response);
             }
         } else {
-            if (InternalConfig.LOG_AUTHENTIFICATION) {
+            if (InternalConfig.isLogAuthentification()) {
                 this.log.debug(AdminHttpServlet.class.getSimpleName()
                         + ": Access denied, user object == null !");
             }

@@ -5,58 +5,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
 import de.unibox.model.database.DatabaseQuery;
 import de.unibox.model.database.objects.SelectionQuery;
 import de.unibox.model.user.AbstractUser;
 
 /**
- * The Class GameQueue.
+ * The Class GamePool implements a functional game pool.
  */
 public class GamePool {
-
-    /**
-     * The Enum ScoringType.
-     */
-    public enum ScoringType {
-
-        /** The win. */
-        WIN(1), /** The draw. */
-        DRAW(0), /** The lose. */
-        LOSE(-1);
-
-        /** The score. */
-        private final int score;
-
-        /**
-         * Instantiates a new scoring type.
-         *
-         * @param thisScore
-         *            the this score
-         */
-        private ScoringType(final int thisScore) {
-            this.score = thisScore;
-        }
-
-        /**
-         * Gets the text.
-         *
-         * @return the text
-         */
-        public int getScore() {
-            return score;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Enum#toString()
-         */
-        @Override
-        public String toString() {
-            return this.score + "";
-        }
-    }
 
     /** The instance. */
     private static GamePool instance;
@@ -76,6 +35,9 @@ public class GamePool {
     /** The game list. */
     private final ArrayList<Game> gameList;
 
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
+
     /**
      * Instantiates a new game pool.
      *
@@ -83,9 +45,8 @@ public class GamePool {
      *             Signals that an I/O exception has occurred.
      */
     private GamePool() throws IOException {
-        if (InternalConfig.LOG_GAMEPOOL) {
-            InternalConfig.log.debug(this.getClass().getSimpleName()
-                    + ": constructor()");
+        if (InternalConfig.isLogGamepool()) {
+            this.log.debug(this.getClass().getSimpleName() + ": constructor()");
         }
         this.gameList = new ArrayList<Game>();
         this.initialize();
@@ -188,13 +149,12 @@ public class GamePool {
      */
     private void initialize() throws IOException {
 
-        if (InternalConfig.LOG_GAMEPOOL) {
-            InternalConfig.log.debug(this.getClass().getSimpleName()
-                    + ": initializing..");
+        if (InternalConfig.isLogGamepool()) {
+            this.log.debug(this.getClass().getSimpleName() + ": initializing..");
         }
 
-        if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug(this.getClass().getSimpleName()
+        if (InternalConfig.isLogDatabase()) {
+            this.log.debug(this.getClass().getSimpleName()
                     + ": select game table..");
         }
 
@@ -218,14 +178,14 @@ public class GamePool {
             }
             transaction.commit();
 
-            if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log.debug(this.getClass().getSimpleName()
+            if (InternalConfig.isLogDatabase()) {
+                this.log.debug(this.getClass().getSimpleName()
                         + ": game pool loaded and available!");
             }
 
         } catch (final SQLException e) {
-            if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log.debug(this.getClass().getSimpleName()
+            if (InternalConfig.isLogDatabase()) {
+                this.log.debug(this.getClass().getSimpleName()
                         + ": Could not query game table.");
             }
             e.printStackTrace();

@@ -8,25 +8,30 @@ import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
 import de.unibox.core.provider.Helper;
 import de.unibox.core.provider.Reversed;
 
 /**
- * The Class AsyncContextParser.
+ * The Class AsyncContextParser is able to identify and handle unused contexts.
  */
 public class AsyncContextParser {
 
     /** The list. */
     public static List<AsyncContextParser> list = null;
 
+    /** The log. */
+    protected static Logger log = Logger.getLogger("UniBoxLogger");
+
     /**
      * Inits the.
      */
     public static void init() {
-        if (InternalConfig.LOG_ASYNC_SESSIONS) {
-            InternalConfig.log.debug(AsyncContextParser.class.getSimpleName()
-                    + ": init()");
+        if (InternalConfig.isLogAsyncSessions()) {
+            AsyncContextParser.log.debug(AsyncContextParser.class
+                    .getSimpleName() + ": init()");
         }
         AsyncContextParser.list = new ArrayList<AsyncContextParser>();
     }
@@ -48,8 +53,8 @@ public class AsyncContextParser {
 
             if (asyncSessions.containsKey(id)
                     && asyncSessions.get(id).equals(time)) {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                    InternalConfig.log.debug(AsyncContextParser.class
+                if (InternalConfig.isLogAsyncSessions()) {
+                    AsyncContextParser.log.debug(AsyncContextParser.class
                             .getSimpleName()
                             + ": removing id="
                             + comSession.getId()
@@ -60,7 +65,7 @@ public class AsyncContextParser {
                 }
                 Communicator.asyncContextQueue.remove(ac);
                 ac.dispatch();
-                //ac.complete();
+                // ac.complete();
             } else {
                 asyncSessions.put(id, time);
             }
@@ -95,7 +100,7 @@ public class AsyncContextParser {
         try {
             req = (HttpServletRequest) thisContext.getRequest();
         } catch (final IllegalStateException e) {
-            if (InternalConfig.LOG_ASYNC_SESSIONS) {
+            if (InternalConfig.isLogAsyncSessions()) {
                 e.printStackTrace();
             }
         }
@@ -106,10 +111,10 @@ public class AsyncContextParser {
             this.creationTime = this.session.getCreationTime();
             this.creationTimeString = Helper.longToDate(this.session
                     .getCreationTime());
-            if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                InternalConfig.log.debug(AsyncContextParser.class
+            if (InternalConfig.isLogAsyncSessions()) {
+                AsyncContextParser.log.debug(AsyncContextParser.class
                         .getSimpleName() + ": add Context: " + thisContext);
-                InternalConfig.log.debug(AsyncContextParser.class
+                AsyncContextParser.log.debug(AsyncContextParser.class
                         .getSimpleName()
                         + ": adding id="
                         + this.id
@@ -120,8 +125,8 @@ public class AsyncContextParser {
             }
             AsyncContextParser.list.add(this);
         } else {
-            if (InternalConfig.LOG_ASYNC_SESSIONS) {
-                InternalConfig.log.debug(AsyncContextParser.class
+            if (InternalConfig.isLogAsyncSessions()) {
+                AsyncContextParser.log.debug(AsyncContextParser.class
                         .getSimpleName()
                         + ": illegal state for context detected: "
                         + thisContext);
