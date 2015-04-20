@@ -375,10 +375,33 @@ var app = {
 					}
 				});
 		$('#resetScoresBtn').on('click', function(e) {
-			console.log("resetScores");
+			jQuery.ajax({
+				type : "GET",
+				url : app.url + app.adminSource,
+				data : "action=resetScores",
+				success : function(data) {
+					swal("Good job!", "Scores reset!", "success");
+				},
+				error : function(e) {
+					swal("Ups..", "Could not reset Scores..", "warning");
+				},
+				async : false
+			});
 		});
 		$('#resetDbBtn').on('click', function(e) {
-			console.log("resetDb");
+			jQuery.ajax({
+				type : "GET",
+				url : app.url + app.adminSource,
+				data : "action=resetDatabase",
+				success : function(data) {
+					// ARGH
+					swal("Good job!", "Game created!", "success");
+				},
+				error : function(e) {
+					swal("Ups..", "Could not reset Database..", "warning");
+				},
+				async : false
+			});
 		});
 		$('#newGameModal').on('shown.bs.modal', function() {
 			$('#gameNameInput').focus();
@@ -597,7 +620,7 @@ var app = {
 									+ data[i].Name + "</option>");
 				}
 				$('#multiSelectDeleteUser').multiselect({
-					includeSelectAllOption : true,
+					includeSelectAllOption : false,
 					enableFiltering : true
 				});
 				$('#multiSelectDeleteUser').multiselect('rebuild');

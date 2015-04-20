@@ -41,7 +41,7 @@ public class AdminStatement extends DatabaseAction<Integer> {
     public void attach(final DatabaseQuery transaction) throws SQLException {
         super.attachUpdate(transaction);
     }
-
+    
     /*
      * (non-Javadoc)
      * 

@@ -53,15 +53,3 @@ INSERT INTO `unibox`.`Result` (`GameID`, `PlayerID`, `Scoring`) VALUES (3, 2, 0)
 INSERT INTO `unibox`.`Result` (`GameID`, `PlayerID`, `Scoring`) VALUES (4, 5, 1);
 
 COMMIT;
-
--- -----------------------------------------------------
--- Data for table `unibox`.`Queue`
--- -----------------------------------------------------
-/**
-START TRANSACTION;
-USE `unibox`;
-INSERT INTO `unibox`.`Queue` (`PlayerID`, `GameID`) VALUES (1, 1);
-INSERT INTO `unibox`.`Queue` (`PlayerID`, `GameID`) VALUES (2, 1);
-
-COMMIT;
-*/

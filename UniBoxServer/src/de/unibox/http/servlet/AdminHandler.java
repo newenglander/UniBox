@@ -1,9 +1,13 @@
 package de.unibox.http.servlet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +21,7 @@ import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.AdminHttpServlet;
 import de.unibox.model.database.DatabaseAction;
 import de.unibox.model.database.DatabaseQuery;
+import de.unibox.model.database.CustomScriptRunner;
 import de.unibox.model.database.objects.AdminStatement;
 import de.unibox.model.database.objects.CategoryInsert;
 import de.unibox.model.database.objects.PlayerInsert;
@@ -131,6 +136,77 @@ public class AdminHandler extends AdminHttpServlet {
                         isComplete = false;
                     }
                 }
+            } else if (action.equals("resetDatabase")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": Reset database. Drop all tables and insert default values.");
+                }
+
+                try {
+                    final DatabaseQuery transaction = new DatabaseQuery();
+
+                    ServletContext context = this.getServletContext();
+
+                    transaction.connect();
+
+                    // execute sql scripts/files like this
+                    CustomScriptRunner runner = new CustomScriptRunner(
+                            transaction.getConnection(), false, false);
+                    runner.runScript(getReader(context
+                            .getResourceAsStream("/WEB-INF/database/UniBoxCreate.sql")));
+                    runner.runScript(getReader(context
+                            .getResourceAsStream("/WEB-INF/database/UniBoxInserts.sql")));
+
+                    transaction.commit();
+
+                    // send broadcast to force client update
+                    Communicator.getMessagequeue().add(
+                            new CommunicatorMessage(MessageType.JS_Command, "ALL",
+                                    "window.parent.app.updateGameTable();"));
+                    Communicator.getMessagequeue().add(
+                            new CommunicatorMessage(MessageType.JS_Command, "ALL",
+                                    "window.parent.app.updateRankingTable();"));
+                    
+                } catch (final SQLException e) {
+                    if (InternalConfig.LOG_DATABASE) {
+                        this.log.debug(this.getClass().getSimpleName()
+                                + ": Could not reset database: " + e.toString());
+                        e.printStackTrace();
+                    }
+                    isComplete = false;
+                }
+            } else if (action.equals("resetScores")) {
+
+                if (InternalConfig.LOG_DATABASE) {
+                    this.log.debug(this.getClass().getSimpleName()
+                            + ": Reset score table.");
+                }
+
+                try {
+                    final DatabaseQuery transaction = new DatabaseQuery();
+
+                    query = new AdminStatement(super.thisUser, "TRUNCATE result;");
+
+                    transaction.connect();
+                    query.attach(transaction);
+                    result = query.execute();
+
+                    transaction.commit();
+                    
+                    Communicator.getMessagequeue().add(
+                            new CommunicatorMessage(MessageType.JS_Command, "ALL",
+                                    "window.parent.app.updateRankingTable();"));
+
+                } catch (final SQLException e) {
+                    if (InternalConfig.LOG_DATABASE) {
+                        this.log.debug(this.getClass().getSimpleName()
+                                + ": Could not reset scores: "
+                                + query.getSqlString());
+                        e.printStackTrace();
+                    }
+                    isComplete = false;
+                }
             }
 
             if (isComplete) {
@@ -233,6 +309,13 @@ public class AdminHandler extends AdminHttpServlet {
                     result = query.execute();
 
                     transaction.commit();
+                    
+                    if (action.equals("createCategory")) {
+                        // update categories clientside
+                        Communicator.getMessagequeue().add(
+                                new CommunicatorMessage(MessageType.JS_Command, "ALL",
+                                        "window.parent.app.updateFormulars();"));
+                    }
 
                 } catch (final SQLException e) {
 
@@ -265,6 +348,10 @@ public class AdminHandler extends AdminHttpServlet {
             super.invalidRequest(request, response);
         }
 
+    }
+
+    private BufferedReader getReader(InputStream thisStream) throws IOException {
+        return new BufferedReader(new InputStreamReader(thisStream));
     }
 
 }
