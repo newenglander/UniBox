@@ -12,8 +12,11 @@ import javafx.stage.Stage;
 import org.apache.log4j.Logger;
 
 import de.unibox.client.events.CommunicationEvent;
+import de.unibox.client.events.DatabaseEvent;
+import de.unibox.client.events.DatabaseEvent.RequestType;
 import de.unibox.client.thread.ThreadEngine;
 import de.unibox.client.thread.worker.RunnableCometListener;
+import de.unibox.client.thread.worker.RunnableDatabaseAgent;
 import de.unibox.client.thread.worker.RunnableLoginAgent;
 import de.unibox.client.thread.worker.RunnableMessageMediator;
 import de.unibox.client.thread.worker.RunnableMessageSender;
@@ -34,6 +37,20 @@ public class ClientProvider {
 
     /** The incoming messages. */
     private static BlockingQueue<CommunicatorMessage> incomingMessages = new LinkedBlockingQueue<CommunicatorMessage>();
+    
+    /** The outgoing database events. */
+    private static BlockingQueue<DatabaseEvent> outgoingDatabaseEvents = new LinkedBlockingQueue<DatabaseEvent>();
+    
+    
+
+    /**
+     * Gets the outgoing database events.
+     *
+     * @return the outgoing database events
+     */
+    public static BlockingQueue<DatabaseEvent> getOutgoingDatabaseEvents() {
+        return outgoingDatabaseEvents;
+    }
 
     /** The log. */
     private static Logger log = Logger.getLogger("UniBoxLogger");
@@ -46,6 +63,18 @@ public class ClientProvider {
 
     /** The reciever url. */
     private static String recieverURL = "/Communicator/Serial";
+
+    /** The database url. */
+    private static String databaseURL = "/Database";
+
+    /**
+     * Gets the database url.
+     *
+     * @return the database url
+     */
+    public static String getDatabaseURL() {
+        return databaseURL;
+    }
 
     /** The url. */
     private static String url = null;
@@ -95,6 +124,10 @@ public class ClientProvider {
             ThreadEngine.getInstance().run(new RunnableCometListener());
             ClientProvider.log.debug(ClientProvider.class.getSimpleName()
                     + ": RunnableCometListener started..");
+            
+            ThreadEngine.getInstance().run(new RunnableDatabaseAgent());
+            ClientProvider.log.debug(ClientProvider.class.getSimpleName()
+                    + ": RunnableDatabaseAgent started..");
 
         } catch (final Exception e) {
             ClientProvider.log.error(ClientProvider.class.getSimpleName()
@@ -295,6 +328,27 @@ public class ClientProvider {
     }
 
     /**
+     * Send win result.
+     */
+    public static void sendWinResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(RequestType.METHOD_POST, "action=createResult&status=win"));
+    }
+    
+    /**
+     * Send draw result.
+     */
+    public static void sendDrawResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(RequestType.METHOD_POST, "action=createResult&status=draw"));
+    }
+    
+    /**
+     * Send lose result.
+     */
+    public static void sendLoseResult() {
+        ClientProvider.outgoingDatabaseEvents.add(new DatabaseEvent(RequestType.METHOD_POST, "action=createResult&status=lose"));
+    }
+
+    /**
      * Sets the cookie.
      *
      * @param cookie
@@ -324,22 +378,23 @@ public class ClientProvider {
     }
 
     /**
-     * Sets the url.
+     * Sets the full url.
      *
      * @param url
-     *            the new url
+     *            the new full url
      */
     public static final void setFullUrl(final String url) {
         ClientProvider.url = url;
     }
-    
+
     /**
      * Sets the ip.
      *
-     * @param ip the new ip
+     * @param ip
+     *            the new ip
      */
     public static final void setIp(final String ip) {
-    	ClientProvider.url = "http://" + ip + ":8080/UniBox";
+        ClientProvider.url = "http://" + ip + ":8080/UniBox";
     }
 
     /**

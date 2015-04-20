@@ -96,10 +96,7 @@ public class RunnableMessageSender extends ThreadTaskImpl {
             String body = null;
 
             try {
-                body = "action="
-                        + URLEncoder.encode(Config.ACTION_POST.toString(),
-                                "UTF-8")
-                        + "&message="
+                body = "action=post&message="
                         + URLEncoder.encode(
                                 ObjectSerializerImpl.objectToString(message),
                                 "UTF-8");
@@ -115,7 +112,7 @@ public class RunnableMessageSender extends ThreadTaskImpl {
                 this.connection = (HttpURLConnection) this.urlObject
                         .openConnection();
 
-                this.connection.setRequestMethod(Config.METHOD_POST.toString());
+                this.connection.setRequestMethod("POST");
                 this.connection.setDoInput(true);
                 this.connection.setDoOutput(true);
                 this.connection.setUseCaches(false);

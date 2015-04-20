@@ -27,6 +27,7 @@ import de.unibox.model.database.objects.ResultInsert;
 import de.unibox.model.database.objects.SelectionQuery;
 import de.unibox.model.game.Game;
 import de.unibox.model.game.GamePool;
+import de.unibox.model.game.GamePool.ScoringType;
 
 /**
  * The Class DatabaseHandler.
@@ -175,7 +176,6 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                 doQuery = true;
 
             }
-
         }
 
         if (doQuery && (query != null)) {
@@ -280,20 +280,33 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                             + ": update result table..");
                 }
 
-                final Integer thisGameID = Integer.parseInt(request
-                        .getParameter("gameId"));
-                final Integer thisPlayerId = Integer.parseInt(request
-                        .getParameter("playerId"));
-                final Integer thisScoring = Integer.parseInt(request
-                        .getParameter("scoring"));
+                final Integer thisGameID = GamePool.getInstance()
+                        .getGameByPlayer(super.thisUser).getGameId();
+                final Integer thisPlayerId = super.thisUser.getPlayerId();
+                final String thisScoringString = request.getParameter("status");
+                
+                ScoringType thisScore = null;
 
-                if ((thisGameID != null) && (thisPlayerId != null)
-                        && (thisScoring != null)) {
-                    query = new ResultInsert(thisGameID, thisPlayerId,
-                            thisScoring);
-                    doInsert = true;
+                switch (thisScoringString) {
+                case "win":
+                    thisScore = GamePool.ScoringType.WIN;
+                    break;
+                case "draw":
+                    thisScore = GamePool.ScoringType.DRAW;
+                    break;
+                case "lose":
+                    thisScore = GamePool.ScoringType.LOSE;
+                    break;
+                default:
+                    break;
                 }
 
+                if ((thisGameID != null) && (thisPlayerId != null)
+                        && (thisScore != null)) {
+                    query = new ResultInsert(thisGameID, thisPlayerId,
+                            thisScore.getScore());
+                    doInsert = true;
+                }
             }
 
             if (doInsert && (query != null)) {

@@ -48,7 +48,7 @@ public class RunnableLoginAgent extends ThreadTaskImpl {
 			String body = null;
 			try {
 				body = "nick=" + URLEncoder.encode(this.username, "UTF-8")
-						+ "&action=" + Config.ACTION_CONNECT.toString() + "&"
+						+ "&action=connect&"
 						+ "password=" + this.password;
 			} catch (final UnsupportedEncodingException e) {
 				ThreadTaskImpl.log.debug(RunnableLoginAgent.class
@@ -61,7 +61,7 @@ public class RunnableLoginAgent extends ThreadTaskImpl {
 				this.connection = (HttpURLConnection) this.urlObject
 						.openConnection();
 
-				this.connection.setRequestMethod(Config.METHOD_POST.toString());
+				this.connection.setRequestMethod("POST");
 				this.connection.setDoInput(true);
 				this.connection.setDoOutput(true);
 				this.connection.setUseCaches(false);

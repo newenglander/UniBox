@@ -13,47 +13,6 @@ import de.unibox.client.api.ClientProvider;
  */
 public abstract class ThreadTaskImpl implements Runnable {
 
-    /**
-     * The Enum Config.
-     */
-    protected enum Config {
-
-        /** The action connect. */
-        ACTION_CONNECT("connect"),
-
-        /** The action post. */
-        ACTION_POST("post"),
-
-        /** The method get. */
-        METHOD_GET("GET"),
-
-        /** The method post. */
-        METHOD_POST("POST");
-
-        /** The text. */
-        private final String text;
-
-        /**
-         * Instantiates a new config.
-         *
-         * @param text
-         *            the text
-         */
-        private Config(final String text) {
-            this.text = text;
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see java.lang.Enum#toString()
-         */
-        @Override
-        public String toString() {
-            return this.text;
-        }
-    }
-
     /** The log. */
     protected static Logger log = Logger.getLogger("UniBoxLogger");
 
