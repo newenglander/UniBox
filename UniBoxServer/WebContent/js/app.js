@@ -688,7 +688,8 @@ var app = {
 			},
 			statusCode : {
 				403 : function() {
-					app.redirect("forbidden");
+					swal("Ups..", "Could not join that game..",
+					"warning");
 				},
 				0 : function() {
 					app.redirect("server_offline");
@@ -714,7 +715,8 @@ var app = {
 					},
 					statusCode : {
 						403 : function() {
-							app.redirect("forbidden");
+							swal("Ups..", "Could not leave that game..",
+							"warning");
 						},
 						0 : function() {
 							app.redirect("server_offline");
@@ -736,7 +738,8 @@ var app = {
 			},
 			statusCode : {
 				403 : function() {
-					app.redirect("forbidden");
+					swal("Ups..", "Could not determine active game..",
+					"warning");
 				},
 				0 : function() {
 					app.redirect("server_offline");
