@@ -8,10 +8,10 @@ The UniBox project connects various gaming clients via network. Basically it con
 
 ## Package Overview
 
-- UniBoxServer (Servlet-based Server)
-- UniBoxCore (Shared dependencies for Server and Client API)
-- UniBoxClient (Client API)
-- UniBoxGame (Simple Demo)
+- UniBoxServer (Servlet-based Server) [WAR](http://alextape.github.io/UniBox/builds/UniBoxServer.war), [JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxServer/)
+- UniBoxCore (Shared dependencies for Server and Client API)[JAR](http://alextape.github.io/UniBox/builds/UniBoxCore.jar), [JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxCore/)
+- UniBoxClient (Client API)[JAR](http://alextape.github.io/UniBox/builds/UniBoxClient.jar), [JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxClient/)
+- UniBoxGame (Simple Demo)[JAR](http://alextape.github.io/UniBox/builds/UniBoxGame.jar), [JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxGame/)
 
 ## Wiki
 
