@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.MessageType;
+import de.unibox.core.network.object.CommunicatorMessageType;
 import de.unibox.core.provider.Helper;
 import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.AdminHttpServlet;
@@ -91,7 +91,7 @@ public class AdminHandler extends AdminHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_COMMAND, "ALL",
+                                        CommunicatorMessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateGameTable();"));
 
                     } catch (final SQLException e) {
@@ -130,7 +130,7 @@ public class AdminHandler extends AdminHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_COMMAND, "ALL",
+                                        CommunicatorMessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateRankingTable();"));
 
                     } catch (final SQLException e) {
@@ -168,7 +168,7 @@ public class AdminHandler extends AdminHttpServlet {
                     // force all other clients to logout after Database drop
                     // (not yourself!)
                     Communicator.getMessagequeue().add(
-                            new CommunicatorMessage(MessageType.JS_COMMAND,
+                            new CommunicatorMessage(CommunicatorMessageType.JS_COMMAND,
                                     super.thisUser.getName(),
                                     "window.parent.app.logout();"));
 
@@ -200,7 +200,7 @@ public class AdminHandler extends AdminHttpServlet {
 
                     // force clients to update rankings
                     Communicator.getMessagequeue().add(
-                            new CommunicatorMessage(MessageType.JS_COMMAND,
+                            new CommunicatorMessage(CommunicatorMessageType.JS_COMMAND,
                                     "ALL",
                                     "window.parent.app.updateRankingTable();"));
 
@@ -209,7 +209,7 @@ public class AdminHandler extends AdminHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_COMMAND, "ALL",
+                                        CommunicatorMessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateUsersSelection();"));
                     }
 
@@ -326,7 +326,7 @@ public class AdminHandler extends AdminHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_COMMAND, "ALL",
+                                        CommunicatorMessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateFormulars();"));
                     }
                     if (action.equals("createPlayer")) {
@@ -334,7 +334,7 @@ public class AdminHandler extends AdminHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_COMMAND, "ALL",
+                                        CommunicatorMessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateUsersSelection();"));
                     }
 

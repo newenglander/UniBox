@@ -1,15 +1,10 @@
 # folders
 .metadata/
 RemoteSystemsTempFiles/
-Servers/
 UniBoxClient/bin/
-UniBoxClient/.settings/
 UniBoxCore/bin/
-UniBoxCore/.settings/
 UniBoxGame/bin/
-UniBoxGame/.settings/
 UniBoxServer/build/
-UniBoxServer/.settings/
 # files
 CodeAnalyzer-0.7.0.jar
 .checkstyle

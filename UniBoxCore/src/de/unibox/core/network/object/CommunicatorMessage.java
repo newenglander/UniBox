@@ -65,7 +65,7 @@ public class CommunicatorMessage implements Serializable {
     private String name;
 
     /** The type. */
-    private MessageType type;
+    private CommunicatorMessageType type;
 
     /**
      * Instantiates a new communicator message.
@@ -77,7 +77,7 @@ public class CommunicatorMessage implements Serializable {
      * @param message
      *            the message
      */
-    public CommunicatorMessage(final MessageType type, final String identifier,
+    public CommunicatorMessage(final CommunicatorMessageType type, final String identifier,
             final String message) {
         super();
         this.type = type;
@@ -193,7 +193,7 @@ public class CommunicatorMessage implements Serializable {
      *
      * @return the type
      */
-    public MessageType getType() {
+    public CommunicatorMessageType getType() {
         return this.type;
     }
 
@@ -233,7 +233,7 @@ public class CommunicatorMessage implements Serializable {
      * @param type
      *            the new type
      */
-    public void setType(final MessageType type) {
+    public void setType(final CommunicatorMessageType type) {
         this.type = type;
     }
 
@@ -244,10 +244,10 @@ public class CommunicatorMessage implements Serializable {
      */
     public String toJavaScript() {
         String returnThis = "";
-        if (this.type == MessageType.JS_COMMAND) {
+        if (this.type == CommunicatorMessageType.JS_COMMAND) {
             returnThis = "<script type='text/javascript'>" + this.getMessage()
                     + "</script>";
-        } else if (this.type == MessageType.PING) {
+        } else if (this.type == CommunicatorMessageType.PING) {
             returnThis = this.getMessage();
         } else {
             if (this.DEBUG_CLIENT_SIDE) {

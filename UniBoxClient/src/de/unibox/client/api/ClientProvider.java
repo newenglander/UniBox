@@ -21,7 +21,7 @@ import de.unibox.client.thread.worker.RunnableLoginAgent;
 import de.unibox.client.thread.worker.RunnableMessageMediator;
 import de.unibox.client.thread.worker.RunnableMessageSender;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.MessageType;
+import de.unibox.core.network.object.CommunicatorMessageType;
 import de.unibox.core.provider.Helper;
 
 /**
@@ -307,7 +307,7 @@ public class ClientProvider {
      */
     public static void sendChatMessage(final String message) {
         final CommunicatorMessage cMessage = new CommunicatorMessage(
-                MessageType.CHAT, ClientProvider.getUsername(),
+                CommunicatorMessageType.CHAT, ClientProvider.getUsername(),
                 Helper.encodeBase64(message));
         ClientProvider.sendCustomMessage(cMessage);
     }
@@ -332,7 +332,7 @@ public class ClientProvider {
      */
     public static void sendErrorMessage(final String message) {
         final CommunicatorMessage cMessage = new CommunicatorMessage(
-                MessageType.ERROR, ClientProvider.getUsername(),
+                CommunicatorMessageType.ERROR, ClientProvider.getUsername(),
                 Helper.encodeBase64(message));
         ClientProvider.sendCustomMessage(cMessage);
     }
@@ -345,7 +345,7 @@ public class ClientProvider {
      */
     public static void sendGameMessage(final String message) {
         final CommunicatorMessage cMessage = new CommunicatorMessage(
-                MessageType.GAME, ClientProvider.getUsername(),
+                CommunicatorMessageType.GAME, ClientProvider.getUsername(),
                 Helper.encodeBase64(message));
         ClientProvider.sendCustomMessage(cMessage);
     }
@@ -358,7 +358,7 @@ public class ClientProvider {
      */
     public static void sendSystemMessage(final String message) {
         final CommunicatorMessage cMessage = new CommunicatorMessage(
-                MessageType.SYSTEM, ClientProvider.getUsername(),
+                CommunicatorMessageType.SYSTEM, ClientProvider.getUsername(),
                 Helper.encodeBase64(message));
         ClientProvider.sendCustomMessage(cMessage);
     }

@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.MessageType;
+import de.unibox.core.network.object.CommunicatorMessageType;
 import de.unibox.core.provider.ObjectSerializerImpl;
 import de.unibox.model.game.GamePool;
 import de.unibox.model.user.AbstractUser;
@@ -87,7 +87,7 @@ public class RunnableNotifier implements Runnable {
 
                         final ClientType remoteType = (ClientType) req
                                 .getAttribute("format");
-                        final MessageType messageType = cMessage.getType();
+                        final CommunicatorMessageType messageType = cMessage.getType();
                         final String sessionId = req.getSession().getId();
                         final AbstractUser receiver = (AbstractUser) req
                                 .getSession().getAttribute("login.object");
@@ -110,7 +110,7 @@ public class RunnableNotifier implements Runnable {
                         switch (remoteType) {
                         case JAVASCRIPT:
                             // ignore GAME messages for webinterface
-                            if (messageType == MessageType.JS_COMMAND) {
+                            if (messageType == CommunicatorMessageType.JS_COMMAND) {
                                 if (receiver.getName().equals(
                                         cMessage.getName())) {
                                     if (InternalConfig.isLogCommunication()) {
@@ -127,13 +127,13 @@ public class RunnableNotifier implements Runnable {
                                     break;
                                 }
                             }
-                            if (messageType != MessageType.GAME) {
+                            if (messageType != CommunicatorMessageType.GAME) {
                                 this.send(acWriter, cMessage.toJavaScript());
                             }
                             break;
                         case SERIAL:
                             // ignore CHAT messages for java clients
-                            if (messageType != MessageType.CHAT) {
+                            if (messageType != CommunicatorMessageType.CHAT) {
 
                                 // decide if message is relevant for
                                 // this client

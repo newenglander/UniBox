@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.MessageType;
+import de.unibox.core.network.object.CommunicatorMessageType;
 import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
@@ -341,7 +341,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_COMMAND, "ALL",
+                                        CommunicatorMessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateGameTable();"));
                     }
                     if (action.equals("createResult")) {
@@ -349,7 +349,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
                         Communicator
                                 .getMessagequeue()
                                 .add(new CommunicatorMessage(
-                                        MessageType.JS_COMMAND, "ALL",
+                                        CommunicatorMessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateRankingTable();"));
                     }
 

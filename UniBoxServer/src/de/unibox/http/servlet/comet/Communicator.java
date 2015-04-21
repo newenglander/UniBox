@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.MessageType;
+import de.unibox.core.network.object.CommunicatorMessageType;
 import de.unibox.core.provider.Helper;
 import de.unibox.core.provider.ObjectSerializerImpl;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
@@ -200,7 +200,7 @@ public class Communicator extends ProtectedHttpServlet {
      *            the message
      * @return the communicator message
      */
-    protected CommunicatorMessage generateCommand(final MessageType type,
+    protected CommunicatorMessage generateCommand(final CommunicatorMessageType type,
             final String name, final String message) {
         return new CommunicatorMessage(type, name, message);
     }
@@ -227,7 +227,7 @@ public class Communicator extends ProtectedHttpServlet {
             @Override
             public void run() {
                 Communicator.getMessagequeue().add(
-                        new CommunicatorMessage(MessageType.PING, "ALL", "."));
+                        new CommunicatorMessage(CommunicatorMessageType.PING, "ALL", "."));
             }
         }, 0, 60, TimeUnit.SECONDS);
 
@@ -273,7 +273,7 @@ public class Communicator extends ProtectedHttpServlet {
         if ("connect".equals(action)) {
 
             final CommunicatorMessage notifyMessage = this.generateCommand(
-                    MessageType.SYSTEM,
+                    CommunicatorMessageType.SYSTEM,
                     "System",
                     Helper.encodeBase64(super.thisUser.getName()
                             + " has joined."));
@@ -299,7 +299,7 @@ public class Communicator extends ProtectedHttpServlet {
 
                 switch (clientType) {
                 case JAVASCRIPT:
-                    cMessage = this.generateCommand(MessageType.CHAT,
+                    cMessage = this.generateCommand(CommunicatorMessageType.CHAT,
                             super.thisUser.getName(), messageString);
                     break;
                 case SERIAL:

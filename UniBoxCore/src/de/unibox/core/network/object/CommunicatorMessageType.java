@@ -3,7 +3,7 @@ package de.unibox.core.network.object;
 /**
  * The Enum MessageType.
  */
-public enum MessageType {
+public enum CommunicatorMessageType {
 
     /** The chat. */
     CHAT,

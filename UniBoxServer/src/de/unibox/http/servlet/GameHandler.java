@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.MessageType;
+import de.unibox.core.network.object.CommunicatorMessageType;
 import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.game.Game;
@@ -166,7 +166,7 @@ public class GameHandler extends ProtectedHttpServlet {
     private void sendUpdateBroadcast(final AbstractUser user) {
         // send update game table broadcast
         Communicator.getMessagequeue().add(
-                new CommunicatorMessage(MessageType.JS_COMMAND, user.getName(),
+                new CommunicatorMessage(CommunicatorMessageType.JS_COMMAND, user.getName(),
                         "window.parent.app.updateGameTable();"));
     }
 
