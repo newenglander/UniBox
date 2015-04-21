@@ -6,5 +6,6 @@ UniBoxCore/bin/
 UniBoxGame/bin/
 UniBoxServer/build/
 # files
-CodeAnalyzer-0.7.0.jar
 .checkstyle
+*.jar
+*.war
