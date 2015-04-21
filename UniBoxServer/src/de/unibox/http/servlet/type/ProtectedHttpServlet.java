@@ -26,7 +26,8 @@ import de.unibox.model.user.UserFactory;
 import de.unibox.model.user.UserType;
 
 /**
- * The Class ProtectedHttpServlet.
+ * The Class ProtectedHttpServlet is a Security Layer for Servlets which should
+ * prevent these from unauthorized access.
  */
 public class ProtectedHttpServlet extends HttpServlet {
 
@@ -58,7 +59,7 @@ public class ProtectedHttpServlet extends HttpServlet {
         this.thisSession = request.getSession();
 
         // create an abstract user object
-        if (InternalConfig.LOG_AUTHENTIFICATION) {
+        if (InternalConfig.isLogAuthentification()) {
             this.log.debug(ProtectedHttpServlet.class.getSimpleName()
                     + ": session: " + this.thisSession.getId()
                     + " - login.object: "
@@ -73,7 +74,7 @@ public class ProtectedHttpServlet extends HttpServlet {
             if ((this.thisUser instanceof RegisteredUser)
                     || (this.thisUser instanceof AdministratorUser)) {
                 isAuthed = true;
-                if (InternalConfig.LOG_AUTHENTIFICATION) {
+                if (InternalConfig.isLogAuthentification()) {
                     this.log.debug(ProtectedHttpServlet.class.getSimpleName()
                             + ": access granted for "
                             + this.thisUser.toString());
@@ -96,7 +97,7 @@ public class ProtectedHttpServlet extends HttpServlet {
 
                             // high critical logging!!! log will contain
                             // password data..
-                            if (InternalConfig.LOG_AUTHENTIFICATION) {
+                            if (InternalConfig.isLogAuthentification()) {
                                 this.log.debug(ProtectedHttpServlet.class
                                         .getSimpleName()
                                         + ": Try to match Nick: '"
@@ -139,13 +140,13 @@ public class ProtectedHttpServlet extends HttpServlet {
 
                                 if ((this.thisUser != null)
                                         && (this.thisUser.getPlayerId() == userID)) {
-                                    if (InternalConfig.LOG_AUTHENTIFICATION) {
+                                    if (InternalConfig.isLogAuthentification()) {
                                         this.log.debug(ProtectedHttpServlet.class
                                                 .getSimpleName()
                                                 + ": user already logged in. received user object from UserFactory..");
                                     }
                                 } else {
-                                    if (InternalConfig.LOG_AUTHENTIFICATION) {
+                                    if (InternalConfig.isLogAuthentification()) {
                                         this.log.debug(ProtectedHttpServlet.class
                                                 .getSimpleName()
                                                 + ": new user logged in. UserFactory is creating user object.");
@@ -160,7 +161,7 @@ public class ProtectedHttpServlet extends HttpServlet {
                                             .getId());
                                 }
 
-                                if (InternalConfig.LOG_AUTHENTIFICATION) {
+                                if (InternalConfig.isLogAuthentification()) {
                                     this.log.debug(ProtectedHttpServlet.class
                                             .getSimpleName()
                                             + ": auth request for  "
@@ -175,14 +176,14 @@ public class ProtectedHttpServlet extends HttpServlet {
                                 isAuthed = true;
 
                             } else {
-                                if (InternalConfig.LOG_AUTHENTIFICATION) {
+                                if (InternalConfig.isLogAuthentification()) {
                                     this.log.debug(ProtectedHttpServlet.class
                                             .getSimpleName()
                                             + ": invalid credentials. could not auth request.");
                                 }
                             }
                         } else {
-                            if (InternalConfig.LOG_AUTHENTIFICATION) {
+                            if (InternalConfig.isLogAuthentification()) {
                                 this.log.debug(ProtectedHttpServlet.class
                                         .getSimpleName()
                                         + ": invalid request detected. incomplete user/pw? ");
@@ -190,7 +191,7 @@ public class ProtectedHttpServlet extends HttpServlet {
                         }
 
                     } catch (final NullPointerException e) {
-                        if (InternalConfig.LOG_AUTHENTIFICATION) {
+                        if (InternalConfig.isLogAuthentification()) {
                             this.log.debug(ProtectedHttpServlet.class
                                     .getSimpleName()
                                     + ": Error. mySQL offline?");
@@ -200,7 +201,7 @@ public class ProtectedHttpServlet extends HttpServlet {
                 }
             }
         } catch (final Exception e) {
-            if (InternalConfig.LOG_AUTHENTIFICATION) {
+            if (InternalConfig.isLogAuthentification()) {
                 this.log.debug(ProtectedHttpServlet.class.getSimpleName()
                         + ": transaction error. could not auth request.");
             }
@@ -258,7 +259,7 @@ public class ProtectedHttpServlet extends HttpServlet {
         try {
             request = (HttpServletRequest) req;
 
-            if (InternalConfig.LOG_REQUEST_HEADER) {
+            if (InternalConfig.isLogRequestHeader()) {
                 final Enumeration<String> headerNames = request
                         .getHeaderNames();
                 this.log.debug(this.getClass().getSimpleName()

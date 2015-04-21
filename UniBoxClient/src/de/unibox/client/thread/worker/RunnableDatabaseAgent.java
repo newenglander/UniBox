@@ -16,7 +16,8 @@ import de.unibox.client.events.DatabaseEvent;
 import de.unibox.client.thread.implementation.ThreadTaskImpl;
 
 /**
- * The Class RunnableMessageSender.
+ * The Class RunnableMessageSender is a Worker to perform DatabaseEvents queued
+ * in the ClientProvider.
  */
 public class RunnableDatabaseAgent extends ThreadTaskImpl {
 
@@ -35,10 +36,11 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
     private String getResponseAsString(final InputStream thisInputStream)
             throws IOException {
         final StringBuilder returnThis = new StringBuilder("");
-        Reader in = new BufferedReader(new InputStreamReader(thisInputStream,
-                "UTF-8"));
-        for (int c; (c = in.read()) >= 0; returnThis.append(c))
+        final Reader in = new BufferedReader(new InputStreamReader(
+                thisInputStream, "UTF-8"));
+        for (int c; (c = in.read()) >= 0; returnThis.append(c)) {
             ;
+        }
         return returnThis.toString();
     }
 
@@ -177,8 +179,8 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
                         + ": Try to etablish connection to "
                         + this.urlObject.getPath());
 
-        byte[] postData = content.getBytes(Charset.forName("UTF-8"));
-        int postDataLength = postData.length;
+        final byte[] postData = content.getBytes(Charset.forName("UTF-8"));
+        final int postDataLength = postData.length;
 
         this.connection = (HttpURLConnection) this.urlObject.openConnection();
         this.connection.setRequestMethod("POST");
@@ -198,7 +200,7 @@ public class RunnableDatabaseAgent extends ThreadTaskImpl {
 
             wr.write(postData);
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
                     .getSimpleName() + ": Could not write parameters");
             e.printStackTrace();

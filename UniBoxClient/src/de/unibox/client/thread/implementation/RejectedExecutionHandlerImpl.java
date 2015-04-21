@@ -6,7 +6,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.log4j.Logger;
 
 /**
- * The Class RejectedExecutionHandlerImpl.
+ * The Class RejectedExecutionHandlerImpl is responsible to log any runnable
+ * rejected by the ThreadEngine.
  */
 public class RejectedExecutionHandlerImpl implements RejectedExecutionHandler {
 

@@ -2,11 +2,13 @@ package de.unibox.model.game;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
 import de.unibox.model.user.AbstractUser;
 
 /**
- * The Class Game.
+ * The Class Game implements the basic game functions.
  */
 public class Game {
 
@@ -18,6 +20,9 @@ public class Game {
 
     /** The game title. */
     private final String gameTitle;
+
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
 
     /** The number of players. */
     private final int numberOfPlayers;
@@ -58,10 +63,9 @@ public class Game {
         boolean returnThis = false;
         if (!this.playerList.contains(player)) {
             if (this.playerList.size() < this.numberOfPlayers) {
-                if (InternalConfig.LOG_GAMEPOOL) {
-                    InternalConfig.log.debug(this.getClass().getSimpleName()
-                            + ": " + player.getName() + " joining game: "
-                            + this);
+                if (InternalConfig.isLogGamepool()) {
+                    this.log.debug(this.getClass().getSimpleName() + ": "
+                            + player.getName() + " joining game: " + this);
                 }
                 this.playerList.add(player);
                 returnThis = true;
@@ -146,8 +150,8 @@ public class Game {
      * @return true, if successful
      */
     public boolean removePlayer(final AbstractUser player) {
-        if (InternalConfig.LOG_GAMEPOOL) {
-            InternalConfig.log.debug(this.getClass().getSimpleName() + ": "
+        if (InternalConfig.isLogGamepool()) {
+            this.log.debug(this.getClass().getSimpleName() + ": "
                     + player.getName() + " leaving game: " + this);
         }
         return this.playerList.remove(player);

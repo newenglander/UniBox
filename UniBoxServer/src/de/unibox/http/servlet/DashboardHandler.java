@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 
 /**
- * The Class DashboardHandler.
+ * The Class DashboardHandler defines and handles direct dashboard requests.
  */
 @WebServlet("/Dashboard")
 public class DashboardHandler extends ProtectedHttpServlet {

@@ -7,7 +7,8 @@ import org.apache.log4j.Logger;
 import de.unibox.client.events.CommunicationEvent;
 
 /**
- * The Class IncomingMessageHandler.
+ * The Class IncomingMessageHandler is an abtract class to get an easy access to
+ * the incoming message event.
  */
 public abstract class IncomingMessageHandler implements
         EventHandler<CommunicationEvent> {

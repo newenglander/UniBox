@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.core.network.object.MessageType;
 import de.unibox.core.provider.Helper;
 import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.AdminHttpServlet;
@@ -28,7 +28,7 @@ import de.unibox.model.database.objects.PlayerInsert;
 import de.unibox.model.user.UserFactory;
 
 /**
- * The Class AdminHandler.
+ * The Class AdminHandler defines and handles administrative tasks.
  */
 @WebServlet("/Admin")
 public class AdminHandler extends AdminHttpServlet {
@@ -67,7 +67,7 @@ public class AdminHandler extends AdminHttpServlet {
 
             if (action.equals("deleteGame")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": delete row of game table..");
                 }
@@ -95,7 +95,7 @@ public class AdminHandler extends AdminHttpServlet {
                                         "window.parent.app.updateGameTable();"));
 
                     } catch (final SQLException e) {
-                        if (InternalConfig.LOG_DATABASE) {
+                        if (InternalConfig.isLogDatabase()) {
                             this.log.debug(this.getClass().getSimpleName()
                                     + ": Could not update database: "
                                     + query.getSqlString());
@@ -106,7 +106,7 @@ public class AdminHandler extends AdminHttpServlet {
                 }
             } else if (action.equals("deleteUser")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": delete row of player table..");
                 }
@@ -134,7 +134,7 @@ public class AdminHandler extends AdminHttpServlet {
                                         "window.parent.app.updateRankingTable();"));
 
                     } catch (final SQLException e) {
-                        if (InternalConfig.LOG_DATABASE) {
+                        if (InternalConfig.isLogDatabase()) {
                             this.log.debug(this.getClass().getSimpleName()
                                     + ": Could not update database: "
                                     + query.getSqlString());
@@ -145,7 +145,7 @@ public class AdminHandler extends AdminHttpServlet {
                 }
             } else if (action.equals("resetDatabase")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": Reset database. Drop all tables and insert default values.");
                 }
@@ -173,7 +173,7 @@ public class AdminHandler extends AdminHttpServlet {
                                     "window.parent.app.logout();"));
 
                 } catch (final SQLException e) {
-                    if (InternalConfig.LOG_DATABASE) {
+                    if (InternalConfig.isLogDatabase()) {
                         this.log.debug(this.getClass().getSimpleName()
                                 + ": Could not reset database: " + e.toString());
                         e.printStackTrace();
@@ -182,7 +182,7 @@ public class AdminHandler extends AdminHttpServlet {
                 }
             } else if (action.equals("resetScores")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": Reset score table.");
                 }
@@ -214,7 +214,7 @@ public class AdminHandler extends AdminHttpServlet {
                     }
 
                 } catch (final SQLException e) {
-                    if (InternalConfig.LOG_DATABASE) {
+                    if (InternalConfig.isLogDatabase()) {
                         this.log.debug(this.getClass().getSimpleName()
                                 + ": Could not reset scores: "
                                 + query.getSqlString());
@@ -265,7 +265,7 @@ public class AdminHandler extends AdminHttpServlet {
         if (action != null) {
             if (action.equals("createPlayer")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": update player table..");
                 }
@@ -291,7 +291,7 @@ public class AdminHandler extends AdminHttpServlet {
 
             } else if (action.equals("createCategory")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": update category table..");
                 }
@@ -340,7 +340,7 @@ public class AdminHandler extends AdminHttpServlet {
 
                 } catch (final SQLException e) {
 
-                    if (InternalConfig.LOG_DATABASE) {
+                    if (InternalConfig.isLogDatabase()) {
                         this.log.debug(this.getClass().getSimpleName()
                                 + ": Could not update database: "
                                 + query.getSqlString());

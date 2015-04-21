@@ -9,7 +9,8 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 /**
- * The Class DatabaseAction.
+ * The Class DatabaseAction is an abstract generic class to handle different
+ * kinds of database actions.
  *
  * @param <T>
  *            the generic type

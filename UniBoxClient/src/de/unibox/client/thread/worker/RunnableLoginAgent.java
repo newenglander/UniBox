@@ -18,7 +18,8 @@ import de.unibox.client.api.ClientProvider;
 import de.unibox.client.thread.implementation.ThreadTaskImpl;
 
 /**
- * The Class RunnableLoginAgent.
+ * The Class RunnableLoginAgent is able to get an access cookie from the backend
+ * by authorize a session with valid credentials.
  */
 public class RunnableLoginAgent extends ThreadTaskImpl {
 

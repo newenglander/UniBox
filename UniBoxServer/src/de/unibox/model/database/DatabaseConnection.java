@@ -6,17 +6,22 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
 
 import de.unibox.config.InternalConfig;
 
 /**
- * The Class DatabaseConnection.
+ * The Class DatabaseConnection implements a database connection table.
  */
 public class DatabaseConnection {
 
     /** The connections. */
     private final Hashtable connections = new Hashtable();
+
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
 
     /** The props. */
     private final Properties props;
@@ -37,8 +42,8 @@ public class DatabaseConnection {
             final int initialConnections) throws SQLException,
             ClassNotFoundException {
         this.props = props;
-        if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug(this.getClass().getSimpleName()
+        if (InternalConfig.isLogDatabase()) {
+            this.log.debug(this.getClass().getSimpleName()
                     + ": new instance [connectionCount= " + initialConnections
                     + "] " + props.toString());
         }
@@ -112,8 +117,8 @@ public class DatabaseConnection {
             final Connection con = this.getNewConnection();
             this.connections.put(con, Boolean.FALSE);
         }
-        if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug(this.getClass().getSimpleName() + ": "
+        if (InternalConfig.isLogDatabase()) {
+            this.log.debug(this.getClass().getSimpleName() + ": "
                     + initialConnections + " Connections etablished");
         }
     }
@@ -127,8 +132,8 @@ public class DatabaseConnection {
     public void returnConnection(final Connection returned) {
         if (this.connections.containsKey(returned)) {
             this.connections.put(returned, Boolean.FALSE);
-            if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log.debug(this.getClass().getSimpleName()
+            if (InternalConfig.isLogDatabase()) {
+                this.log.debug(this.getClass().getSimpleName()
                         + ": connection returned");
             }
         }

@@ -17,7 +17,8 @@ import de.unibox.model.database.DatabaseQuery;
 import de.unibox.model.database.objects.PasswordUpdate;
 
 /**
- * The Class LogoutHandler.
+ * The Class AuthHandler defines and handles authorization tasks beside the
+ * relevant servlet types.
  */
 @WebServlet("/Auth")
 public class AuthHandler extends ProtectedHttpServlet {
@@ -48,7 +49,7 @@ public class AuthHandler extends ProtectedHttpServlet {
 
         switch (action) {
         case "logout":
-            if (InternalConfig.LOG_AUTHENTIFICATION) {
+            if (InternalConfig.isLogAuthentification()) {
                 this.log.debug(this.getClass().getSimpleName()
                         + ": Invalidate session for "
                         + super.thisUser.getName());
@@ -83,7 +84,7 @@ public class AuthHandler extends ProtectedHttpServlet {
 
         switch (action) {
         case "changePassword":
-            if (InternalConfig.LOG_AUTHENTIFICATION) {
+            if (InternalConfig.isLogAuthentification()) {
                 this.log.debug(this.getClass().getSimpleName()
                         + ": Change password for " + super.thisUser.getName());
             }
@@ -116,7 +117,7 @@ public class AuthHandler extends ProtectedHttpServlet {
                     affectedRows = query.execute();
 
                     if (affectedRows == 1) {
-                        if (InternalConfig.LOG_AUTHENTIFICATION) {
+                        if (InternalConfig.isLogAuthentification()) {
                             this.log.debug(this.getClass().getSimpleName()
                                     + " change password succesfull. Affected rows: "
                                     + affectedRows);
@@ -125,7 +126,7 @@ public class AuthHandler extends ProtectedHttpServlet {
                         response.setStatus(HttpServletResponse.SC_OK);
                         transaction.commit();
                     } else {
-                        if (InternalConfig.LOG_AUTHENTIFICATION) {
+                        if (InternalConfig.isLogAuthentification()) {
                             this.log.debug(this.getClass().getSimpleName()
                                     + " change password failed. Affected rows: "
                                     + affectedRows);
@@ -137,7 +138,7 @@ public class AuthHandler extends ProtectedHttpServlet {
 
                 } catch (final SQLException e) {
 
-                    if (InternalConfig.LOG_DATABASE) {
+                    if (InternalConfig.isLogDatabase()) {
                         this.log.debug(this.getClass().getSimpleName()
                                 + ": Could not update database: "
                                 + query.getSqlString());

@@ -8,14 +8,20 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
-import de.unibox.http.servlet.comet.Communicator.ClientType;
+import de.unibox.http.servlet.comet.ClientType;
 import de.unibox.model.user.AbstractUser;
 
 /**
- * The Class HttpSessionCollector.
+ * The Class HttpSessionCollector is a Listener which is able to register every
+ * available session.
  */
 public class HttpSessionCollector implements HttpSessionListener {
+
+    /** The log. */
+    protected static Logger log = Logger.getLogger("UniBoxLogger");
 
     /** The Constant sessions. */
     private static final Map<String, HttpSession> sessions = new HashMap<String, HttpSession>();
@@ -31,8 +37,9 @@ public class HttpSessionCollector implements HttpSessionListener {
     @Deprecated
     public static ArrayList<HttpSession> findByClientType(
             final ClientType clientType) {
-        if (InternalConfig.LOG_AUTHENTIFICATION) {
-            InternalConfig.log.debug(HttpSessionCollector.class.getSimpleName()
+        if (InternalConfig.isLogAuthentification()) {
+            HttpSessionCollector.log.debug(HttpSessionCollector.class
+                    .getSimpleName()
                     + ": tries to find session by ClientType: " + clientType);
         }
         final ArrayList<HttpSession> returnThis = new ArrayList<HttpSession>();
@@ -58,8 +65,8 @@ public class HttpSessionCollector implements HttpSessionListener {
      * @return the http session
      */
     public static HttpSession findById(final String sessionId) {
-        if (InternalConfig.LOG_AUTHENTIFICATION) {
-            InternalConfig.log
+        if (InternalConfig.isLogAuthentification()) {
+            HttpSessionCollector.log
                     .debug("HttpSessionListener tries to find session by id: "
                             + sessionId);
         }
@@ -74,8 +81,8 @@ public class HttpSessionCollector implements HttpSessionListener {
      * @return the http session
      */
     public static HttpSession findByUserName(final String name) {
-        if (InternalConfig.LOG_AUTHENTIFICATION) {
-            InternalConfig.log
+        if (InternalConfig.isLogAuthentification()) {
+            HttpSessionCollector.log
                     .debug("HttpSessionListener tries to find session of user: "
                             + name);
         }
@@ -102,8 +109,8 @@ public class HttpSessionCollector implements HttpSessionListener {
      */
     @Override
     public void sessionCreated(final HttpSessionEvent event) {
-        if (InternalConfig.LOG_AUTHENTIFICATION) {
-            InternalConfig.log
+        if (InternalConfig.isLogAuthentification()) {
+            HttpSessionCollector.log
                     .debug("HttpSessionListener creating new Session");
         }
         final HttpSession session = event.getSession();
@@ -119,8 +126,9 @@ public class HttpSessionCollector implements HttpSessionListener {
      */
     @Override
     public void sessionDestroyed(final HttpSessionEvent event) {
-        if (InternalConfig.LOG_AUTHENTIFICATION) {
-            InternalConfig.log.debug("HttpSessionListener destroying Session");
+        if (InternalConfig.isLogAuthentification()) {
+            HttpSessionCollector.log
+                    .debug("HttpSessionListener destroying Session");
         }
         HttpSessionCollector.sessions.remove(event.getSession().getId());
     }

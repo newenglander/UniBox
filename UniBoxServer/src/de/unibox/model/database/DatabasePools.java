@@ -3,23 +3,28 @@ package de.unibox.model.database;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
-import de.unibox.http.servlet.filter.SecurityWrapper.SecurityLevel;
+import de.unibox.http.servlet.filter.SecurityLevel;
 
 /**
- * The Class DatabasePools.
+ * The Class DatabasePools implements a functional tool of database connections.
  */
 public class DatabasePools {
 
     /** The administrator pool. */
     public static DatabaseConnection administratorPool = null;
 
+    /** The log. */
+    protected static Logger log = Logger.getLogger("UniBoxLogger");
+
     /** The page pool. */
     public static DatabaseConnection pagePool = null;
 
     /** The Constant URL. */
-    private static final String URL = InternalConfig.PROTOCOL + "//"
-            + InternalConfig.DB_SERVER + "/" + InternalConfig.DB_NAME;
+    private static final String URL = InternalConfig.getDbProtocol() + "//"
+            + InternalConfig.getDbServer() + "/" + InternalConfig.getDbName();
 
     /** The user pool. */
     public static DatabaseConnection userPool = null;
@@ -75,23 +80,23 @@ public class DatabasePools {
     synchronized public static void initialize(final SecurityLevel userRole)
             throws SQLException, ClassNotFoundException {
         final Properties props = new Properties();
-        props.put("connection.driver", InternalConfig.DRIVER);
+        props.put("connection.driver", InternalConfig.getDbDriver());
         props.put("connection.url", DatabasePools.URL);
         switch (userRole) {
         case USER:
-            props.put("user", InternalConfig.DB_USER);
-            props.put("password", InternalConfig.DB_PASSWORD);
+            props.put("user", InternalConfig.getDbUser());
+            props.put("password", InternalConfig.getDbPassword());
             if (DatabasePools.userPool == null) {
                 DatabasePools.userPool = new DatabaseConnection(props,
                         userRole.getConnectionCount());
-                if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log.info(DatabasePools.class.getSimpleName()
+                if (InternalConfig.isLogDatabase()) {
+                    DatabasePools.log.info(DatabasePools.class.getSimpleName()
                             + ": userPool is online");
                 }
                 break;
             } else {
-                if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log
+                if (InternalConfig.isLogDatabase()) {
+                    DatabasePools.log
                             .info("ClassPools userPool already online");
                 }
                 break;
@@ -105,21 +110,21 @@ public class DatabasePools {
             if (DatabasePools.administratorPool == null) {
                 DatabasePools.pagePool = new DatabaseConnection(props,
                         userRole.getConnectionCount());
-                if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log.info(DatabasePools.class.getSimpleName()
+                if (InternalConfig.isLogDatabase()) {
+                    DatabasePools.log.info(DatabasePools.class.getSimpleName()
                             + ": administratorPool is online");
                 }
                 break;
             } else {
-                if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log.info(DatabasePools.class.getSimpleName()
+                if (InternalConfig.isLogDatabase()) {
+                    DatabasePools.log.info(DatabasePools.class.getSimpleName()
                             + ": administratorPool already online");
                 }
                 break;
             }
         default:
-            if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log
+            if (InternalConfig.isLogDatabase()) {
+                DatabasePools.log
                         .warn(DatabasePools.class.getSimpleName()
                                 + ": non valid configuration trys to instance new pool");
             }

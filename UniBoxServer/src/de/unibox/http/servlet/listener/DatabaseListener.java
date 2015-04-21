@@ -5,21 +5,20 @@ import java.sql.SQLException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
 import de.unibox.model.database.DatabaseQuery;
 
 /**
- * The listener interface for receiving database events. The class that is
- * interested in processing a database event implements this interface, and the
- * object created with that class is registered with a component using the
- * component's <code>addDatabaseListener<code> method. When
- * the database event occurs, that object's appropriate
- * method is invoked. This class is listening to all jsps able to redirect any
- * loggings to several targets using log4j.
+ * The Class DatabaseListener is a Listener which init() the Database
+ * functionality on startup.
  *
- * @see DatabaseEvent
  */
 public class DatabaseListener implements ServletContextListener {
+
+    /** The log. */
+    protected Logger log = Logger.getLogger("UniBoxLogger");
 
     /*
      * (non-Javadoc)
@@ -42,12 +41,12 @@ public class DatabaseListener implements ServletContextListener {
     public void contextInitialized(final ServletContextEvent event) {
 
         try {
-            InternalConfig.log.info(DatabaseListener.class.getSimpleName()
+            this.log.info(DatabaseListener.class.getSimpleName()
                     + ": Database initialization..");
             DatabaseQuery.init();
         } catch (final SQLException e) {
-            if (InternalConfig.LOG_DATABASE) {
-                InternalConfig.log.warn(DatabaseListener.class.getSimpleName()
+            if (InternalConfig.isLogDatabase()) {
+                this.log.warn(DatabaseListener.class.getSimpleName()
                         + ": Database initialization failed!");
             }
             e.printStackTrace();

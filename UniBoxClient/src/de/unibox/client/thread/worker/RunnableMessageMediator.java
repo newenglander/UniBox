@@ -7,7 +7,8 @@ import de.unibox.core.network.object.CommunicatorMessage;
 import de.unibox.core.provider.Helper;
 
 /**
- * The Class RunnableMessageMediator.
+ * The Class RunnableMessageMediator is a Worker to handle incoming messages
+ * queued in the ClientProvider.
  */
 public class RunnableMessageMediator extends ThreadTaskImpl {
 

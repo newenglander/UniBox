@@ -4,13 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 import de.unibox.config.InternalConfig;
-import de.unibox.http.servlet.filter.SecurityWrapper.SecurityLevel;
+import de.unibox.http.servlet.filter.SecurityLevel;
 
 /**
- * The Class DatabaseQuery.
+ * The Class DatabaseQuery implements the basic functions of a database query.
  */
 public class DatabaseQuery {
+
+    /** The log. */
+    protected static Logger log = Logger.getLogger("UniBoxLogger");
 
     /** The pool. */
     private static DatabaseConnection pool = null;
@@ -24,23 +29,21 @@ public class DatabaseQuery {
     public static void init() throws SQLException {
         if (DatabaseQuery.pool == null) {
             try {
-                if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log.debug(DatabaseQuery.class
-                            .getSimpleName()
+                if (InternalConfig.isLogDatabase()) {
+                    DatabaseQuery.log.debug(DatabaseQuery.class.getSimpleName()
                             + ": initialize ConnectionPool with "
                             + SecurityLevel.USER);
                 }
                 DatabasePools.initialize(SecurityLevel.USER);
-                if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log.debug(DatabaseQuery.class
-                            .getSimpleName()
+                if (InternalConfig.isLogDatabase()) {
+                    DatabaseQuery.log.debug(DatabaseQuery.class.getSimpleName()
                             + ": retrieve ConnectionPool for "
                             + SecurityLevel.USER);
                 }
                 DatabaseQuery.pool = DatabasePools.getPool(SecurityLevel.USER);
             } catch (final Exception e) {
-                if (InternalConfig.LOG_DATABASE) {
-                    InternalConfig.log.warn(DatabaseQuery.class.getSimpleName()
+                if (InternalConfig.isLogDatabase()) {
+                    DatabaseQuery.log.warn(DatabaseQuery.class.getSimpleName()
                             + ": could not initialize ConnectionPool");
                 }
                 e.printStackTrace();
@@ -60,8 +63,8 @@ public class DatabaseQuery {
     public void commit() throws SQLException {
         this.connnection.commit();
         DatabaseQuery.pool.returnConnection(this.connnection);
-        if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+        if (InternalConfig.isLogDatabase()) {
+            DatabaseQuery.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": committed");
         }
     }
@@ -79,8 +82,8 @@ public class DatabaseQuery {
             throw new SQLException("SQL Server offline?");
         }
         this.connnection.setAutoCommit(false);
-        if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+        if (InternalConfig.isLogDatabase()) {
+            DatabaseQuery.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": connected");
         }
     }
@@ -105,8 +108,8 @@ public class DatabaseQuery {
      */
     public PreparedStatement getQuery(final String statement)
             throws SQLException {
-        if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+        if (InternalConfig.isLogDatabase()) {
+            DatabaseQuery.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": Preparing Query: " + statement);
         }
         final PreparedStatement query = this.connnection
@@ -125,8 +128,8 @@ public class DatabaseQuery {
      */
     public PreparedStatement getUpdate(final String statement)
             throws SQLException {
-        if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+        if (InternalConfig.isLogDatabase()) {
+            DatabaseQuery.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": Preparing Update: " + statement);
         }
         final PreparedStatement update = this.connnection
@@ -143,8 +146,8 @@ public class DatabaseQuery {
     public void rollback() throws SQLException {
         this.connnection.rollback();
         DatabaseQuery.pool.returnConnection(this.connnection);
-        if (InternalConfig.LOG_DATABASE) {
-            InternalConfig.log.debug(DatabaseQuery.class.getSimpleName()
+        if (InternalConfig.isLogDatabase()) {
+            DatabaseQuery.log.debug(DatabaseQuery.class.getSimpleName()
                     + ": rollback");
         }
     }

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.unibox.config.InternalConfig;
 
 /**
- * The Class JavaScriptCommunicator.
+ * The Class JavaScriptCommunicator is responsible for all javascript messages.
  */
 @WebServlet(urlPatterns = { "/Communicator/JavaScript" }, asyncSupported = true)
 public class JavaScriptCommunicator extends Communicator {
@@ -37,7 +37,7 @@ public class JavaScriptCommunicator extends Communicator {
 
         super.thisUser.setSessionId(super.thisSession.getId());
 
-        if (InternalConfig.LOG_AUTHENTIFICATION) {
+        if (InternalConfig.isLogAuthentification()) {
             this.log.debug(JavaScriptCommunicator.class.getSimpleName()
                     + ": Get detected: " + super.thisUser);
         }
@@ -50,7 +50,7 @@ public class JavaScriptCommunicator extends Communicator {
         ac.addListener(new AsyncListener() {
             @Override
             public void onComplete(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     JavaScriptCommunicator.this.log
                             .debug(JavaScriptCommunicator.class.getSimpleName()
                                     + " onComplete()");
@@ -60,7 +60,7 @@ public class JavaScriptCommunicator extends Communicator {
 
             @Override
             public void onError(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     JavaScriptCommunicator.this.log
                             .debug(JavaScriptCommunicator.class.getSimpleName()
                                     + " onError()");
@@ -70,7 +70,7 @@ public class JavaScriptCommunicator extends Communicator {
 
             @Override
             public void onStartAsync(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     JavaScriptCommunicator.this.log
                             .debug(JavaScriptCommunicator.class.getSimpleName()
                                     + " onStartAsync()");
@@ -79,7 +79,7 @@ public class JavaScriptCommunicator extends Communicator {
 
             @Override
             public void onTimeout(final AsyncEvent event) throws IOException {
-                if (InternalConfig.LOG_ASYNC_SESSIONS) {
+                if (InternalConfig.isLogAsyncSessions()) {
                     JavaScriptCommunicator.this.log
                             .debug(JavaScriptCommunicator.class.getSimpleName()
                                     + " onTimeout()");
@@ -106,7 +106,7 @@ public class JavaScriptCommunicator extends Communicator {
 
         final String action = req.getParameter("action");
 
-        if (InternalConfig.LOG_COMMUNICATION) {
+        if (InternalConfig.isLogCommunication()) {
             this.log.debug(JavaScriptCommunicator.class.getSimpleName()
                     + ": Post detected: " + super.thisUser);
         }

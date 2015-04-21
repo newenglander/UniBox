@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import de.unibox.config.InternalConfig;
 import de.unibox.core.network.object.CommunicatorMessage;
-import de.unibox.core.network.object.CommunicatorMessage.MessageType;
+import de.unibox.core.network.object.MessageType;
 import de.unibox.http.servlet.comet.Communicator;
 import de.unibox.http.servlet.type.ProtectedHttpServlet;
 import de.unibox.model.database.DatabaseAction;
@@ -27,10 +27,10 @@ import de.unibox.model.database.objects.ResultInsert;
 import de.unibox.model.database.objects.SelectionQuery;
 import de.unibox.model.game.Game;
 import de.unibox.model.game.GamePool;
-import de.unibox.model.game.GamePool.ScoringType;
+import de.unibox.model.game.ScoringType;
 
 /**
- * The Class DatabaseHandler.
+ * The Class DatabaseHandler defines and handles database tasks.
  */
 @WebServlet("/Database")
 public class DatabaseHandler extends ProtectedHttpServlet {
@@ -134,7 +134,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
         SelectionQuery query = null;
 
-        if (InternalConfig.LOG_DATABASE) {
+        if (InternalConfig.isLogDatabase()) {
             this.log.debug(this.getClass().getSimpleName() + ": doGet with: "
                     + action);
         }
@@ -143,7 +143,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
             if (action.equals("getRanking")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": select ranking table..");
                 }
@@ -153,7 +153,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
             } else if (action.equals("getGames")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": select game table..");
                 }
@@ -163,7 +163,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
             } else if (action.equals("getUsers")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": select users table..");
                 }
@@ -172,7 +172,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
             } else if (action.equals("getCategories")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": select game table..");
                 }
@@ -215,7 +215,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
             } catch (final SQLException e) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": Could not query game table.");
                 }
@@ -223,7 +223,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
             } catch (final JSONException e) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": Could not convert game table data to json.");
                 }
@@ -259,7 +259,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
         String errorMessage = "illegal_Request";
 
-        if (InternalConfig.LOG_DATABASE) {
+        if (InternalConfig.isLogDatabase()) {
             this.log.debug(this.getClass().getSimpleName() + ": doPost with: "
                     + action);
         }
@@ -269,7 +269,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
         if (action != null) {
             if (action.equals("createGame")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": update game table..");
                 }
@@ -285,7 +285,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
             } else if (action.equals("createResult")) {
 
-                if (InternalConfig.LOG_DATABASE) {
+                if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
                             + ": update result table..");
                 }
@@ -299,13 +299,13 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
                 switch (thisScoringString) {
                 case "win":
-                    thisScore = GamePool.ScoringType.WIN;
+                    thisScore = ScoringType.WIN;
                     break;
                 case "draw":
-                    thisScore = GamePool.ScoringType.DRAW;
+                    thisScore = ScoringType.DRAW;
                     break;
                 case "lose":
-                    thisScore = GamePool.ScoringType.LOSE;
+                    thisScore = ScoringType.LOSE;
                     break;
                 default:
                     break;
@@ -355,7 +355,7 @@ public class DatabaseHandler extends ProtectedHttpServlet {
 
                 } catch (final SQLException e) {
 
-                    if (InternalConfig.LOG_DATABASE) {
+                    if (InternalConfig.isLogDatabase()) {
                         this.log.debug(this.getClass().getSimpleName()
                                 + ": Could not update database: "
                                 + query.getSqlString());

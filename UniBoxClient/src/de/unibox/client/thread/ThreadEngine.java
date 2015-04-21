@@ -16,7 +16,8 @@ import de.unibox.client.thread.implementation.ThreadTaskImpl;
 import de.unibox.client.thread.runnable.RunnableThreadMonitor;
 
 /**
- * The Class ThreadEngine.
+ * The Class ThreadEngine is responsible for all worker threads. It provides a
+ * pool to get rudimentary access and control to all available worker threads.
  */
 public class ThreadEngine {
 
@@ -76,7 +77,7 @@ public class ThreadEngine {
     }
 
     /**
-     * Block till done.
+     * This method blocks runtime till all threads are done.
      */
     public void blockTillDone() {
         ThreadEngine.log.debug("ThreadEngine: blockTillDone()");
@@ -91,7 +92,7 @@ public class ThreadEngine {
     }
 
     /**
-     * Boot.
+     * This method is initializing the ThreadEngine.
      */
     protected void boot() {
         ThreadEngine.log.debug(this.getClass().getSimpleName() + ": boot()");
@@ -102,7 +103,7 @@ public class ThreadEngine {
     }
 
     /**
-     * Disable monitoring.
+     * Disable ThreadEngine monitoring.
      */
     private void disableMonitoring() {
         ThreadEngine.log.debug(this.getClass().getSimpleName()
@@ -116,7 +117,7 @@ public class ThreadEngine {
     }
 
     /**
-     * Enable monitoring.
+     * Enable ThreadEngine monitoring.
      */
     private void enableMonitoring() {
         ThreadEngine.log.debug(this.getClass().getSimpleName()
@@ -138,16 +139,16 @@ public class ThreadEngine {
     }
 
     /**
-     * Checks if is monitor.
+     * Checks state of MonitorThread.
      *
-     * @return true, if is monitor
+     * @return true, if MonitorThread is running.
      */
     public boolean isMonitor() {
         return this.isMonitor;
     }
 
     /**
-     * Run.
+     * This method engage runnables to the ThreadEngine.
      *
      * @param myRunnable
      *            the my runnable
@@ -173,7 +174,7 @@ public class ThreadEngine {
     }
 
     /**
-     * Shutdown.
+     * Shutdown the ThreadEngine gently.
      */
     protected void shutdown() {
         ThreadEngine.log

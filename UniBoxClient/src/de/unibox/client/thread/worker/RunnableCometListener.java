@@ -15,6 +15,11 @@ import de.unibox.client.thread.implementation.ThreadTaskImpl;
 import de.unibox.core.network.object.CommunicatorMessage;
 import de.unibox.core.provider.ObjectSerializerImpl;
 
+/**
+ * Basically this class is responsible for the downchannel from the backend to
+ * the client.
+ *
+ */
 public class RunnableCometListener extends ThreadTaskImpl {
 
     /*
