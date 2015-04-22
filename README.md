@@ -2,7 +2,7 @@
 
 The [Wiki Page](https://github.com/AlexTape/UniBox/wiki) of this project contains all available information about the usage and the functionality of this project.
 
-###Table of Content:
+### Table of Content:
 
 1. Introduction
 2. Installation
