@@ -13,7 +13,7 @@ The [Wiki Page](https://github.com/AlexTape/UniBox/wiki) of this project contain
 
 ### Package Overview
 | Package      | Description |JavaDoc           | Builds  |
-|:-------------|:------------:|:-------------:|:-----:|
+|:-------------|:------------|:-------------:|:-----:|
 |UniBoxServer| Servlet-based |[JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxServer/)|[WAR](http://alextape.github.io/UniBox/builds/UniBoxServer.war)|
 |UniBoxCore| Shared dependencies for Server and Client API|[JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxCore/)|[JAR](http://alextape.github.io/UniBox/builds/UniBoxCore.jar)|
 |UniBoxClient | Client API |[JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxClient/)|[JAR](http://alextape.github.io/UniBox/builds/UniBoxClient.jar)|
