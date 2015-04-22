@@ -39,7 +39,7 @@ public class SerialCommunicator extends Communicator {
 
         if (InternalConfig.isLogCommunication()) {
             this.log.debug(SerialCommunicator.class.getSimpleName()
-                    + ": Get detected: " + super.thisUser);
+                    + ": GET detected: " + super.thisUser);
         }
 
         final PrintWriter writer = res.getWriter();
@@ -105,7 +105,7 @@ public class SerialCommunicator extends Communicator {
 
         if (InternalConfig.isLogCommunication()) {
             this.log.debug(SerialCommunicator.class.getSimpleName()
-                    + ": Post detected: " + super.thisUser);
+                    + ": POST detected: " + super.thisUser);
         }
 
         super.switchAction(req, res, action);

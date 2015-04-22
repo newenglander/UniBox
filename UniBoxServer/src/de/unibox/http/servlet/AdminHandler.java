@@ -204,15 +204,6 @@ public class AdminHandler extends AdminHttpServlet {
                                     "ALL",
                                     "window.parent.app.updateRankingTable();"));
 
-                    if (action.equals("createPlayer")) {
-                        // update players clientside
-                        Communicator
-                                .getMessagequeue()
-                                .add(new CommunicatorMessage(
-                                        CommunicatorMessageType.JS_COMMAND, "ALL",
-                                        "window.parent.app.updateUsersSelection();"));
-                    }
-
                 } catch (final SQLException e) {
                     if (InternalConfig.isLogDatabase()) {
                         this.log.debug(this.getClass().getSimpleName()
@@ -263,7 +254,7 @@ public class AdminHandler extends AdminHttpServlet {
         DatabaseAction<Integer> query = null;
 
         if (action != null) {
-            if (action.equals("createPlayer")) {
+            if (action.equals("createUser")) {
 
                 if (InternalConfig.isLogDatabase()) {
                     this.log.debug(this.getClass().getSimpleName()
@@ -299,7 +290,7 @@ public class AdminHandler extends AdminHttpServlet {
                 final String thisGameTitle = request.getParameter("gameTitle");
                 final Integer thisNumberOfPlayers = Integer.parseInt(request
                         .getParameter("numberOfPlayers"));
-
+                
                 if ((thisGameTitle != null) && (thisNumberOfPlayers != null)) {
                     query = new CategoryInsert(thisGameTitle,
                             thisNumberOfPlayers);
@@ -329,7 +320,7 @@ public class AdminHandler extends AdminHttpServlet {
                                         CommunicatorMessageType.JS_COMMAND, "ALL",
                                         "window.parent.app.updateFormulars();"));
                     }
-                    if (action.equals("createPlayer")) {
+                    if (action.equals("createUser")) {
                         // force clients to update users list
                         Communicator
                                 .getMessagequeue()
@@ -361,7 +352,6 @@ public class AdminHandler extends AdminHttpServlet {
                 } else {
                     super.serviceErrorMessage(response, errorMessage);
                 }
-
             } else {
                 super.serviceErrorMessage(response, errorMessage);
             }

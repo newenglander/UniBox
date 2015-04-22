@@ -21,5 +21,8 @@ public enum CommunicatorMessageType {
     PING,
 
     /** The system. */
-    SYSTEM
+    SYSTEM,
+    
+    /** The plain. */
+    PLAIN
 }

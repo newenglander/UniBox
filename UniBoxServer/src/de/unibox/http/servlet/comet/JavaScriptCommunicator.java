@@ -39,7 +39,7 @@ public class JavaScriptCommunicator extends Communicator {
 
         if (InternalConfig.isLogAuthentification()) {
             this.log.debug(JavaScriptCommunicator.class.getSimpleName()
-                    + ": Get detected: " + super.thisUser);
+                    + ": GET detected: " + super.thisUser);
         }
 
         final PrintWriter writer = res.getWriter();
@@ -108,7 +108,7 @@ public class JavaScriptCommunicator extends Communicator {
 
         if (InternalConfig.isLogCommunication()) {
             this.log.debug(JavaScriptCommunicator.class.getSimpleName()
-                    + ": Post detected: " + super.thisUser);
+                    + ": POST detected: " + super.thisUser);
         }
 
         super.switchAction(req, res, action);

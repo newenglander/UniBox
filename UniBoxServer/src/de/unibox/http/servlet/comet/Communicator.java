@@ -34,313 +34,312 @@ import de.unibox.http.servlet.type.ProtectedHttpServlet;
 @WebServlet(urlPatterns = { "/Communicator" }, asyncSupported = true)
 public class Communicator extends ProtectedHttpServlet {
 
-    /** The Constant queue. */
-    protected static final Queue<AsyncContext> asyncContextQueue = new ConcurrentLinkedQueue<AsyncContext>();
+	/** The Constant queue. */
+	protected static final Queue<AsyncContext> asyncContextQueue = new ConcurrentLinkedQueue<AsyncContext>();
 
-    /** The Constant messageQueue. */
-    private static final BlockingQueue<CommunicatorMessage> messageQueue = new LinkedBlockingQueue<CommunicatorMessage>();
+	/** The Constant messageQueue. */
+	private static final BlockingQueue<CommunicatorMessage> messageQueue = new LinkedBlockingQueue<CommunicatorMessage>();
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = -2919167206889576860L;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -2919167206889576860L;
 
-    /**
-     * Gets the Constant queue.
-     *
-     * @return the Constant queue
-     */
-    public static Queue<AsyncContext> getAsyncContextQueue() {
-        return Communicator.asyncContextQueue;
-    }
+	/**
+	 * Gets the Constant queue.
+	 *
+	 * @return the Constant queue
+	 */
+	public static Queue<AsyncContext> getAsyncContextQueue() {
+		return Communicator.asyncContextQueue;
+	}
 
-    public static BlockingQueue<CommunicatorMessage> getMessagequeue() {
-        return Communicator.messageQueue;
-    }
+	public static BlockingQueue<CommunicatorMessage> getMessagequeue() {
+		return Communicator.messageQueue;
+	}
 
-    /** The keep alive service. */
-    protected ScheduledExecutorService keepAliveService = null;
+	/** The keep alive service. */
+	protected ScheduledExecutorService keepAliveService = null;
 
-    /** The notifier thread. */
-    protected Thread notifierThread = null;
+	/** The notifier thread. */
+	protected Thread notifierThread = null;
 
-    /**
-     * Adds the context.
-     *
-     * @param thisAc
-     *            the this ac
-     */
-    protected void addContext(final AsyncContext thisAc) {
-        if (InternalConfig.isLogCommunication()) {
-            this.log.debug(Communicator.class.getSimpleName()
-                    + ": adding context: " + thisAc);
-        }
-        Communicator.asyncContextQueue.add(thisAc);
-    }
+	/**
+	 * Adds the context.
+	 *
+	 * @param thisAc
+	 *            the this ac
+	 */
+	protected void addContext(final AsyncContext thisAc) {
+		if (InternalConfig.isLogCommunication()) {
+			this.log.debug(Communicator.class.getSimpleName()
+					+ ": adding context: " + thisAc);
+		}
+		Communicator.asyncContextQueue.add(thisAc);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.servlet.GenericServlet#destroy()
-     */
-    @Override
-    public void destroy() {
-        if (InternalConfig.isLogThreads()) {
-            this.log.debug(this.getClass().getSimpleName() + ": destroyed");
-        }
-        Communicator.asyncContextQueue.clear();
-        this.notifierThread.interrupt();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.servlet.GenericServlet#destroy()
+	 */
+	@Override
+	public void destroy() {
+		if (InternalConfig.isLogThreads()) {
+			this.log.debug(this.getClass().getSimpleName() + ": destroyed");
+		}
+		Communicator.asyncContextQueue.clear();
+		this.notifierThread.interrupt();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
-     * , javax.servlet.http.HttpServletResponse)
-     */
-    @Override
-    protected void doGet(final HttpServletRequest req,
-            final HttpServletResponse res) throws ServletException, IOException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
+	 * , javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void doGet(final HttpServletRequest req,
+			final HttpServletResponse res) throws ServletException, IOException {
 
-        req.setAttribute("format", ClientType.PLAIN);
-        super.thisUser.setSessionId(super.thisSession.getId());
+		req.setAttribute("format", ClientType.PLAIN);
+		super.thisUser.setSessionId(super.thisSession.getId());
 
-        if (InternalConfig.isLogCommunication()) {
-            this.log.debug(Communicator.class.getSimpleName()
-                    + ": Get detected: " + super.thisUser);
-        }
+		if (InternalConfig.isLogCommunication()) {
+			this.log.debug(Communicator.class.getSimpleName()
+					+ ": GET detected: " + super.thisUser);
+		}
 
-        final PrintWriter writer = res.getWriter();
-        writer.flush();
+		final PrintWriter writer = res.getWriter();
+		writer.flush();
 
-        final AsyncContext ac = req.startAsync();
-        ac.setTimeout(50);
-        ac.addListener(new AsyncListener() {
-            @Override
-            public void onComplete(final AsyncEvent event) throws IOException {
-                if (InternalConfig.isLogAsyncSessions()) {
-                    Communicator.this.log.debug(Communicator.class
-                            .getSimpleName() + " onComplete()");
-                }
-                Communicator.asyncContextQueue.remove(ac);
-                ac.complete();
-            }
+		final AsyncContext ac = req.startAsync();
+		ac.setTimeout(50);
+		ac.addListener(new AsyncListener() {
+			@Override
+			public void onComplete(final AsyncEvent event) throws IOException {
+				if (InternalConfig.isLogAsyncSessions()) {
+					Communicator.this.log.debug(Communicator.class
+							.getSimpleName() + " onComplete()");
+				}
+				Communicator.asyncContextQueue.remove(ac);
+				ac.complete();
+			}
 
-            @Override
-            public void onError(final AsyncEvent event) throws IOException {
-                if (InternalConfig.isLogAsyncSessions()) {
-                    Communicator.this.log.debug(Communicator.class
-                            .getSimpleName() + " onError()");
-                }
-                Communicator.asyncContextQueue.remove(ac);
-                ac.complete();
-            }
+			@Override
+			public void onError(final AsyncEvent event) throws IOException {
+				if (InternalConfig.isLogAsyncSessions()) {
+					Communicator.this.log.debug(Communicator.class
+							.getSimpleName() + " onError()");
+				}
+				Communicator.asyncContextQueue.remove(ac);
+				ac.complete();
+			}
 
-            @Override
-            public void onStartAsync(final AsyncEvent event) throws IOException {
-                if (InternalConfig.isLogAsyncSessions()) {
-                    Communicator.this.log.debug(Communicator.class
-                            .getSimpleName() + " onStartAsync()");
-                }
-            }
+			@Override
+			public void onStartAsync(final AsyncEvent event) throws IOException {
+				if (InternalConfig.isLogAsyncSessions()) {
+					Communicator.this.log.debug(Communicator.class
+							.getSimpleName() + " onStartAsync()");
+				}
+			}
 
-            @Override
-            public void onTimeout(final AsyncEvent event) throws IOException {
-                if (InternalConfig.isLogAsyncSessions()) {
-                    Communicator.this.log.debug(Communicator.class
-                            .getSimpleName() + " onTimeout()");
-                }
-                Communicator.asyncContextQueue.remove(ac);
-                ac.complete();
-            }
-        });
-        this.addContext(ac);
-    }
+			@Override
+			public void onTimeout(final AsyncEvent event) throws IOException {
+				if (InternalConfig.isLogAsyncSessions()) {
+					Communicator.this.log.debug(Communicator.class
+							.getSimpleName() + " onTimeout()");
+				}
+				Communicator.asyncContextQueue.remove(ac);
+				ac.complete();
+			}
+		});
+		this.addContext(ac);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest
-     * , javax.servlet.http.HttpServletResponse)
-     */
-    @Override
-    protected void doPost(final HttpServletRequest req,
-            final HttpServletResponse res) throws ServletException, IOException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest
+	 * , javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void doPost(final HttpServletRequest req,
+			final HttpServletResponse res) throws ServletException, IOException {
 
-        res.setContentType("text/plain");
-        req.setAttribute("format", ClientType.PLAIN);
-        req.setCharacterEncoding("UTF-8");
+		res.setContentType("text/plain");
+		req.setAttribute("format", ClientType.PLAIN);
+		req.setCharacterEncoding("UTF-8");
 
-        final String action = req.getParameter("action");
+		final String action = req.getParameter("action");
 
-        if (InternalConfig.isLogCommunication()) {
-            this.log.debug(Communicator.class.getSimpleName()
-                    + ": Detected: POST, Action: " + action + ", User: "
-                    + super.thisUser);
-        }
+		if (InternalConfig.isLogCommunication()) {
+			this.log.debug(Communicator.class.getSimpleName()
+					+ ": POST detected: " + super.thisUser);
+		}
 
-        final StringBuilder buffer = new StringBuilder();
-        final BufferedReader reader = req.getReader();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            buffer.append(line);
-        }
+		final StringBuilder buffer = new StringBuilder();
+		final BufferedReader reader = req.getReader();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			buffer.append(line);
+		}
 
-        this.switchAction(req, res, action);
-    }
+		this.switchAction(req, res, action);
+	}
 
-    /**
-     * Generate command.
-     *
-     * @param type
-     *            the type
-     * @param name
-     *            the name
-     * @param message
-     *            the message
-     * @return the communicator message
-     */
-    protected CommunicatorMessage generateCommand(final CommunicatorMessageType type,
-            final String name, final String message) {
-        return new CommunicatorMessage(type, name, message);
-    }
+	/**
+	 * Generate command.
+	 *
+	 * @param type
+	 *            the type
+	 * @param name
+	 *            the name
+	 * @param message
+	 *            the message
+	 * @return the communicator message
+	 */
+	protected CommunicatorMessage generateCommand(
+			final CommunicatorMessageType type, final String name,
+			final String message) {
+		return new CommunicatorMessage(type, name, message);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
-     */
-    @Override
-    public void init(final ServletConfig config) throws ServletException {
-        super.init(config);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.servlet.GenericServlet#init(javax.servlet.ServletConfig)
+	 */
+	@Override
+	public void init(final ServletConfig config) throws ServletException {
+		super.init(config);
 
-        if (InternalConfig.isLogThreads()) {
-            this.log.debug(Communicator.class.getSimpleName()
-                    + ": deploy new thread");
-        }
+		if (InternalConfig.isLogThreads()) {
+			this.log.debug(Communicator.class.getSimpleName()
+					+ ": deploy new thread");
+		}
 
-        this.notifierThread = new Thread(new RunnableNotifier());
-        this.notifierThread.start();
+		this.notifierThread = new Thread(new RunnableNotifier());
+		this.notifierThread.start();
 
-        this.keepAliveService = Executors.newSingleThreadScheduledExecutor();
-        this.keepAliveService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                Communicator.getMessagequeue().add(
-                        new CommunicatorMessage(CommunicatorMessageType.PING, "ALL", "."));
-            }
-        }, 0, 60, TimeUnit.SECONDS);
+		this.keepAliveService = Executors.newSingleThreadScheduledExecutor();
+		this.keepAliveService.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				Communicator.getMessagequeue().add(
+						new CommunicatorMessage(CommunicatorMessageType.PING,
+								"ALL", "."));
+			}
+		}, 0, 60, TimeUnit.SECONDS);
 
-    }
+	}
 
-    /**
-     * Notify.
-     *
-     * @param cMessage
-     *            the c message
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    protected void notify(final CommunicatorMessage cMessage)
-            throws IOException {
-        try {
-            Communicator.messageQueue.put(cMessage);
-        } catch (final Exception ex) {
-            final IOException t = new IOException();
-            t.initCause(ex);
-            throw t;
-        }
-    }
+	/**
+	 * Notify.
+	 *
+	 * @param cMessage
+	 *            the c message
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	protected void notify(final CommunicatorMessage cMessage)
+			throws IOException {
+		try {
+			Communicator.messageQueue.put(cMessage);
+		} catch (final Exception ex) {
+			final IOException t = new IOException();
+			t.initCause(ex);
+			throw t;
+		}
+	}
 
-    /**
-     * Switch action.
-     *
-     * @param req
-     *            the req
-     * @param res
-     *            the res
-     * @param action
-     *            the action
-     * @throws ServletException
-     *             the servlet exception
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    protected void switchAction(final HttpServletRequest req,
-            final HttpServletResponse res, final String action)
-            throws ServletException, IOException {
+	/**
+	 * Switch action.
+	 *
+	 * @param req
+	 *            the req
+	 * @param res
+	 *            the res
+	 * @param action
+	 *            the action
+	 * @throws ServletException
+	 *             the servlet exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	protected void switchAction(final HttpServletRequest req,
+			final HttpServletResponse res, final String action)
+			throws ServletException, IOException {
 
-        if ("connect".equals(action)) {
+		if ("connect".equals(action)) {
 
-            final CommunicatorMessage notifyMessage = this.generateCommand(
-                    CommunicatorMessageType.SYSTEM,
-                    "System",
-                    Helper.encodeBase64(super.thisUser.getName()
-                            + " has joined."));
-            this.notify(notifyMessage);
+			final CommunicatorMessage notifyMessage = this.generateCommand(
+					CommunicatorMessageType.SYSTEM,
+					"System",
+					Helper.encodeBase64(super.thisUser.getName()
+							+ " has joined."));
+			this.notify(notifyMessage);
 
-            res.setStatus(HttpServletResponse.SC_OK);
-            res.getWriter().println("success");
+			res.setStatus(HttpServletResponse.SC_OK);
+			res.getWriter().println("success");
 
-        } else if ("post".equals(action)) {
+		} else if ("push".equals(action)) {
 
-            final String messageString = req.getParameter("message");
-            CommunicatorMessage cMessage = null;
+			final String messageString = req.getParameter("message");
+			CommunicatorMessage cMessage = null;
 
-            try {
+			try {
 
-                final ClientType clientType = (ClientType) req
-                        .getAttribute("format");
+				final ClientType clientType = (ClientType) req
+						.getAttribute("format");
 
-                if (InternalConfig.isLogCommunication()) {
-                    this.log.debug(Communicator.class.getSimpleName()
-                            + " switchAction: " + clientType);
-                }
+				if (InternalConfig.isLogCommunication()) {
+					this.log.debug(Communicator.class.getSimpleName()
+							+ " switchAction: " + clientType);
+				}
 
-                switch (clientType) {
-                case JAVASCRIPT:
-                    cMessage = this.generateCommand(CommunicatorMessageType.CHAT,
-                            super.thisUser.getName(), messageString);
-                    break;
-                case SERIAL:
-                    cMessage = ObjectSerializerImpl.stringToObject(
-                            messageString, CommunicatorMessage.class);
-                    break;
-                case PLAIN:
-                    if (InternalConfig.isLogCommunication()) {
-                        this.log.warn(Communicator.class.getSimpleName()
-                                + ": UNHANDLED PLAIN MESSAGE: "
-                                + super.thisUser.getName() + ": "
-                                + messageString);
-                    }
-                    break;
-                default:
-                    if (InternalConfig.isLogCommunication()) {
-                        this.log.warn(Communicator.class.getSimpleName()
-                                + " suppressing default message: "
-                                + messageString);
-                    }
-                    throw new Exception(
-                            "incoming message switched to default type!");
-                }
+				switch (clientType) {
+				case JAVASCRIPT:
+					cMessage = this.generateCommand(
+							CommunicatorMessageType.CHAT,
+							super.thisUser.getName(), messageString);
+					break;
+				case SERIAL:
+					cMessage = ObjectSerializerImpl.stringToObject(
+							messageString, CommunicatorMessage.class);
+					break;
+				case PLAIN:
+					cMessage = this.generateCommand(
+							CommunicatorMessageType.PLAIN,
+							super.thisUser.getName(), messageString);
+					break;
+				default:
+					if (InternalConfig.isLogCommunication()) {
+						this.log.warn(Communicator.class.getSimpleName()
+								+ " suppressing default message: "
+								+ messageString);
+					}
+					throw new Exception(
+							"incoming message switched to default type!");
+				}
 
-            } catch (final Exception e) {
-                res.sendError(422, "Unprocessable Entity");
-                e.printStackTrace();
-            } finally {
-                if (InternalConfig.isLogCommunication()) {
-                    this.log.debug(Communicator.class.getSimpleName()
-                            + ": Recieving: " + cMessage);
-                }
-                this.notify(cMessage);
-                res.setStatus(HttpServletResponse.SC_OK);
-                res.getWriter().println("success");
-            }
+			} catch (final Exception e) {
+				res.sendError(422, "Unprocessable Entity");
+				e.printStackTrace();
+			} finally {
+				if (InternalConfig.isLogCommunication()) {
+					this.log.debug(Communicator.class.getSimpleName()
+							+ ": Recieving: " + cMessage);
+				}
+				this.notify(cMessage);
+				res.setStatus(HttpServletResponse.SC_OK);
+				res.getWriter().println("success");
+			}
 
-        } else {
+		} else {
 
-            res.sendError(422, "Unprocessable Entity");
+			res.sendError(422, "Unprocessable Entity");
 
-        }
-    }
+		}
+	}
 }

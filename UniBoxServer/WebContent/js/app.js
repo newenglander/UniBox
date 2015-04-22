@@ -249,7 +249,7 @@ var app = {
 										.ajax({
 											type : "POST",
 											url : app.url + app.adminSource,
-											data : "action=createPlayer&name="
+											data : "action=createUser&name="
 													+ Base64.encode(name)
 													+ "&adminRights=" + isAdmin,
 											success : function(data) {
@@ -459,7 +459,7 @@ var app = {
 					.ajax({
 						type : "POST",
 						url : app.url + app.cometSource,
-						data : "action=post&message=" + Base64.encode(message),
+						data : "action=push&message=" + Base64.encode(message),
 						success : function() {
 							// tiny dirty hack for mobile devices in order of
 							// the missing onResum() method to prevent offline
