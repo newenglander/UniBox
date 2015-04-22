@@ -2,7 +2,7 @@
 
 The [Wiki Page](https://github.com/AlexTape/UniBox/wiki) of this project contains all available information about the usage and the functionality of this project.
 
-##Table of Content:
+###Table of Content:
 
 1. Introduction
 2. Installation
@@ -11,12 +11,13 @@ The [Wiki Page](https://github.com/AlexTape/UniBox/wiki) of this project contain
 5. Routing
 6. Bugs
 
-## Package Overview
-
-- UniBoxServer (Servlet-based Server) [WAR](http://alextape.github.io/UniBox/builds/UniBoxServer.war), [JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxServer/)
-- UniBoxCore (Shared dependencies for Server and Client API)[JAR](http://alextape.github.io/UniBox/builds/UniBoxCore.jar), [JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxCore/)
-- UniBoxClient (Client API)[JAR](http://alextape.github.io/UniBox/builds/UniBoxClient.jar), [JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxClient/)
-- UniBoxGame (Simple Demo)[JAR](http://alextape.github.io/UniBox/builds/UniBoxGame.jar), [JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxGame/)
+### Package Overview
+| Package      | Description |JavaDoc           | Builds  |
+|:-------------|:------------:|:-------------:|:-----:|
+|UniBoxServer| Servlet-based |[JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxServer/)|[WAR](http://alextape.github.io/UniBox/builds/UniBoxServer.war)|
+|UniBoxCore| Shared dependencies for Server and Client API|[JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxCore/)|[JAR](http://alextape.github.io/UniBox/builds/UniBoxCore.jar)|
+|UniBoxClient | Client API |[JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxClient/)|[JAR](http://alextape.github.io/UniBox/builds/UniBoxClient.jar)|
+|UniBoxGame|Simple JavaFX Application Demo|[JavaDoc](http://alextape.github.io/UniBox/JavaDoc/UniBoxGame/)|[JAR](http://alextape.github.io/UniBox/builds/UniBoxGame.jar)|
 
 # Introduction
 
@@ -24,42 +25,39 @@ The [Wiki Page](https://github.com/AlexTape/UniBox/wiki) of this project contain
 
 The UniBox project connects various gaming clients via network. Basically it consists of a Servlet-Server linked to a mysql database (storing user data, rankings), an easy to user client API and a core library, to cover cross-package dependencies.
 
-## Package Overview
-
-- UniBoxServer (Servlet-based Server)
-- UniBoxCore (Shared dependencies for Server and Client API)
-- UniBoxClient (Client API)
-- UniBoxGame (Simple Demo)
-
 ## UniBox Server
 
 The Server is providing a web-frontend to get a quick overview of the current running game sessions. Furthermore there is a chat functionality which is mostly intended to permit a communication between online/registered players before they joined an enclosed game channel.
 
-## UniBox Client API
+## UniBox Client (API)
+
+
 
 ## UniBox Core
 
-## UniBox Game
+## UniBox Game (Demo)
 
 # Installation
 
+## Setup
+
+## Deployment
+
+## Running
+
+## Mainentance
+
 # User Guide
 
-## Introduction
+## Preparing
 
 The UserBoxClient is providing a User API.
 
-To get in touch with the service and to play your JavaFX game against
-another remote player you first have to get valid credentials by your
-administrator. After that you can login into the backend dashboard to
-change your default password.
+To get in touch with the service and to play your JavaFX game against another remote player you first have to get valid credentials by your administrator. After that you can login into the backend dashboard to change your default password.
 
-The Dashboard is displaying all available game channels and the current
-result statistics. Furhtermore you can create new game channels and chat
-with other remote players via the chat tab.
+The Dashboard is displaying all available game channels and the current result statistics. Furhtermore you can create new game channels and chat with other remote players via the chat tab.
 
-NOTE: The backend is fully responsible, so you can even use it with your
-smartphone or tablet as a simple but functional chat system.
+NOTE: The backend is fully responsible, so you can even use it with your smartphone or tablet as a simple but functional chat system.
 
 ## Getting started with your JavaFX Application
 
@@ -122,7 +120,7 @@ of your Application with the Backend.
 ClientProvider.connect();
 ```
 
-### Sending messages
+## Sending messages
 
 Now you should be able to send different Types of Messages. Basically you just need
 the sendGameMessage() method to send your game states, changes or events.
@@ -137,7 +135,7 @@ ClientProvider.sendSystemMessage(<STRING>);
 
 NOTE: You got to implement your own protocol. UniBoxClient will not parse or cast any message content.
 
-### Receiving messages
+## Receiving messages
 
 To receive messages send by the backend you got to bind a custom handler to your main stage.
 The API is providing an abstract class that implements a EventHandler for incoming messages.
@@ -168,7 +166,7 @@ ClientProvider.bind(primaryStage, new IncomingMessageHandler() {
 All incoming messages will be published within the handle() method, while "user" contains the
 sender name and "msg" the concrete payload e.g. the message string.
 
-### Handle highscores
+## Handle highscores
 
 Last but not least you are able to manipulate the highscore list.
 
@@ -211,13 +209,6 @@ If the receiver wants to pick the serialized object, just do this:
  */
 ClientProvider.bind(primaryStage, new IncomingMessageHandler() {
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * de.unibox.client.api.IncomingMessageHandler#handle(java.lang.
-	 * String, java.lang.String)
-	 */
 	@Override
 	public void handle(final String user, final String msg) {
 
@@ -246,22 +237,32 @@ ClientProvider.sendGameMessage(serializedObject);
 The UniBox Server is implementing different type of messages.
 ```java
     public enum MessageType {
-
-        /** The chat. */
         CHAT,
-
-        /** The error. */
         ERROR,
-
-        /** The game. */
         GAME,
-
-        /** The system. */
         SYSTEM
     }
 ```
 Each message type has it´s own prediction. The following routes are able to deliver different kinds of messages around the registered clients. Please read carefully if you want to deliver messages beside the default messaging functions derived by the Client API or overwrite the default functionality of the frontend javascript app.
 
+# Routing
+
+```
+Root:        http://server:8080/UniBox
+```
+All routes are defined beyond the static route of your tomcat instance. Basically we differ between **public** and **protected** routes. Public routes can be called by any client. Protected routes require a session and a user object which are only available if the client was authenticated with a valid cookie generated after confirmed credentials during the login process.
+
+## Public Routes
+### Get Login Screen
+```
+Type:        GET|POST
+URL:         /Login
+Parameter:   error=[STRING]
+ContentType: text/html
+```
+This Route is a straight forward to /login.html which is a static page serving the login formular. If anything went wrong due using the webservice you will be redirected to this screen and a error will be attached as a value for the error parameter.
+
+## Authorized Routes
 ### Asynchron long polling routes
 
 ```
@@ -314,28 +315,8 @@ Output:      text/html
 ```
 This request is able to promote a new user with action=connect as a SYSTEM Message (e.g. User XY joined..). Furthermore this route is used to inject new messages with the action=post parameter. The concrete message content will be specified within the message parameter value. If anything went wrong you will get a 422 Http-State. **Serial Messages can be forwarded as different types, like CHAT, ERROR, GAME or SYSTEM Messages**.
 
-# Routing
-
-
-```
-Root:        http://server:8080/UniBox
-```
-All routes are defined beyond the static route of your tomcat instance. Basically we differ between **public** and **protected** routes. Public routes can be called by any client. Protected routes require a session and a user object which are only available if the client was authenticated with a valid cookie generated after confirmed credentials during the login process.
-
-### Public Routes
-
-#### Get Login Screen
-```
-Type:        GET|POST
-URL:         /Login
-Parameter:   error=[STRING]
-ContentType: text/html
-```
-This Route is a straight forward to /login.html which is a static page serving the login formular. If anything went wrong due using the webservice you will be redirected to this screen and a error will be attached as a value for the error parameter.
-
-### Protected Routes
-
-#### Get dashboard
+## Static Routes
+### Get dashboard
 ```
 Type:        GET|POST
 URL:         /Dashboard
@@ -344,7 +325,7 @@ ContentType: text/html
 ```
 This Route is a straight forward to /dashboard.html which is a static page serving the frontend as a javascript webapp.
 
-#### Get game and ranking lists
+### Get game and ranking lists
 ```
 Type:        GET
 URL:         /Database
@@ -353,7 +334,7 @@ Output:      application/json
 ```
 This route is serving direct database selections for ranking and game tables/lists.
 
-#### Create new player
+### Create new player
 ```
 Type:        POST
 URL:         /Database
@@ -362,7 +343,7 @@ Output:      text/html
 ```
 This route can be used to create a new user. To grant admin privilegs to this user the adminrights parameter can be set to true (1) or false (0). The default password will be 'user'.
 
-#### Create new category
+### Create new category
 ```
 Type:        POST
 URL:         /Database
@@ -371,7 +352,7 @@ Output:      text/html
 ```
 This route can be used to create a new game category. The name of this category can be choosen and the maximal count of players able to play together in one game instance has to be set.
 
-#### Create new game
+### Create new game
 ```
 Type:        POST
 URL:         /Database
@@ -380,16 +361,7 @@ Output:      text/html
 ```
 This route can be used to create a new game entry. The name of this game can be choosen and the game category e.g. catid has to be set to relate the game to a concrete game category.
 
-#### Create new queue entry
-```
-Type:        POST
-URL:         /Database
-Parameter:   create=queue&gamename=[STRING]&catid=[INTEGER]
-Output:      text/html
-```
-*NOT_IMPLEMENTED_ATM*
-
-#### Create new game result
+### Create new game result
 ```
 Type:        POST
 URL:         /Database
@@ -398,7 +370,7 @@ Output:      text/html
 ```
 This route can be used to create a new result entry for a finished game. To get it done, you have to set the gameid, the corresponding playerid and the scoring, which yill be set in the database.
 
-#### Join and leave game
+### Join and leave game
 ```
 Type:        GET|POST
 URL:         /Game
@@ -407,7 +379,7 @@ Output:      text/html__
 ```
 This route can be used by any client to join or leave a concrete game during runtime, identified by the related game id. If the game is already full or another error appearing you will receive a BAD_REQUEST Http-State and "error" as plain body response. If joining/leaving was successfull you get a "OK" Http-State and a "success" body response. To get to know if you are a participant of any game, you can request the game id of the joined game with 'action=whichgame' request.
 
-#### Logout
+### Logout
 ```
 Type:        GET|POST
 URL:         /Logout
@@ -416,13 +388,13 @@ Output:      text/html
 ```
 This route can be used by any client to invalidate the corresponing session. The callback will be a redirection to the public login formular.
 
+# Administrative Routes
+...
+
 # Bugs
-
-_known_bugs_
-
-Known Bugs:
-1. In Internet Explorer 11 the Chat-Function is not working until the app is recieving the third incoming message.
-2.
+##Known Bugs:
+###Internet Explorer 11
+1. The Chat-Function is not working until the app is recieving the second incoming message.
 
 
 
