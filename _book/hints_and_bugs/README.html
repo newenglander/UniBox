@@ -4,22 +4,24 @@
     <head>
         
         <meta charset="UTF-8">
-        <title>Introduction | Introduction</title>
+        <title>Hints and Bugs | Introduction</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="The UniBox project connects various gaming clients via network. Basically it consists of a Servlet-Server linked to a mysql database (storing user data, rankings), an easy to user client API and a core library, to cover cross-package dependencies.">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 1.0.3">
         <meta name="HandheldFriendly" content="true"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
-        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
         
     
     
     
-    <link rel="next" href="./communication_concept/README.html" />
+    <link rel="next" href="../home/README.html" />
     
+    
+    <link rel="prev" href="../user_guide/README.html" />
     
 
         
@@ -27,11 +29,11 @@
     <body>
         
         
-<link rel="stylesheet" href="gitbook/style.css">
+<link rel="stylesheet" href="../gitbook/style.css">
 
 
         
-    <div class="book"  data-level="0" data-basepath="." data-revision="1429709657912">
+    <div class="book"  data-level="4" data-basepath=".." data-revision="1429709657912">
     
 
 <div class="book-summary">
@@ -49,10 +51,10 @@
         
     
         
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
-                    <a href="./index.html">
+                    <a href="../index.html">
                         <i class="fa fa-check"></i>
                         
                          Introduction
@@ -66,7 +68,7 @@
         <li class="chapter " data-level="1" data-path="communication_concept/README.html">
             
                 
-                    <a href="./communication_concept/README.html">
+                    <a href="../communication_concept/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>1.</b>
@@ -82,7 +84,7 @@
         <li class="chapter " data-level="2" data-path="requests/README.html">
             
                 
-                    <a href="./requests/README.html">
+                    <a href="../requests/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>2.</b>
@@ -98,7 +100,7 @@
         <li class="chapter " data-level="3" data-path="user_guide/README.html">
             
                 
-                    <a href="./user_guide/README.html">
+                    <a href="../user_guide/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>3.</b>
@@ -111,10 +113,10 @@
         </li>
     
         
-        <li class="chapter " data-level="4" data-path="hints_and_bugs/README.html">
+        <li class="chapter active" data-level="4" data-path="hints_and_bugs/README.html">
             
                 
-                    <a href="./hints_and_bugs/README.html">
+                    <a href="../hints_and_bugs/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>4.</b>
@@ -130,7 +132,7 @@
         <li class="chapter " data-level="5" data-path="home/README.html">
             
                 
-                    <a href="./home/README.html">
+                    <a href="../home/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>5.</b>
@@ -223,7 +225,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >Introduction</a>
+        <a href="../" >Introduction</a>
     </h1>
 </div>
 
@@ -231,21 +233,49 @@
                 <div class="page-inner">
                 
                 
-                    <section class="normal" id="section-gitbook_4509">
+                    <section class="normal" id="section-gitbook_4510">
                     
-                        <h1 id="introduction">Introduction</h1>
-<h2 id="why-unibox">Why UniBox?</h2>
-<p>The UniBox project connects various gaming clients via network. Basically it consists of a Servlet-Server linked to a mysql database (storing user data, rankings), an easy to user client API and a core library, to cover cross-package dependencies.</p>
-<h2 id="unibox-server">UniBox Server</h2>
-<p>The Server is providing a web-frontend to get a quick overview of the current running game sessions. Furthermore there is a chat functionality which is mostly intended to permit a communication between online/registered players before they joined an enclosed game channel.</p>
-<h2 id="unibox-client-api">UniBox Client (API)</h2>
-<h2 id="unibox-core">UniBox Core</h2>
-<h2 id="unibox-game-demo">UniBox Game (Demo)</h2>
-<h1 id="installation">Installation</h1>
-<h2 id="setup">Setup</h2>
-<h2 id="deployment">Deployment</h2>
-<h2 id="running">Running</h2>
-<h2 id="mainentance">Mainentance</h2>
+                        <h1 id="hints-and-bugs">Hints and Bugs</h1>
+<h2 id="hints">Hints</h2>
+<p>The API is providing a implementation of the native object serialization routine:</p>
+<pre><code>ObjectSerializerImpl.objectToString(final Serializable object);
+
+ObjectSerializerImpl.stringToObject(final String string, final Class&lt;E&gt; clazz);
+</code></pre><p>With these methods you are able to send objects directly:</p>
+<pre><code>AnyObject any = new AnyObject();
+
+String serializedObject = ObjectSerializerImpl.objectToString(any);
+
+ClientProvider.sendGameMessage(serializedObject);
+</code></pre><p>Remember that the receiver has to know which object is arriving. So you need the Class of
+the serialized object on both sides (sender and receiver).</p>
+<p>If the receiver wants to pick the serialized object, just do this:</p>
+<pre><code>/**
+ * UniBoxClient: bind event handler for incoming messages.
+ */
+ClientProvider.bind(primaryStage, new IncomingMessageHandler() {
+
+    @Override
+    public void handle(final String user, final String msg) {
+
+        AnyObject any = ObjectSerializerImpl.stringToObject(msg, AnyClass.class);
+
+        // any is an exact copy of the object send by the sender
+
+    }
+});
+</code></pre><p>Just to food your thought. You can even capsule objects:</p>
+<p>```
+ArrayList<AnyObject> list = new ArrayList<AnyObject>();
+list.add(obj1);
+list.add(obj2);</p>
+<p>String serializedObject = ObjectSerializerImpl.objectToString(list);</p>
+<h2 id="bugs">Bugs</h2>
+<h2 id="known-bugs">Known Bugs:</h2>
+<h3 id="internet-explorer-11">Internet Explorer 11</h3>
+<ol>
+<li>The Chat-Function is not working until the app is recieving the second incoming message.</li>
+</ol>
 
                     
                     </section>
@@ -256,21 +286,23 @@
         </div>
 
         
+        <a href="../user_guide/README.html" class="navigation navigation-prev " aria-label="Previous page: User Guide"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./communication_concept/README.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Concept"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="../home/README.html" class="navigation navigation-next " aria-label="Next page: Home"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
 
         
-<script src="gitbook/app.js"></script>
+<script src="../gitbook/app.js"></script>
 
     
     <script src="https://cdn.mathjax.org/mathjax/2.4-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
     
-    <script src="gitbook/plugins/gitbook-plugin-mathjax/plugin.js"></script>
+    <script src="../gitbook/plugins/gitbook-plugin-mathjax/plugin.js"></script>
     
 
 <script>

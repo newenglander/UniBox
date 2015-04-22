@@ -1,0 +1,297 @@
+# Requests
+
+```
+Root:        http://server:8080/UniBox
+```
+All requests are defined beyond the static route of your tomcat instance. Basically we differ between **public**, **registered** and **administrative** routes. Public routes can be called by any client. Registered routes require a session and a bound user object which is attached during the authentication process and accessible through a valid cookie generated after confirmed credentials.
+
+# Asynchron Requests
+### Plain Comet Listener
+```
+Type:           GET
+URL:            /Communicator
+Parameter:      -
+Output:         text/html
+Realm:          public
+```
+This request delivers a long polling http response to receive **plain** messages.
+
+### JavaScript Comet Listener
+```
+Type:           GET
+URL:            /Communicator/JavaScript
+Parameter:      -
+Output:         text/html
+Realm:          public
+```
+This request delivers a long polling http response to receive **javascript** messages. **GAME Message will not delivered via this route**.
+
+### Serial Comet Listener
+```
+Type:           GET
+URL:            /Communicator/Serial
+Parameter:      -
+Output:         text/html
+Realm:          registered
+```
+This request delivers a long polling http response to receive **serialized object** messages. **CHAT Messages will not delivered via this route**.
+
+# Synchron Requests
+## Login Mask
+```
+Type:           GET|POST
+URL:            /Login
+Parameter:      error=[STRING]
+ContentType:    text/html
+Realm:          public
+```
+This Route is forward handle to /login.html which is a static page serving the login formular. If anything went really wrong while using the webservice you will be redirected to this screen and a error will be attached as a value for the error parameter.
+
+## Request Connection Cookie
+```
+Type:           POST
+URL:            /Communicator
+                /JavaScript
+                /Serial
+Parameter:      action=connect
+                nick=[STRING]
+                password[BASE64_STRING]
+Output:         text/html
+Realm:          registered
+```
+This request is able to promote a new user as a SYSTEM Message (e.g. "User XY joined.."). No matter which of these three available urls you call to promote your login, the result will be the same. Basically this method can be used to retrieve a cookie without visiting the login mask.
+
+**NOTE:** All registered requests are able to authorize you if the request contains nick and password parameters. But in case of the performance issue it is much better to store the received cookie after the first request you do to get instant access without claiming the authorize routine each time again and again.
+
+## Sending Messages
+### Plain Message
+```
+Type:           POST
+URL:            /Communicator
+Parameter:      action=push
+                message=[STRING]
+Output:         text/html
+Realm:          registered
+```
+This route can be used to push plain messages. The concrete message content will be specified within the message parameter value. If anything went wrong you will get a 422 Http-State. Plain Messages are currently forwareded to all registered clients. Recommended usage would be a base64 encoded message string even if each client has to encode the string itself.
+
+**NOTE:** Right now neither the Client API nor the Dashboard is using PLAIN Messages. It is currently just a kind of generic message which is basically not needed in the UniBox Lifecycle.
+
+### Javascript Message
+```
+Type:           POST
+URL:            /Communicator/JavaScript
+Parameter:      action=push
+                message=[STRING]
+Output:         text/html
+Realm:          registered
+```
+This route is used to push a new javascript message. The concrete message content will be specified within the message parameter value. If anything went wrong you will get a 422 Http-State. Javascript Messages are forwarded as CHAT Messages. These Messages will be broadcasted to all Dashboard Clients immediatly.
+
+### Serial Message
+```
+Type:           POST
+URL:            /Communicator/Serial
+Parameter:      action=push
+                message=[STRING]
+Output:         text/html
+Realm:          registered
+```
+This route is used to push serial message.  The concrete message content will be specified within the message parameter value. The whole Communication Object will get serialized and transmitted. If anything went wrong you will get a 422 Http-State. Serial Messages can be any [type of message](http://alextape.github.io/UniBox/JavaDoc/UniBoxCore/de/unibox/core/network/object/CommunicatorMessageType.html) and will be forwarded to all clients connected through the UniBox API.
+
+**NOTE:** Serial Messages will NOT be forwarded to any Dashboard Client.
+
+### Request the Dashboard
+```
+Type:           GET|POST
+URL:            /Dashboard
+Parameter:      -
+ContentType:    text/html
+Realm:          registered
+```
+This request is basically a request dispatcher to the full responsive dashboard implementation. The dashboard will work fine with almost any browser on almost any device.
+
+### Get user list
+```
+Type:           GET
+URL:            /Database
+Parameter:      action=getUsers
+Output:         application/json
+Realm:          registered
+```
+This request will retrieve the list of registered users as a JSON object.
+
+### Get game list
+```
+Type:           GET
+URL:            /Database
+Parameter:      action=getGames
+Output:         application/json
+Realm:          registered
+```
+This request is serving the list of registered games. Including position wiring and Usernames of joined players. The response is a JSON objet.
+
+### Get ranking list
+```
+Type:           GET
+URL:            /Database
+Parameter:      action=getRanking
+Output:         application/json
+Realm:          registered
+```
+This route is serving the list of registered ranking-points. The response is a JSON object.
+
+### Get category list
+```
+Type:           GET
+URL:            /Database
+Parameter:      action=getCategories
+Output:         application/json
+Realm:          registered
+```
+This route is serving the list of registered categories. The response is a JSON object.
+
+### Create game
+```
+Type:           POST
+URL:            /Database
+Parameter:      action=createGame
+                gameName=[STRING]
+                catID=[INTEGER]
+Output:         text/html
+Realm:          registered
+```
+This route can be used to create a new game entry. The name of this game can be choosen and the game category e.g. catid has to be set to relate the game to a concrete game category.  This call will force all remote clients to refetch the their game list.
+
+### Create score
+```
+Type:           POST
+URL:            /Database
+Parameter:      action=createResult
+                status=[win|draw|lose]
+Output:         text/html
+Realm:          registered
+```
+This route can be used to create a new result entry for a finished game. To get it done, you have to set the gameid, the corresponding playerid and the scoring, which yill be set in the database. This call will force all remote clients to refetch the their ranking list.
+
+### Join game
+```
+Type:           GET|POST
+URL:            /Game
+Parameter:      action=joinGame
+                gameid=[INTEGER]
+Output:         text/html
+Realm:          registered
+```
+This route can be used to join a existing game by the related game id. If the user is already joined to a game, the backend will automatic leave the previous game to let the user join to this one.
+
+### Leave game
+```
+Type:           GET|POST
+URL:            /Game
+Parameter:      action=leaveGame
+Output:         text/html
+Realm:          registered
+```
+This route can be used to leave a game in which the user is currently joined.
+
+### Which game
+```
+Type:           GET|POST
+URL:            /Game
+Parameter:      action=whichGame
+Output:         text/html
+Realm:          registered
+```
+This route will return the gameID of the currently joined game, depending on the connected user session.
+
+### Change user password
+```
+Type:           POST
+URL:            /Auth
+Parameter:      action=changePassword
+                oldPassword=[STRING]
+                inputPassword=[STRING]
+                inputPasswordConfirm=[STRING]
+Output:         text/html
+Realm:          registered
+```
+This request can be triggered to change the user password.
+
+### Logout user
+```
+Type:           GET
+URL:            /Auth
+Parameter:      action=logout
+Output:         text/html
+Realm:          registered
+```
+This request can be used by any client to invalidate the corresponing session. The callback will be a redirection to the public login formular.
+
+## Administrative requests
+
+### Create category
+```
+Type:           POST
+URL:            /Admin
+Parameter:      action=createCategory
+                gameTitle=[STRING]
+                numberOfPlayers=[INTEGER]
+Output:         text/html
+Realm:          administrative
+```
+This request can be used to create a new game category. The name of this category can be choosen and the maximal count of players able to play together in one game instance has to be set.
+
+### Create user
+```
+Type:           POST
+URL:            /Admin
+Parameter:      action=createUser
+                name=[STRING]
+                adminRights[0|1]
+Output:         text/html
+Realm:          administrative
+```
+This request can be used to create a new user. To grant admin privilegs to this user the adminrights parameter can be set to true (1) or false (0). The default password will be 'user'.
+
+### Delete user
+```
+Type:           GET
+URL:            /Admin
+Parameter:      action=deleteUser
+                userId=[INTEGER]
+Output:         text/html
+Realm:          administrative
+```
+TODO
+
+### Delete game
+```
+Type:           GET
+URL:            /Admin
+Parameter:      action=deleteGame
+                gameId=[INTEGER]
+Output:         text/html
+Realm:          administrative
+```
+TODO
+
+### Reset scores
+```
+Type:           GET
+URL:            /Admin
+Parameter:      action=resetScores
+Output:         text/html
+Realm:          administrative
+```
+TODO
+
+### Reset database
+```
+Type:           GET
+URL:            /Admin
+Parameter:      action=resetDatabase
+Output:         text/html
+Realm:          administrative
+```
+TODO

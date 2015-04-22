@@ -4,22 +4,24 @@
     <head>
         
         <meta charset="UTF-8">
-        <title>Introduction | Introduction</title>
+        <title>User Guide | Introduction</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <meta name="description" content="The UniBox project connects various gaming clients via network. Basically it consists of a Servlet-Server linked to a mysql database (storing user data, rankings), an easy to user client API and a core library, to cover cross-package dependencies.">
+        <meta name="description" content="">
         <meta name="generator" content="GitBook 1.0.3">
         <meta name="HandheldFriendly" content="true"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
-        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
         
     
     
     
-    <link rel="next" href="./communication_concept/README.html" />
+    <link rel="next" href="../hints_and_bugs/README.html" />
     
+    
+    <link rel="prev" href="../requests/README.html" />
     
 
         
@@ -27,11 +29,11 @@
     <body>
         
         
-<link rel="stylesheet" href="gitbook/style.css">
+<link rel="stylesheet" href="../gitbook/style.css">
 
 
         
-    <div class="book"  data-level="0" data-basepath="." data-revision="1429709657912">
+    <div class="book"  data-level="3" data-basepath=".." data-revision="1429709657912">
     
 
 <div class="book-summary">
@@ -49,10 +51,10 @@
         
     
         
-        <li class="chapter active" data-level="0" data-path="index.html">
+        <li class="chapter " data-level="0" data-path="index.html">
             
                 
-                    <a href="./index.html">
+                    <a href="../index.html">
                         <i class="fa fa-check"></i>
                         
                          Introduction
@@ -66,7 +68,7 @@
         <li class="chapter " data-level="1" data-path="communication_concept/README.html">
             
                 
-                    <a href="./communication_concept/README.html">
+                    <a href="../communication_concept/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>1.</b>
@@ -82,7 +84,7 @@
         <li class="chapter " data-level="2" data-path="requests/README.html">
             
                 
-                    <a href="./requests/README.html">
+                    <a href="../requests/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>2.</b>
@@ -95,10 +97,10 @@
         </li>
     
         
-        <li class="chapter " data-level="3" data-path="user_guide/README.html">
+        <li class="chapter active" data-level="3" data-path="user_guide/README.html">
             
                 
-                    <a href="./user_guide/README.html">
+                    <a href="../user_guide/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>3.</b>
@@ -114,7 +116,7 @@
         <li class="chapter " data-level="4" data-path="hints_and_bugs/README.html">
             
                 
-                    <a href="./hints_and_bugs/README.html">
+                    <a href="../hints_and_bugs/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>4.</b>
@@ -130,7 +132,7 @@
         <li class="chapter " data-level="5" data-path="home/README.html">
             
                 
-                    <a href="./home/README.html">
+                    <a href="../home/README.html">
                         <i class="fa fa-check"></i>
                         
                             <b>5.</b>
@@ -223,7 +225,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="./" >Introduction</a>
+        <a href="../" >Introduction</a>
     </h1>
 </div>
 
@@ -231,21 +233,94 @@
                 <div class="page-inner">
                 
                 
-                    <section class="normal" id="section-gitbook_4509">
+                    <section class="normal" id="section-gitbook_4513">
                     
-                        <h1 id="introduction">Introduction</h1>
-<h2 id="why-unibox">Why UniBox?</h2>
-<p>The UniBox project connects various gaming clients via network. Basically it consists of a Servlet-Server linked to a mysql database (storing user data, rankings), an easy to user client API and a core library, to cover cross-package dependencies.</p>
-<h2 id="unibox-server">UniBox Server</h2>
-<p>The Server is providing a web-frontend to get a quick overview of the current running game sessions. Furthermore there is a chat functionality which is mostly intended to permit a communication between online/registered players before they joined an enclosed game channel.</p>
-<h2 id="unibox-client-api">UniBox Client (API)</h2>
-<h2 id="unibox-core">UniBox Core</h2>
-<h2 id="unibox-game-demo">UniBox Game (Demo)</h2>
-<h1 id="installation">Installation</h1>
-<h2 id="setup">Setup</h2>
-<h2 id="deployment">Deployment</h2>
-<h2 id="running">Running</h2>
-<h2 id="mainentance">Mainentance</h2>
+                        <h1 id="user-guide">User Guide</h1>
+<h2 id="preparing">Preparing</h2>
+<p>The UserBoxClient is providing a User API.</p>
+<p>To get in touch with the service and to play your JavaFX game against another remote player you first have to get valid credentials by your administrator. After that you can login into the backend dashboard to change your default password.</p>
+<p>The Dashboard is displaying all available game channels and the current result statistics. Furhtermore you can create new game channels and chat with other remote players via the chat tab.</p>
+<p>NOTE: The backend is fully responsible, so you can even use it with your smartphone or tablet as a simple but functional chat system.</p>
+<h2 id="getting-started-with-your-javafx-application">Getting started with your JavaFX Application</h2>
+<p>After you set the UniBoxClient.jar as a needed Dependency of your project
+your are able to setup your needs.</p>
+<p>First of all you got to set your Username and Password togehter with the IP of
+the UniBoxServer Instance. To be flexible the API will provide different methods
+for that task to fit your needs.</p>
+<p>You can pass your credentials as parameter like</p>
+<pre><code>java -jar YourGame.jar &lt;ip&gt; &lt;user&gt; &lt;password&gt;
+</code></pre><p>If you prefer that way, simple add the following calls to your main():</p>
+<pre><code>public static void main(final String[] args) {
+
+    // init credentials
+    ClientProvider.setIp(args[0]);
+    ClientProvider.setUsername(args[1]);
+    ClientProvider.setPassword(args[2]);
+
+    Application.launch(args);
+
+}
+</code></pre><p>If you like a more static way you can place these methods in your start() method as well:</p>
+<pre><code>public final void start(final Stage primaryStage) {
+
+    // init credentials
+
+    ClientProvider.setIp(&quot;192.168.0.150&quot;);
+    ClientProvider.setUsername(&quot;user&quot;);
+    ClientProvider.setPassword(&quot;password&quot;);
+
+    // ...
+
+}
+</code></pre><p>As the credentials and the IP were set. You can call the login routine to register your
+Application to the backend service.</p>
+<pre><code>ClientProvider.login();
+</code></pre><p>Now you got a valid cookie to talk on an authorized level to the backend workers.
+To start the main loop of the Client API you got to connect the local workers/threads
+of your Application with the Backend.</p>
+<pre><code>ClientProvider.connect();
+</code></pre><h2 id="sending-messages">Sending messages</h2>
+<p>Now you should be able to send different Types of Messages. Basically you just need
+the sendGameMessage() method to send your game states, changes or events.</p>
+<pre><code>ClientProvider.sendChatMessage(&lt;STRING&gt;);
+ClientProvider.sendCustomMessage(&lt;STRING&gt;);
+ClientProvider.sendErrorMessage(&lt;STRING&gt;);
+ClientProvider.sendGameMessage(&lt;STRING&gt;);
+ClientProvider.sendSystemMessage(&lt;STRING&gt;);
+</code></pre><p>NOTE: You got to implement your own protocol. UniBoxClient will not parse or cast any message content.</p>
+<h2 id="receiving-messages">Receiving messages</h2>
+<p>To receive messages send by the backend you got to bind a custom handler to your main stage.
+The API is providing an abstract class that implements a EventHandler for incoming messages.
+To get it working just copy paste this code to your derived JavaFX Application Class.</p>
+<pre><code>/**
+ * UniBoxClient: bind event handler for incoming messages.
+ */
+ClientProvider.bind(primaryStage, new IncomingMessageHandler() {
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * de.unibox.client.api.IncomingMessageHandler#handle(java.lang.
+     * String, java.lang.String)
+     */
+    @Override
+    public void handle(final String user, final String msg) {
+
+        // handle incoming messages here on &lt;MainThread&gt;
+
+    }
+});
+</code></pre><p>All incoming messages will be published within the handle() method, while &quot;user&quot; contains the
+sender name and &quot;msg&quot; the concrete payload e.g. the message string.</p>
+<h2 id="handle-highscores">Handle highscores</h2>
+<p>Last but not least you are able to manipulate the highscore list.</p>
+<p>NOTE: You are not able to commit a result without being part of a game (you must join a game before).</p>
+<pre><code>ClientProvider.reportWinResult(); // +1 point
+ClientProvider.reportDrawResult(); // +/- 0 points
+ClientProvider.reportLoseResult(); // -1 point
+</code></pre><p>ClientProvider.sendGameMessage(serializedObject);
+```</p>
 
                     
                     </section>
@@ -256,21 +331,23 @@
         </div>
 
         
+        <a href="../requests/README.html" class="navigation navigation-prev " aria-label="Previous page: Requests"><i class="fa fa-angle-left"></i></a>
         
-        <a href="./communication_concept/README.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Concept"><i class="fa fa-angle-right"></i></a>
+        
+        <a href="../hints_and_bugs/README.html" class="navigation navigation-next " aria-label="Next page: Hints and Bugs"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
 
         
-<script src="gitbook/app.js"></script>
+<script src="../gitbook/app.js"></script>
 
     
     <script src="https://cdn.mathjax.org/mathjax/2.4-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
 
     
-    <script src="gitbook/plugins/gitbook-plugin-mathjax/plugin.js"></script>
+    <script src="../gitbook/plugins/gitbook-plugin-mathjax/plugin.js"></script>
     
 
 <script>
