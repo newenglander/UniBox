@@ -5,6 +5,6 @@
 * [Concept](concept/README.md)
 * [Requests](requests/README.md)
 * [User Guide](user_guide/README.md)
-   * Installation
+   * [Installation](installation.md)
 * [Hints and Bugs](hints_and_bugs/README.md)
 
