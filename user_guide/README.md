@@ -128,6 +128,3 @@ ClientProvider.reportWinResult(); // +1 point
 ClientProvider.reportDrawResult(); // +/- 0 points
 ClientProvider.reportLoseResult(); // -1 point
 ```
-
-ClientProvider.sendGameMessage(serializedObject);
-```
