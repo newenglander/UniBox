@@ -7,7 +7,7 @@
 * [User Guide](user_guide/README.md)
    * Getting Started
    * [Installation](installation.md)
-   * Client
    * Server
+* Client
 * [Hints and Bugs](hints_and_bugs/README.md)
 
