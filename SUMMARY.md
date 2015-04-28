@@ -8,5 +8,6 @@
    * Getting Started
    * [Installation](installation.md)
    * Client
+   * Server
 * [Hints and Bugs](hints_and_bugs/README.md)
 
