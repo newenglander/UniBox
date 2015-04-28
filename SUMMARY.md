@@ -4,6 +4,7 @@
 * [Introduction](introduction/README.md)
 * [Concept](concept/README.md)
 * [Requests](requests/README.md)
+* [Installation](installation.md)
 * [User Guide](user_guide/README.md)
    * Client
    * [Installation](installation.md)
