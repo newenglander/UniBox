@@ -1,41 +1,3 @@
-# Requests
-
-```
-Root:        http://server:8080/UniBox
-```
-All requests are defined beyond the static route of your tomcat instance. Basically we differ between **public**, **registered** and **administrative** routes. Public routes can be called by any client. Registered routes require a session and a bound user object which is attached during the authentication process and accessible through a valid cookie generated after confirmed credentials.
-
-# Asynchron Requests
-### Plain Comet Listener
-```
-Type:           GET
-URL:            /Communicator
-Parameter:      -
-Output:         text/html
-Realm:          public
-```
-This request delivers a long polling http response to receive **plain** messages.
-
-### JavaScript Comet Listener
-```
-Type:           GET
-URL:            /Communicator/JavaScript
-Parameter:      -
-Output:         text/html
-Realm:          public
-```
-This request delivers a long polling http response to receive **javascript** messages. **GAME Message will not delivered via this route**.
-
-### Serial Comet Listener
-```
-Type:           GET
-URL:            /Communicator/Serial
-Parameter:      -
-Output:         text/html
-Realm:          registered
-```
-This request delivers a long polling http response to receive **serialized object** messages. **CHAT Messages will not delivered via this route**.
-
 # Synchron Requests
 ## Login Mask
 ```
@@ -91,7 +53,7 @@ public enum CommunicatorMessageType {
 
     /** The system. */
     SYSTEM,
-    
+
     /** The plain. */
     PLAIN
 }

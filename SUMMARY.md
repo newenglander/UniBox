@@ -1,13 +1,23 @@
 # Summary
 
-* [Home](README.md)
-* [Introduction](introduction/README.md)
-* [Concept](concept/README.md)
-* [Requests](requests/README.md)
-* [User Guide](user_guide/README.md)
-   * [Client](client.md)
-       * Getting Started
-   * Server
-       * Getting Started
-* [Hints and Bugs](hints_and_bugs/README.md)
+* [Home](home.md)
+* [Introduction](introduction/introduction.md)
+* [Concept](concept/concept.md)
+* [Requests](requests/requests.md)
+   * [Asynchron Requests](requests/asynchron_requests.md)
+   * [Synchron Requests](requests/synchron_requests.md)
+* [User Guide](user_guide/user_guide.md)
+   * [Client](user_guide/client.md)
+       * [Getting Started](user_guide/client/getting_started.md)
+       * [Sending Messages](user_guide/client/sending_messages.md)
+       * [Receive Messages](user_guide/client/receive_messages.md)
+       * [Handle Highscores](user_guide/client/highscores.md)
+   * [Server](user_guide/server.md)
+       * [Getting Started](user_guide/server/getting_started.md)
+	   * [Installation](user_guide/server/installation.md)
+	   * [Configuration](user_guide/server/configuration.md)
+	   * [Database Setup](user_guide/server/database_setup.md)
+	   * [Tomcat Setup](user_guide/server/tomcat_setup.md)
+	   * [Logging](user_guide/server/logging.md)
+* [Hints and Bugs](hints_and_bugs/hints_and_bugs.md)
 
