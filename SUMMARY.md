@@ -8,5 +8,6 @@
    * Client
        * Getting Started
    * Server
+       * Getting Started
 * [Hints and Bugs](hints_and_bugs/README.md)
 
