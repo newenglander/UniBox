@@ -6,5 +6,6 @@
 * [Requests](requests/README.md)
 * [User Guide](user_guide/README.md)
    * [Installation](installation.md)
+   * Getting Started
 * [Hints and Bugs](hints_and_bugs/README.md)
 
