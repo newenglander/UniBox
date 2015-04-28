@@ -1,1 +1,1 @@
-# Getting Started
+# Database Setup

@@ -1,4 +1,4 @@
-# Preparing
+# Client Guide
 
 The UserBoxClient is providing a User API.
 
