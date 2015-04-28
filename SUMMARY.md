@@ -6,6 +6,7 @@
 * [Requests](requests/README.md)
 * [User Guide](user_guide/README.md)
    * Client
+       * Getting Started
    * Server
 * [Hints and Bugs](hints_and_bugs/README.md)
 
