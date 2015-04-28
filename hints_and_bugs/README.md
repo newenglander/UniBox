@@ -51,9 +51,13 @@ list.add(obj2);
 
 String serializedObject = ObjectSerializerImpl.objectToString(list);
 
+ClientProvider.sendGameMessage(serializedObject);
+```
+
 ## Bugs
 ##Known Bugs:
 ###Internet Explorer 11
 1. The Chat-Function is not working until the app is recieving the second incoming message.
+
 
 
