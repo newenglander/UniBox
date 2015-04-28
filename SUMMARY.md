@@ -9,5 +9,6 @@
    * Client
    * [Installation](installation.md)
    * Server
+* Server
 * [Hints and Bugs](hints_and_bugs/README.md)
 
