@@ -27,7 +27,7 @@ java -jar YourGame.jar <ip> <user> <password>
 
 If you prefer that way, simple add the following calls to your main():
 
-```
+```java
 public static void main(final String[] args) {
 
 	// init credentials
