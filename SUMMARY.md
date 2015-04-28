@@ -5,7 +5,7 @@
 * [Concept](concept/README.md)
 * [Requests](requests/README.md)
 * [User Guide](user_guide/README.md)
-   * Client
+   * [Client](client.md)
        * Getting Started
    * Server
        * Getting Started
