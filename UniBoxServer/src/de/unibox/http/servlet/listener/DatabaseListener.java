@@ -39,7 +39,7 @@ public class DatabaseListener implements ServletContextListener {
      */
     @Override
     public void contextInitialized(final ServletContextEvent event) {
-
+    	
         try {
             this.log.info(DatabaseListener.class.getSimpleName()
                     + ": Database initialization..");

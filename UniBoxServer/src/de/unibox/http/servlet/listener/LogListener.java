@@ -38,7 +38,8 @@ public class LogListener implements ServletContextListener {
      */
     @Override
     public void contextInitialized(final ServletContextEvent event) {
-        final ServletContext context = event.getServletContext();
+        
+    	final ServletContext context = event.getServletContext();
 
         BasicConfigurator.configure();
 

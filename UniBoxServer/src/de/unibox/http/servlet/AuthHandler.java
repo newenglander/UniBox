@@ -45,7 +45,7 @@ public class AuthHandler extends ProtectedHttpServlet {
             final HttpServletResponse response) throws ServletException,
             IOException {
 
-        final String action = request.getParameter("action");
+        final String action = request.getParameter("handle");
 
         switch (action) {
         case "logout":

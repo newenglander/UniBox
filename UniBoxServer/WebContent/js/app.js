@@ -451,7 +451,7 @@ var app = {
 		});
 	},
 	logout : function() {
-		window.location.replace("/UniBox/Auth?action=logout");
+		window.location.replace("/UniBox/Auth?handle=logout");
 	},
 	post : function(message) {
 		if (message) {

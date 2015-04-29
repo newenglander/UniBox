@@ -61,7 +61,7 @@
 							<li><a id="changePassword" href="#" data-toggle="modal"
 								data-target=".bs-change-password-modal-lg">Change password</a></li>
 						</ul></li>
-					<li><a class="whiteText" href="/UniBox/Auth?action=logout">Logout</a></li>
+					<li><a class="whiteText" href="/UniBox/Auth?handle=logout">Logout</a></li>
 				</ul>
 			</div>
 		</div>
