@@ -30,6 +30,9 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<listener>
+		<listener-class>de.unibox.http.servlet.listener.ConfigListener</listener-class>
+	</listener>
+	<listener>
 		<listener-class>de.unibox.http.servlet.listener.LogListener</listener-class>
 	</listener>
 	<listener>
@@ -38,7 +41,7 @@
 	<listener>
 		<listener-class>de.unibox.http.servlet.listener.HttpSessionCollector</listener-class>
 	</listener>
-		<listener>
+	<listener>
 		<listener-class>de.unibox.http.servlet.listener.GamePoolListener</listener-class>
 	</listener>
 </web-app>
