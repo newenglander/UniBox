@@ -1,1 +1,63 @@
 # Installation
+
+Follow these few steps to deploy unibox.
+
+## Deploy database
+
+To setup the mysql database visit your phpMyAdmin (or similar tool) to create a new database and inject both sql scripts in the right order.
+
+1. [Create Script](https://github.com/AlexTape/UniBox/blob/master/UniBoxServer/WebContent/WEB-INF/database/UniBoxCreate.sql)
+
+2. [Insert Script](https://github.com/AlexTape/UniBox/blob/master/UniBoxServer/WebContent/WEB-INF/database/UniBoxInserts.sql)
+
+## Deploy WAR file
+
+First of all you need the WAR File. After download you can copy the WAR file to you tomcat webapps folder.
+
+```
+%CATALINA_HOME%\webapps
+```
+
+**IMPORTANT: rename "UniBoxServer.war" to "UniBox.war" !**
+
+
+After that, start your Tomcat e.g. run the Tomcat startup script.
+
+```
+%CATALINA_HOME%\bin\startup.bat
+```
+
+Your WAR file will automatically stripped to a folder that has the same name (without extension).
+
+```
+%CATALINA_HOME%\UniBoxServer\
+```
+
+Take a look into the tomcat configuration and take the port for the HTTP-Connector.
+
+```
+%CATALINA_HOME%\conf\server.xml
+```
+
+The default value is 8080.
+
+```
+<Connector port="8080" protocol="HTTP/1.1"
+		   connectionTimeout="20000"
+		   redirectPort="8443" />
+```
+
+## Good job!
+
+Access the following URL
+
+```
+http://localhost:port/UniBoxServer/
+```
+
+Initial Admin Credentials:
+
+```
+User:       Admin
+Password:   user
+```
