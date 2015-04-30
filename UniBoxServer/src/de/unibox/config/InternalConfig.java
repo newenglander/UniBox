@@ -1,7 +1,7 @@
 package de.unibox.config;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -201,12 +201,12 @@ public class InternalConfig {
 	 * @param file
 	 *            the file
 	 */
-	public static void load(String file) {
+	public static void load(InputStream inputStream) {
 		final Properties properties = new Properties();
 		try {
 			
 			// load properties file
-			properties.load(new FileInputStream(file));
+			properties.load(inputStream);
 			
 			// parse strings
 			InternalConfig.setDbDriver(properties.getProperty("",

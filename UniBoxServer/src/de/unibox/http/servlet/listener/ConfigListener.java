@@ -16,9 +16,9 @@ public class ConfigListener implements ServletContextListener {
 
 	/** The log. */
 	protected Logger log = Logger.getLogger("UniBoxLogger");
-
+	
 	/** The config file. */
-	private String configFile = "server.properties";
+	private String configFile = "/WEB-INF/config/server.properties";
 
 	/*
 	 * (non-Javadoc)
@@ -42,19 +42,10 @@ public class ConfigListener implements ServletContextListener {
 
 		final ServletContext context = event.getServletContext();
 
-		System.setProperty("rootPath", context.getRealPath("/"));
-		final String prefix = context.getRealPath("/");
-		final String file = "WEB-INF" + System.getProperty("file.separator")
-				+ "classes" + System.getProperty("file.separator") + configFile;
-
-		if (file != null) {
-			
-			// init configuration
-			InternalConfig.load(prefix + file);
-			this.log.info(ConfigListener.class.getSimpleName()
-					+ ": Configuration loaded from: " + prefix + file);
-		}
-
+		// init configuration
+		InternalConfig.load(context.getResourceAsStream(configFile));
+		this.log.info(ConfigListener.class.getSimpleName()
+				+ ": Configuration loaded from: " + configFile);
 	}
 
 }
