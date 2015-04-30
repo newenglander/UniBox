@@ -23,7 +23,9 @@ import de.unibox.core.provider.ObjectSerializerImpl;
  * the runnableComet event occurs, that object's appropriate
  * method is invoked.
  *
- * @see RunnableCometEvent
+ * Incoming Messages will be handled here.
+ *
+ * @see java.util.concurrent.BlockingQueue
  */
 public class RunnableCometListener extends ThreadTaskImpl {
 

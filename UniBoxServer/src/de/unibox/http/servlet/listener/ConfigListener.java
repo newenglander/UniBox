@@ -11,7 +11,7 @@ import de.unibox.config.InternalConfig;
 /**
  * The LogListener Class is able to provide logging features even in JSPs.
  *
- * @see ConfigEvent
+ * @see ServletContextEvent
  */
 public class ConfigListener implements ServletContextListener {
 
