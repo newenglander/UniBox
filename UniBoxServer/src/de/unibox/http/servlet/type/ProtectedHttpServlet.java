@@ -253,6 +253,16 @@ public class ProtectedHttpServlet extends HttpServlet {
 		response.getWriter().write("BAD_REQUEST");
 	}
 
+	/**
+	 * Reflect with error message.
+	 *
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
 	protected void reflectWithErrorMessage(final HttpServletRequest request,
 			final HttpServletResponse response) throws IOException {
 		if (InternalConfig.isLogAuthentification()) {

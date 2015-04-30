@@ -17,6 +17,7 @@ import de.unibox.model.database.DatabaseQuery;
  * The Class DatabaseListener is a Listener which init() the Database
  * functionality on startup.
  *
+ * @see DatabaseEvent
  */
 public class DatabaseListener implements ServletContextListener {
 

@@ -7,10 +7,12 @@ import javax.servlet.ServletContextListener;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.pattern.LogEvent;
 
 /**
  * The LogListener Class is able to provide logging features even in JSPs.
  *
+ * @see LogEvent
  */
 public class LogListener implements ServletContextListener {
 

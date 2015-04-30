@@ -16,206 +16,205 @@ import de.unibox.client.events.DatabaseEvent;
 import de.unibox.client.thread.implementation.ThreadTaskImpl;
 
 /**
- * The Class RunnableMessageSender is a Worker to perform DatabaseEvents queued
- * in the ClientProvider.
+ * The Class RunnableDatabaseAgent.
  */
 public class RunnableDatabaseAgent extends ThreadTaskImpl {
 
-    /** The enabled. */
-    public boolean enabled = true;
+	/** The enabled. */
+	public boolean enabled = true;
 
-    /**
-     * Gets the response as string.
-     *
-     * @param thisInputStream
-     *            the this input stream
-     * @return the response as string
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    private String getResponseAsString(final InputStream thisInputStream)
-            throws IOException {
-        final StringBuilder returnThis = new StringBuilder("");
-        final Reader in = new BufferedReader(new InputStreamReader(
-                thisInputStream, "UTF-8"));
-        for (int c; (c = in.read()) >= 0; returnThis.append(c)) {
-            ;
-        }
-        return returnThis.toString();
-    }
+	/**
+	 * Gets the response as string.
+	 *
+	 * @param thisInputStream
+	 *            the this input stream
+	 * @return the response as string
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	private String getResponseAsString(final InputStream thisInputStream)
+			throws IOException {
+		final StringBuilder returnThis = new StringBuilder("");
+		final Reader in = new BufferedReader(new InputStreamReader(
+				thisInputStream, "UTF-8"));
+		for (int c; (c = in.read()) >= 0; returnThis.append(c)) {
+			;
+		}
+		return returnThis.toString();
+	}
 
-    /**
-     * Handle.
-     *
-     * @param query
-     *            the query
-     */
-    private void handle(final DatabaseEvent query) {
+	/**
+	 * Handle.
+	 *
+	 * @param query
+	 *            the query
+	 */
+	private void handle(final DatabaseEvent query) {
 
-        try {
-            ThreadTaskImpl.log.debug(this.getClass().getSimpleName()
-                    + " preparing query:" + query);
+		try {
+			ThreadTaskImpl.log.debug(this.getClass().getSimpleName()
+					+ " preparing query:" + query);
 
-            String result = null;
+			String result = null;
 
-            try {
+			try {
 
-                switch (query.getRequestType()) {
-                case METHOD_POST:
-                    result = this.requestPost(query.getParameter());
-                    break;
-                case METHOD_GET:
-                    result = this.requestGet(query.getParameter());
-                    break;
-                default:
-                    throw new IOException("UNKNOWN_REQUEST_TYPE");
-                }
+				switch (query.getRequestType()) {
+				case METHOD_POST:
+					result = this.requestPost(query.getParameter());
+					break;
+				case METHOD_GET:
+					result = this.requestGet(query.getParameter());
+					break;
+				default:
+					throw new IOException("UNKNOWN_REQUEST_TYPE");
+				}
 
-            } catch (final IOException e) {
-                ThreadTaskImpl.log.warn(RunnableDatabaseAgent.class
-                        .getSimpleName()
-                        + ": Fatal error due HTTP transaction.");
-                if (e instanceof ConnectException) {
-                    ThreadTaskImpl.log.warn(RunnableDatabaseAgent.class
-                            .getSimpleName()
-                            + ": maybe server offline? "
-                            + this.url);
-                }
-                e.printStackTrace();
-            }
+			} catch (final IOException e) {
+				ThreadTaskImpl.log.warn(RunnableDatabaseAgent.class
+						.getSimpleName()
+						+ ": Fatal error due HTTP transaction.");
+				if (e instanceof ConnectException) {
+					ThreadTaskImpl.log.warn(RunnableDatabaseAgent.class
+							.getSimpleName()
+							+ ": maybe server offline? "
+							+ this.url);
+				}
+				e.printStackTrace();
+			}
 
-            ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
-                    .getSimpleName() + ": Result=" + result);
+			ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
+					.getSimpleName() + ": Result=" + result);
 
-        } finally {
-            ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
-                    .getSimpleName() + ": done.");
-        }
-    }
+		} finally {
+			ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
+					.getSimpleName() + ": done.");
+		}
+	}
 
-    /**
-     * Checks if is enabled.
-     *
-     * @return true, if is enabled
-     */
-    public synchronized final boolean isEnabled() {
-        return this.enabled;
-    }
+	/**
+	 * Checks if is enabled.
+	 *
+	 * @return true, if is enabled
+	 */
+	public synchronized final boolean isEnabled() {
+		return this.enabled;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.unibox.client.thread.implementation.ThreadTaskImpl#process()
-     */
-    @Override
-    protected void process() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.unibox.client.thread.implementation.ThreadTaskImpl#process()
+	 */
+	@Override
+	protected void process() {
 
-        try {
-            ThreadTaskImpl.log.debug(RunnableMessageMediator.class
-                    .getSimpleName() + ": running..");
-            while (this.enabled) {
+		try {
+			ThreadTaskImpl.log.debug(RunnableMessageMediator.class
+					.getSimpleName() + ": running..");
+			while (this.enabled) {
 
-                ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
-                        .getSimpleName() + ": next iteration..");
+				ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
+						.getSimpleName() + ": next iteration..");
 
-                this.handle(ClientProvider.getOutgoingDatabaseEvents().take());
-            }
-        } catch (final InterruptedException e) {
-            ThreadTaskImpl.log
-                    .debug(RunnableDatabaseAgent.class.getSimpleName()
-                            + ": Not able to get next outgoing database event from qeue.");
-            e.printStackTrace();
-        } finally {
-            ThreadTaskImpl.log.debug(RunnableMessageMediator.class
-                    .getSimpleName() + ": done.");
-        }
-    }
+				this.handle(ClientProvider.getOutgoingDatabaseEvents().take());
+			}
+		} catch (final InterruptedException e) {
+			ThreadTaskImpl.log
+					.debug(RunnableDatabaseAgent.class.getSimpleName()
+							+ ": Not able to get next outgoing database event from qeue.");
+			e.printStackTrace();
+		} finally {
+			ThreadTaskImpl.log.debug(RunnableMessageMediator.class
+					.getSimpleName() + ": done.");
+		}
+	}
 
-    /**
-     * Request get.
-     *
-     * @param content
-     *            the content
-     * @return the string
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    private final String requestGet(final String content) throws IOException {
+	/**
+	 * Request get.
+	 *
+	 * @param content
+	 *            the content
+	 * @return the string
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	private final String requestGet(final String content) throws IOException {
 
-        final String databaseURL = this.url + ClientProvider.getDatabaseURL();
-        this.urlObject = new URL(databaseURL + "?" + content);
+		final String databaseURL = this.url + ClientProvider.getDatabaseURL();
+		this.urlObject = new URL(databaseURL + "?" + content);
 
-        ThreadTaskImpl.log
-                .debug(RunnableDatabaseAgent.class.getSimpleName()
-                        + ": Try to etablish connection to "
-                        + this.urlObject.getPath());
+		ThreadTaskImpl.log
+				.debug(RunnableDatabaseAgent.class.getSimpleName()
+						+ ": Try to etablish connection to "
+						+ this.urlObject.getPath());
 
-        this.connection = (HttpURLConnection) this.urlObject.openConnection();
-        this.connection.setRequestMethod("GET");
-        this.connection.setUseCaches(false);
-        this.connection
-                .addRequestProperty("Cookie", ClientProvider.getCookie());
-        this.connection.setRequestProperty("Content-Type", "text/html");
+		this.connection = (HttpURLConnection) this.urlObject.openConnection();
+		this.connection.setRequestMethod("GET");
+		this.connection.setUseCaches(false);
+		this.connection
+				.addRequestProperty("Cookie", ClientProvider.getCookie());
+		this.connection.setRequestProperty("Content-Type", "text/html");
 
-        return this.getResponseAsString(this.connection.getInputStream());
-    }
+		return this.getResponseAsString(this.connection.getInputStream());
+	}
 
-    /**
-     * Request post.
-     *
-     * @param content
-     *            the content
-     * @return the string
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    private final String requestPost(final String content) throws IOException {
+	/**
+	 * Request post.
+	 *
+	 * @param content
+	 *            the content
+	 * @return the string
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	private final String requestPost(final String content) throws IOException {
 
-        final String databaseURL = this.url + ClientProvider.getDatabaseURL();
-        this.urlObject = new URL(databaseURL);
+		final String databaseURL = this.url + ClientProvider.getDatabaseURL();
+		this.urlObject = new URL(databaseURL);
 
-        ThreadTaskImpl.log
-                .debug(RunnableDatabaseAgent.class.getSimpleName()
-                        + ": Try to etablish connection to "
-                        + this.urlObject.getPath());
+		ThreadTaskImpl.log
+				.debug(RunnableDatabaseAgent.class.getSimpleName()
+						+ ": Try to etablish connection to "
+						+ this.urlObject.getPath());
 
-        final byte[] postData = content.getBytes(Charset.forName("UTF-8"));
-        final int postDataLength = postData.length;
+		final byte[] postData = content.getBytes(Charset.forName("UTF-8"));
+		final int postDataLength = postData.length;
 
-        this.connection = (HttpURLConnection) this.urlObject.openConnection();
-        this.connection.setRequestMethod("POST");
-        this.connection.setDoInput(true);
-        this.connection.setDoOutput(true);
-        this.connection.setUseCaches(false);
-        this.connection
-                .addRequestProperty("Cookie", ClientProvider.getCookie());
-        this.connection.setRequestProperty("Content-Type",
-                "application/x-www-form-urlencoded");
-        this.connection.setRequestProperty("charset", "utf-8");
-        this.connection.setRequestProperty("Content-Length",
-                Integer.toString(postDataLength));
+		this.connection = (HttpURLConnection) this.urlObject.openConnection();
+		this.connection.setRequestMethod("POST");
+		this.connection.setDoInput(true);
+		this.connection.setDoOutput(true);
+		this.connection.setUseCaches(false);
+		this.connection
+				.addRequestProperty("Cookie", ClientProvider.getCookie());
+		this.connection.setRequestProperty("Content-Type",
+				"application/x-www-form-urlencoded");
+		this.connection.setRequestProperty("charset", "utf-8");
+		this.connection.setRequestProperty("Content-Length",
+				Integer.toString(postDataLength));
 
-        try (DataOutputStream wr = new DataOutputStream(
-                this.connection.getOutputStream())) {
+		try (DataOutputStream wr = new DataOutputStream(
+				this.connection.getOutputStream())) {
 
-            wr.write(postData);
+			wr.write(postData);
 
-        } catch (final Exception e) {
-            ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
-                    .getSimpleName() + ": Could not write parameters");
-            e.printStackTrace();
-        }
+		} catch (final Exception e) {
+			ThreadTaskImpl.log.debug(RunnableDatabaseAgent.class
+					.getSimpleName() + ": Could not write parameters");
+			e.printStackTrace();
+		}
 
-        return this.getResponseAsString(this.connection.getInputStream());
-    }
+		return this.getResponseAsString(this.connection.getInputStream());
+	}
 
-    /**
-     * Sets the enabled.
-     *
-     * @param enabled
-     *            the new enabled
-     */
-    public synchronized final void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
-    }
+	/**
+	 * Sets the enabled.
+	 *
+	 * @param enabled
+	 *            the new enabled
+	 */
+	public synchronized final void setEnabled(final boolean enabled) {
+		this.enabled = enabled;
+	}
 }

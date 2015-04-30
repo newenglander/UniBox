@@ -6,26 +6,25 @@ import java.util.concurrent.ThreadPoolExecutor;
 import org.apache.log4j.Logger;
 
 /**
- * The Class RejectedExecutionHandlerImpl is responsible to log any runnable
- * rejected by the ThreadEngine.
+ * The Class RejectedExecutionHandlerImpl.
  */
 public class RejectedExecutionHandlerImpl implements RejectedExecutionHandler {
 
-    /** The log. */
-    protected static Logger log = Logger.getLogger("UniBoxLogger");
+	/** The log. */
+	protected static Logger log = Logger.getLogger("UniBoxLogger");
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * java.util.concurrent.RejectedExecutionHandler#rejectedExecution(java.
-     * lang.Runnable, java.util.concurrent.ThreadPoolExecutor)
-     */
-    @Override
-    public void rejectedExecution(final Runnable r,
-            final ThreadPoolExecutor executor) {
-        RejectedExecutionHandlerImpl.log.debug(this.getClass().getSimpleName()
-                + ": " + r.toString() + " is rejected");
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * java.util.concurrent.RejectedExecutionHandler#rejectedExecution(java.
+	 * lang.Runnable, java.util.concurrent.ThreadPoolExecutor)
+	 */
+	@Override
+	public void rejectedExecution(final Runnable r,
+			final ThreadPoolExecutor executor) {
+		RejectedExecutionHandlerImpl.log.debug(this.getClass().getSimpleName()
+				+ ": " + r.toString() + " is rejected");
+	}
 
 }
