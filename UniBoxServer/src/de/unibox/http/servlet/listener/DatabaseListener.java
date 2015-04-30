@@ -30,29 +30,35 @@ public class DatabaseListener implements ServletContextListener {
 	 * ServletContextEvent)
 	 */
 	@Override
-    public final void contextDestroyed(ServletContextEvent sce) {
-        // deregister JDBC drivers in this context's ClassLoader:
-        // Get the Context ClassLoader
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        // Loop through all drivers
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            Driver driver = drivers.nextElement();
-            if (driver.getClass().getClassLoader() == cl) {
-                // This driver was registered by the webapp's ClassLoader, so deregister it:
-                try {
-                    log.info(this.getClass().getSimpleName()+ ": Deregistering JDBC driver {}" + driver);
-                    DriverManager.deregisterDriver(driver);
-                } catch (SQLException e) {
-                    log.error(this.getClass().getSimpleName()+ ": Error deregistering JDBC driver {}" + driver);
-                    e.printStackTrace();
-                }
-            } else {
-                // driver was not registered by the webapp's ClassLoader and may be in use elsewhere
-                log.trace(this.getClass().getSimpleName()+ ": Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader: " + driver);
-            }
-        }
-    }
+	public final void contextDestroyed(final ServletContextEvent sce) {
+		// deregister JDBC drivers in this context's ClassLoader:
+		// Get the Context ClassLoader
+		final ClassLoader cl = Thread.currentThread().getContextClassLoader();
+		// Loop through all drivers
+		final Enumeration<Driver> drivers = DriverManager.getDrivers();
+		while (drivers.hasMoreElements()) {
+			final Driver driver = drivers.nextElement();
+			if (driver.getClass().getClassLoader() == cl) {
+				// This driver was registered by the webapp's ClassLoader, so
+				// deregister it:
+				try {
+					this.log.info(this.getClass().getSimpleName()
+							+ ": Deregistering JDBC driver {}" + driver);
+					DriverManager.deregisterDriver(driver);
+				} catch (final SQLException e) {
+					this.log.error(this.getClass().getSimpleName()
+							+ ": Error deregistering JDBC driver {}" + driver);
+					e.printStackTrace();
+				}
+			} else {
+				// driver was not registered by the webapp's ClassLoader and may
+				// be in use elsewhere
+				this.log.trace(this.getClass().getSimpleName()
+						+ ": Not deregistering JDBC driver {} as it does not belong to this webapp's ClassLoader: "
+						+ driver);
+			}
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -5,10 +5,10 @@ package de.unibox.http.servlet.comet;
  */
 public enum ClientType {
 
-    /** The javascript. */
-    JAVASCRIPT,
-    /** The plain. */
-    PLAIN,
-    /** The serial. */
-    SERIAL
+	/** The javascript. */
+	JAVASCRIPT,
+	/** The plain. */
+	PLAIN,
+	/** The serial. */
+	SERIAL
 }

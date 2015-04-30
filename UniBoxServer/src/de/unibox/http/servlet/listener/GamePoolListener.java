@@ -17,42 +17,42 @@ import de.unibox.model.game.GamePool;
  */
 public class GamePoolListener implements ServletContextListener {
 
-    /** The log. */
-    protected Logger log = Logger.getLogger("UniBoxLogger");
+	/** The log. */
+	protected Logger log = Logger.getLogger("UniBoxLogger");
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.
-     * ServletContextEvent)
-     */
-    @Override
-    public void contextDestroyed(final ServletContextEvent event) {
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.
+	 * ServletContextEvent)
+	 */
+	@Override
+	public void contextDestroyed(final ServletContextEvent event) {
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * javax.servlet.ServletContextListener#contextInitialized(javax.servlet
-     * .ServletContextEvent)
-     */
-    @Override
-    public void contextInitialized(final ServletContextEvent event) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.servlet.ServletContextListener#contextInitialized(javax.servlet
+	 * .ServletContextEvent)
+	 */
+	@Override
+	public void contextInitialized(final ServletContextEvent event) {
 
-        // initialize game pool singleton
-        try {
-            this.log.info(GamePoolListener.class.getSimpleName()
-                    + ": GamePool initialization..");
-            GamePool.getInstance();
-        } catch (final IOException e) {
-            if (InternalConfig.isLogDatabase()) {
-                this.log.warn(GamePoolListener.class.getSimpleName()
-                        + ": GamePool initialization failed!");
-            }
-            e.printStackTrace();
-        }
+		// initialize game pool singleton
+		try {
+			this.log.info(GamePoolListener.class.getSimpleName()
+					+ ": GamePool initialization..");
+			GamePool.getInstance();
+		} catch (final IOException e) {
+			if (InternalConfig.isLogDatabase()) {
+				this.log.warn(GamePoolListener.class.getSimpleName()
+						+ ": GamePool initialization failed!");
+			}
+			e.printStackTrace();
+		}
 
-    }
+	}
 
 }

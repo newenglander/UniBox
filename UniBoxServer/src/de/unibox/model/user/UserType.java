@@ -5,10 +5,10 @@ package de.unibox.model.user;
  */
 public enum UserType {
 
-    /** The administrator. */
-    ADMINISTRATOR,
-    /** The default. */
-    DEFAULT,
-    /** The registered. */
-    REGISTERED
+	/** The administrator. */
+	ADMINISTRATOR,
+	/** The default. */
+	DEFAULT,
+	/** The registered. */
+	REGISTERED
 }

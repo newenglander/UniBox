@@ -16,58 +16,58 @@ import de.unibox.model.user.AdministratorUser;
  */
 public class AdminHttpServlet extends ProtectedHttpServlet {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 8302172333071821716L;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 8302172333071821716L;
 
-    /**
-     * Do service.
-     *
-     * @param request
-     *            the request
-     * @param response
-     *            the response
-     * @throws ServletException
-     *             the servlet exception
-     * @throws IOException
-     *             Signals that an I/O exception has occurred.
-     */
-    @Override
-    protected void doService(final HttpServletRequest request,
-            final HttpServletResponse response) throws ServletException,
-            IOException {
+	/**
+	 * Do service.
+	 *
+	 * @param request
+	 *            the request
+	 * @param response
+	 *            the response
+	 * @throws ServletException
+	 *             the servlet exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	@Override
+	protected void doService(final HttpServletRequest request,
+			final HttpServletResponse response) throws ServletException,
+			IOException {
 
-        if (null != super.thisUser) {
+		if (null != super.thisUser) {
 
-            if (InternalConfig.isLogAuthentification()) {
-                this.log.debug(AdminHttpServlet.class.getSimpleName() + ": "
-                        + super.thisUser.getName()
-                        + " requesting AdminHttpServlet.");
-            }
+			if (InternalConfig.isLogAuthentification()) {
+				this.log.debug(AdminHttpServlet.class.getSimpleName() + ": "
+						+ super.thisUser.getName()
+						+ " requesting AdminHttpServlet.");
+			}
 
-            if (super.thisUser instanceof AdministratorUser) {
-                if (InternalConfig.isLogAuthentification()) {
-                    this.log.debug(AdminHttpServlet.class.getSimpleName()
-                            + ": Access granted for "
-                            + super.thisUser.getName());
-                }
-                this.service(request, response);
-            } else {
-                if (InternalConfig.isLogAuthentification()) {
-                    this.log.debug(AdminHttpServlet.class.getSimpleName()
-                            + ": Access denied for " + super.thisUser.getName()
-                            + ". Invalidate related session..");
-                }
-                final HttpSession session = request.getSession();
-                session.invalidate();
-                this.serviceDenied(request, response);
-            }
-        } else {
-            if (InternalConfig.isLogAuthentification()) {
-                this.log.debug(AdminHttpServlet.class.getSimpleName()
-                        + ": Access denied, user object == null !");
-            }
-            this.serviceDenied(request, response);
-        }
-    }
+			if (super.thisUser instanceof AdministratorUser) {
+				if (InternalConfig.isLogAuthentification()) {
+					this.log.debug(AdminHttpServlet.class.getSimpleName()
+							+ ": Access granted for "
+							+ super.thisUser.getName());
+				}
+				this.service(request, response);
+			} else {
+				if (InternalConfig.isLogAuthentification()) {
+					this.log.debug(AdminHttpServlet.class.getSimpleName()
+							+ ": Access denied for " + super.thisUser.getName()
+							+ ". Invalidate related session..");
+				}
+				final HttpSession session = request.getSession();
+				session.invalidate();
+				this.serviceDenied(request, response);
+			}
+		} else {
+			if (InternalConfig.isLogAuthentification()) {
+				this.log.debug(AdminHttpServlet.class.getSimpleName()
+						+ ": Access denied, user object == null !");
+			}
+			this.serviceDenied(request, response);
+		}
+	}
 
 }

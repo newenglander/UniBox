@@ -23,140 +23,140 @@ import de.unibox.model.database.objects.PasswordUpdate;
 @WebServlet("/Auth")
 public class AuthHandler extends ProtectedHttpServlet {
 
-    /** The Constant serialVersionUID. */
-    private static final long serialVersionUID = 1482513223695465763L;
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1482513223695465763L;
 
-    /**
-     * Instantiates a new auth handler.
-     */
-    public AuthHandler() {
-        super();
-    }
+	/**
+	 * Instantiates a new auth handler.
+	 */
+	public AuthHandler() {
+		super();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
-     * , javax.servlet.http.HttpServletResponse)
-     */
-    @Override
-    protected void doGet(final HttpServletRequest request,
-            final HttpServletResponse response) throws ServletException,
-            IOException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest
+	 * , javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void doGet(final HttpServletRequest request,
+			final HttpServletResponse response) throws ServletException,
+			IOException {
 
-        final String action = request.getParameter("handle");
+		final String action = request.getParameter("handle");
 
-        switch (action) {
-        case "logout":
-            if (InternalConfig.isLogAuthentification()) {
-                this.log.debug(this.getClass().getSimpleName()
-                        + ": Invalidate session for "
-                        + super.thisUser.getName());
-            }
-            final RequestDispatcher rd = request
-                    .getRequestDispatcher("/login.html");
+		switch (action) {
+		case "logout":
+			if (InternalConfig.isLogAuthentification()) {
+				this.log.debug(this.getClass().getSimpleName()
+						+ ": Invalidate session for "
+						+ super.thisUser.getName());
+			}
+			final RequestDispatcher rd = request
+					.getRequestDispatcher("/login.html");
 
-            request.getSession().invalidate();
+			request.getSession().invalidate();
 
-            response.setStatus(HttpServletResponse.SC_OK);
-            rd.forward(request, response);
-            break;
-        default:
-            break;
-        }
+			response.setStatus(HttpServletResponse.SC_OK);
+			rd.forward(request, response);
+			break;
+		default:
+			break;
+		}
 
-    }
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest
-     * , javax.servlet.http.HttpServletResponse)
-     */
-    @Override
-    protected void doPost(final HttpServletRequest request,
-            final HttpServletResponse response) throws ServletException,
-            IOException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest
+	 * , javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void doPost(final HttpServletRequest request,
+			final HttpServletResponse response) throws ServletException,
+			IOException {
 
-        final String action = request.getParameter("action");
+		final String action = request.getParameter("action");
 
-        switch (action) {
-        case "changePassword":
-            if (InternalConfig.isLogAuthentification()) {
-                this.log.debug(this.getClass().getSimpleName()
-                        + ": Change password for " + super.thisUser.getName());
-            }
+		switch (action) {
+		case "changePassword":
+			if (InternalConfig.isLogAuthentification()) {
+				this.log.debug(this.getClass().getSimpleName()
+						+ ": Change password for " + super.thisUser.getName());
+			}
 
-            final Integer userId = super.thisUser.getPlayerId();
-            final String oldPassword64 = request.getParameter("oldPassword");
-            final String inputPassword64 = request
-                    .getParameter("inputPassword");
-            final String inputPasswordConfirm64 = request
-                    .getParameter("inputPasswordConfirm");
+			final Integer userId = super.thisUser.getPlayerId();
+			final String oldPassword64 = request.getParameter("oldPassword");
+			final String inputPassword64 = request
+					.getParameter("inputPassword");
+			final String inputPasswordConfirm64 = request
+					.getParameter("inputPasswordConfirm");
 
-            if ((userId != null) && (oldPassword64 != null)
-                    && (inputPassword64 != null)
-                    && (inputPasswordConfirm64 != null)) {
+			if ((userId != null) && (oldPassword64 != null)
+					&& (inputPassword64 != null)
+					&& (inputPasswordConfirm64 != null)) {
 
-                DatabaseAction<Integer> query = null;
+				DatabaseAction<Integer> query = null;
 
-                query = new PasswordUpdate(userId, oldPassword64,
-                        inputPassword64, inputPasswordConfirm64);
+				query = new PasswordUpdate(userId, oldPassword64,
+						inputPassword64, inputPasswordConfirm64);
 
-                int affectedRows = 0;
-                response.setContentType("text/html");
-                final PrintWriter out = response.getWriter();
+				int affectedRows = 0;
+				response.setContentType("text/html");
+				final PrintWriter out = response.getWriter();
 
-                try {
+				try {
 
-                    final DatabaseQuery transaction = new DatabaseQuery();
-                    transaction.connect();
-                    query.attach(transaction);
-                    affectedRows = query.execute();
+					final DatabaseQuery transaction = new DatabaseQuery();
+					transaction.connect();
+					query.attach(transaction);
+					affectedRows = query.execute();
 
-                    if (affectedRows == 1) {
-                        if (InternalConfig.isLogAuthentification()) {
-                            this.log.debug(this.getClass().getSimpleName()
-                                    + " change password succesfull. Affected rows: "
-                                    + affectedRows);
-                        }
-                        out.print("success");
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        transaction.commit();
-                    } else {
-                        if (InternalConfig.isLogAuthentification()) {
-                            this.log.debug(this.getClass().getSimpleName()
-                                    + " change password failed. Affected rows: "
-                                    + affectedRows);
-                        }
-                        out.print("failed");
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        transaction.rollback();
-                    }
+					if (affectedRows == 1) {
+						if (InternalConfig.isLogAuthentification()) {
+							this.log.debug(this.getClass().getSimpleName()
+									+ " change password succesfull. Affected rows: "
+									+ affectedRows);
+						}
+						out.print("success");
+						response.setStatus(HttpServletResponse.SC_OK);
+						transaction.commit();
+					} else {
+						if (InternalConfig.isLogAuthentification()) {
+							this.log.debug(this.getClass().getSimpleName()
+									+ " change password failed. Affected rows: "
+									+ affectedRows);
+						}
+						out.print("failed");
+						response.setStatus(HttpServletResponse.SC_OK);
+						transaction.rollback();
+					}
 
-                } catch (final SQLException e) {
+				} catch (final SQLException e) {
 
-                    if (InternalConfig.isLogDatabase()) {
-                        this.log.debug(this.getClass().getSimpleName()
-                                + ": Could not update database: "
-                                + query.getSqlString());
-                    }
-                    e.printStackTrace();
-                }
+					if (InternalConfig.isLogDatabase()) {
+						this.log.debug(this.getClass().getSimpleName()
+								+ ": Could not update database: "
+								+ query.getSqlString());
+					}
+					e.printStackTrace();
+				}
 
-                out.flush();
-                out.close();
+				out.flush();
+				out.close();
 
-            } else {
-                super.invalidRequest(request, response);
-            }
-            break;
-        default:
-            break;
-        }
+			} else {
+				super.invalidRequest(request, response);
+			}
+			break;
+		default:
+			break;
+		}
 
-    }
+	}
 
 }

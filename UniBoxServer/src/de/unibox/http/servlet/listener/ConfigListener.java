@@ -14,11 +14,11 @@ import de.unibox.config.InternalConfig;
  */
 public class ConfigListener implements ServletContextListener {
 
+	/** The config file. */
+	private final String configFile = "/WEB-INF/config/server.properties";
+
 	/** The log. */
 	protected Logger log = Logger.getLogger("UniBoxLogger");
-	
-	/** The config file. */
-	private String configFile = "/WEB-INF/config/server.properties";
 
 	/*
 	 * (non-Javadoc)
@@ -43,9 +43,9 @@ public class ConfigListener implements ServletContextListener {
 		final ServletContext context = event.getServletContext();
 
 		// init configuration
-		InternalConfig.load(context.getResourceAsStream(configFile));
+		InternalConfig.load(context.getResourceAsStream(this.configFile));
 		this.log.info(ConfigListener.class.getSimpleName()
-				+ ": Configuration loaded from: " + configFile);
+				+ ": Configuration loaded from: " + this.configFile);
 	}
 
 }

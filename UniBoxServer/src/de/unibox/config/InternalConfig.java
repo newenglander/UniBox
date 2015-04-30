@@ -201,7 +201,7 @@ public class InternalConfig {
 	 * @param inputStream
 	 *            the input stream
 	 */
-	public static void load(InputStream inputStream) {
+	public static void load(final InputStream inputStream) {
 		final Properties properties = new Properties();
 		try {
 
@@ -210,48 +210,50 @@ public class InternalConfig {
 
 			// parse database parameter
 			InternalConfig.setDbDriver(properties.getProperty("DB_DRIVER",
-					DB_DRIVER));
+					InternalConfig.DB_DRIVER));
 			InternalConfig.setDbProtocol(properties.getProperty("DB_PROTOCOL",
-					DB_PROTOCOL));
+					InternalConfig.DB_PROTOCOL));
 
 			InternalConfig.setDbServer(properties.getProperty("DB_SERVER",
-					DB_SERVER));
-			InternalConfig
-					.setDbName(properties.getProperty("DB_NAME", DB_NAME));
+					InternalConfig.DB_SERVER));
+			InternalConfig.setDbName(properties.getProperty("DB_NAME",
+					InternalConfig.DB_NAME));
 
-			InternalConfig
-					.setDbUser(properties.getProperty("DB_USER", DB_USER));
+			InternalConfig.setDbUser(properties.getProperty("DB_USER",
+					InternalConfig.DB_USER));
 			InternalConfig.setDbPassword(properties.getProperty("DB_PASSWORD",
-					DB_PASSWORD));
+					InternalConfig.DB_PASSWORD));
 
 			// parse logging parameter
-			InternalConfig.setLogAsyncSessions(Boolean.parseBoolean(properties
-					.getProperty("LOG_ASYNC_SESSIONS",
-							Boolean.toString(LOG_ASYNC_SESSIONS))));
-			InternalConfig.setLogAuthentification(Boolean
-					.parseBoolean(properties.getProperty(
+			InternalConfig
+					.setLogAsyncSessions(Boolean.parseBoolean(properties.getProperty(
+							"LOG_ASYNC_SESSIONS",
+							Boolean.toString(InternalConfig.LOG_ASYNC_SESSIONS))));
+			InternalConfig
+					.setLogAuthentification(Boolean.parseBoolean(properties.getProperty(
 							"LOG_AUTHENTIFICATION",
-							Boolean.toString(LOG_AUTHENTIFICATION))));
-			InternalConfig.setLogCommunication(Boolean.parseBoolean(properties
-					.getProperty("LOG_COMMUNICATION",
-							Boolean.toString(LOG_COMMUNICATION))));
+							Boolean.toString(InternalConfig.LOG_AUTHENTIFICATION))));
 			InternalConfig
-					.setLogDatabase(Boolean.parseBoolean(properties
-							.getProperty("LOG_DATABASE",
-									Boolean.toString(LOG_DATABASE))));
+					.setLogCommunication(Boolean.parseBoolean(properties.getProperty(
+							"LOG_COMMUNICATION",
+							Boolean.toString(InternalConfig.LOG_COMMUNICATION))));
+			InternalConfig.setLogDatabase(Boolean.parseBoolean(properties
+					.getProperty("LOG_DATABASE",
+							Boolean.toString(InternalConfig.LOG_DATABASE))));
+			InternalConfig.setLogGamepool(Boolean.parseBoolean(properties
+					.getProperty("LOG_GAMEPOOL",
+							Boolean.toString(InternalConfig.LOG_GAMEPOOL))));
 			InternalConfig
-					.setLogGamepool(Boolean.parseBoolean(properties
-							.getProperty("LOG_GAMEPOOL",
-									Boolean.toString(LOG_GAMEPOOL))));
-			InternalConfig.setLogRequestHeader(Boolean.parseBoolean(properties
-					.getProperty("LOG_REQUEST_HEADER",
-							Boolean.toString(LOG_REQUEST_HEADER))));
-			InternalConfig.setLogRequestedUri(Boolean.parseBoolean(properties
-					.getProperty("LOG_REQUESTED_URI",
-							Boolean.toString(LOG_REQUESTED_URI))));
+					.setLogRequestHeader(Boolean.parseBoolean(properties.getProperty(
+							"LOG_REQUEST_HEADER",
+							Boolean.toString(InternalConfig.LOG_REQUEST_HEADER))));
 			InternalConfig
-					.setLogThreads(Boolean.parseBoolean(properties.getProperty(
-							"LOG_THREADS", Boolean.toString(LOG_THREADS))));
+					.setLogRequestedUri(Boolean.parseBoolean(properties.getProperty(
+							"LOG_REQUESTED_URI",
+							Boolean.toString(InternalConfig.LOG_REQUESTED_URI))));
+			InternalConfig.setLogThreads(Boolean.parseBoolean(properties
+					.getProperty("LOG_THREADS",
+							Boolean.toString(InternalConfig.LOG_THREADS))));
 
 		} catch (final IOException e) {
 			e.printStackTrace();

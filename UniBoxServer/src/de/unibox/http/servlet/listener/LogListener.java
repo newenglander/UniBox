@@ -15,7 +15,7 @@ import org.apache.log4j.PropertyConfigurator;
 public class LogListener implements ServletContextListener {
 
 	/** The config file. */
-	private String configFile = "/WEB-INF/config/log4j.properties";
+	private final String configFile = "/WEB-INF/config/log4j.properties";
 
 	/** The log. */
 	protected Logger log = Logger.getLogger("UniBoxLogger");
@@ -44,9 +44,10 @@ public class LogListener implements ServletContextListener {
 
 		BasicConfigurator.configure();
 
-		PropertyConfigurator.configure(context.getResourceAsStream(configFile));
+		PropertyConfigurator.configure(context
+				.getResourceAsStream(this.configFile));
 		this.log.info(LogListener.class.getSimpleName()
-				+ ": Logging started for application: " + configFile);
+				+ ": Logging started for application: " + this.configFile);
 
 	}
 

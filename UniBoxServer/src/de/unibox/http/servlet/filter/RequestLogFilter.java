@@ -23,76 +23,76 @@ import de.unibox.config.InternalConfig;
 @WebFilter(urlPatterns = { "/LogFilter" }, asyncSupported = true)
 public class RequestLogFilter implements Filter {
 
-    /** The log. */
-    protected Logger log = Logger.getLogger("UniBoxLogger");
+	/** The log. */
+	protected Logger log = Logger.getLogger("UniBoxLogger");
 
-    /**
-     * Instantiates a new request log filter.
-     */
-    public RequestLogFilter() {
-    }
+	/**
+	 * Instantiates a new request log filter.
+	 */
+	public RequestLogFilter() {
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.servlet.Filter#destroy()
-     */
-    @Override
-    public void destroy() {
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.servlet.Filter#destroy()
+	 */
+	@Override
+	public void destroy() {
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
-     * javax.servlet.ServletResponse, javax.servlet.FilterChain)
-     */
-    @Override
-    public void doFilter(final ServletRequest request,
-            final ServletResponse response, final FilterChain chain)
-            throws IOException, ServletException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest,
+	 * javax.servlet.ServletResponse, javax.servlet.FilterChain)
+	 */
+	@Override
+	public void doFilter(final ServletRequest request,
+			final ServletResponse response, final FilterChain chain)
+			throws IOException, ServletException {
 
-        if (InternalConfig.isLogRequestedUri()) {
+		if (InternalConfig.isLogRequestedUri()) {
 
-            final StringBuilder url = new StringBuilder("");
-            final StringBuilder query = new StringBuilder("?");
-            final StringBuilder status = new StringBuilder("");
-            final StringBuilder method = new StringBuilder("");
-            if (request instanceof HttpServletRequest) {
-                url.append(((HttpServletRequest) request).getRequestURL()
-                        .toString());
-                query.append(((HttpServletRequest) request).getQueryString());
-                method.append(((HttpServletRequest) request).getMethod());
-            }
-            final long bef = System.currentTimeMillis();
-            chain.doFilter(request, response);
-            final long aft = System.currentTimeMillis();
-            if (response instanceof HttpServletResponse) {
-                status.append(((HttpServletResponse) response).getStatus());
-            }
-            if (query.toString().equals("?null")) {
-                this.log.debug(this.getClass().getSimpleName() + ": CODE: "
-                        + status + ", TIME: " + (aft - bef) + "ms, TYPE: "
-                        + method + ", URL: " + url.toString());
-            } else {
-                this.log.debug(this.getClass().getSimpleName() + ": CODE: "
-                        + status + ", TIME: " + (aft - bef) + "ms, TYPE: "
-                        + method + ", URL: " + url.toString()
-                        + query.toString());
-            }
+			final StringBuilder url = new StringBuilder("");
+			final StringBuilder query = new StringBuilder("?");
+			final StringBuilder status = new StringBuilder("");
+			final StringBuilder method = new StringBuilder("");
+			if (request instanceof HttpServletRequest) {
+				url.append(((HttpServletRequest) request).getRequestURL()
+						.toString());
+				query.append(((HttpServletRequest) request).getQueryString());
+				method.append(((HttpServletRequest) request).getMethod());
+			}
+			final long bef = System.currentTimeMillis();
+			chain.doFilter(request, response);
+			final long aft = System.currentTimeMillis();
+			if (response instanceof HttpServletResponse) {
+				status.append(((HttpServletResponse) response).getStatus());
+			}
+			if (query.toString().equals("?null")) {
+				this.log.debug(this.getClass().getSimpleName() + ": CODE: "
+						+ status + ", TIME: " + (aft - bef) + "ms, TYPE: "
+						+ method + ", URL: " + url.toString());
+			} else {
+				this.log.debug(this.getClass().getSimpleName() + ": CODE: "
+						+ status + ", TIME: " + (aft - bef) + "ms, TYPE: "
+						+ method + ", URL: " + url.toString()
+						+ query.toString());
+			}
 
-        } else {
-            chain.doFilter(request, response);
-        }
-    }
+		} else {
+			chain.doFilter(request, response);
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
-     */
-    @Override
-    public void init(final FilterConfig fConfig) throws ServletException {
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+	 */
+	@Override
+	public void init(final FilterConfig fConfig) throws ServletException {
+	}
 
 }

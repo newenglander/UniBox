@@ -34,6 +34,9 @@ public class ProtectedHttpServlet extends HttpServlet {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7033488871704480169L;
 
+	/** The error message. */
+	private String errorMessage = null;
+
 	/** The log. */
 	protected Logger log = Logger.getLogger("UniBoxLogger");
 
@@ -42,9 +45,6 @@ public class ProtectedHttpServlet extends HttpServlet {
 
 	/** The this user. */
 	protected AbstractUser thisUser = null;
-
-	/** The error message. */
-	private String errorMessage = null;
 
 	/**
 	 * Auth.
@@ -232,6 +232,10 @@ public class ProtectedHttpServlet extends HttpServlet {
 		super.service(request, response);
 	}
 
+	private String getErrorMessage() {
+		return this.errorMessage;
+	}
+
 	/**
 	 * Invalid request.
 	 *
@@ -247,6 +251,19 @@ public class ProtectedHttpServlet extends HttpServlet {
 		response.setContentType("text/html");
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		response.getWriter().write("BAD_REQUEST");
+	}
+
+	protected void reflectWithErrorMessage(final HttpServletRequest request,
+			final HttpServletResponse response) throws IOException {
+		if (InternalConfig.isLogAuthentification()) {
+			this.log.debug(ProtectedHttpServlet.class.getSimpleName()
+					+ ": reflect with error message: " + this.getErrorMessage());
+		}
+		final String url = request.getRequestURL().toString();
+		final String baseURL = url.substring(0, url.length()
+				- request.getRequestURI().length())
+				+ request.getContextPath() + "/";
+		response.sendRedirect(baseURL + "?handle=" + this.getErrorMessage());
 	}
 
 	/*
@@ -291,8 +308,8 @@ public class ProtectedHttpServlet extends HttpServlet {
 		} else {
 			if (this.getErrorMessage() != null) {
 				try {
-				this.reflectWithErrorMessage(request, response);
-				} catch (IOException e) {
+					this.reflectWithErrorMessage(request, response);
+				} catch (final IOException e) {
 					this.serviceDenied(request, response);
 				}
 			} else {
@@ -301,16 +318,6 @@ public class ProtectedHttpServlet extends HttpServlet {
 		}
 	}
 
-	protected void reflectWithErrorMessage(final HttpServletRequest request, HttpServletResponse response) throws IOException {
-		if (InternalConfig.isLogAuthentification()) {
-			this.log.debug(ProtectedHttpServlet.class.getSimpleName()
-					+ ": reflect with error message: " + this.getErrorMessage());
-		}
-		String url = request.getRequestURL().toString();
-		String baseURL = url.substring(0, url.length() - request.getRequestURI().length()) + request.getContextPath() + "/";
-		response.sendRedirect(baseURL + "?handle=" + this.getErrorMessage());
-	}
-	
 	/**
 	 * Service denied.
 	 *
@@ -351,7 +358,7 @@ public class ProtectedHttpServlet extends HttpServlet {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	protected void serviceDeniedWithParams(final HttpServletRequest request,
-			final HttpServletResponse response, String params)
+			final HttpServletResponse response, final String params)
 			throws IOException {
 		if (InternalConfig.isLogAuthentification()) {
 			this.log.debug(ProtectedHttpServlet.class.getSimpleName()
@@ -360,7 +367,7 @@ public class ProtectedHttpServlet extends HttpServlet {
 		response.setContentType("text/html");
 		response.setStatus(HttpServletResponse.SC_OK);
 		try {
-			request.setAttribute("error", getErrorMessage());
+			request.setAttribute("error", this.getErrorMessage());
 			request.getRequestDispatcher("/login.html").include(request,
 					response);
 		} catch (final ServletException e) {
@@ -392,6 +399,10 @@ public class ProtectedHttpServlet extends HttpServlet {
 		response.getWriter().close();
 	}
 
+	private void setErrorMessage(final String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+
 	/**
 	 * Validate user bean.
 	 */
@@ -410,14 +421,6 @@ public class ProtectedHttpServlet extends HttpServlet {
 			}
 			this.thisSession.setAttribute("userbean", userBean);
 		}
-	}
-
-	private String getErrorMessage() {
-		return errorMessage;
-	}
-
-	private void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
 	}
 
 }
