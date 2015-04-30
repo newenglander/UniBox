@@ -8,8 +8,6 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import de.unibox.config.InternalConfig;
-
 /**
  * The LogListener Class is able to provide logging features even in JSPs.
  *
@@ -47,10 +45,8 @@ public class LogListener implements ServletContextListener {
 		BasicConfigurator.configure();
 
 		PropertyConfigurator.configure(context.getResourceAsStream(configFile));
-		if (InternalConfig.isLogAuthentification()) {
-			this.log.info(LogListener.class.getSimpleName()
-					+ ": Logging started for application: " + configFile);
-		}
+		this.log.info(LogListener.class.getSimpleName()
+				+ ": Logging started for application: " + configFile);
 
 	}
 
