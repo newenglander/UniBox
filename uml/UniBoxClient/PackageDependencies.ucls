@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.8" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <package id="1" language="java" name="de.unibox.client.thread.worker" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/worker" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="197" x="306" y="37"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="de.unibox.client.api" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/api" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="133" x="173" y="217"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="de.unibox.client.events" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/events" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="154" x="327" y="307"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="de.unibox.client.thread" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="153" x="41" y="307"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="de.unibox.client.thread.implementation" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/implementation" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="244" x="41" y="127"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <package id="6" language="java" name="de.unibox.client.thread.runnable" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/runnable" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="50" width="206" x="41" y="397"/>    
+    <display autosize="true" stereotype="true" sort-features="false" accessors="true"/>  
+  </package>  
+  <dependency id="7">    
+    <bendpoint x="50" y="217"/>    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="8">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="5"/>  
+  </dependency>  
+  <dependency id="9">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="10">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="12">    
+    <bendpoint x="336" y="127"/>    
+    <bendpoint x="336" y="217"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="13">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="14">    
+    <bendpoint x="315" y="127"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.8" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="de.unibox.client.thread.ThreadEngine" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/ThreadEngine.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="405" width="196" x="1122" y="1763"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="de.unibox.client.events.CommunicationEvent" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/events/CommunicationEvent.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="261" width="316" x="766" y="1763"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="de.unibox.client.thread.implementation.ThreadTaskImpl" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/implementation/ThreadTaskImpl.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="369" width="178" x="1126" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="de.unibox.client.thread.implementation.RejectedExecutionHandlerImpl" 
+    project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/implementation/RejectedExecutionHandlerImpl.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="117" width="288" x="1271" y="2218"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="de.unibox.client.thread.runnable.RunnableThreadMonitor" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/runnable/RunnableThreadMonitor.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="207" width="258" x="973" y="2218"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="de.unibox.client.thread.worker.RunnableMessageMediator" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/worker/RunnableMessageMediator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="153" width="179" x="587" y="711"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="de.unibox.client.thread.ConcreteThreadFactory" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/ConcreteThreadFactory.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="158" x="724" y="2218"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="de.unibox.client.events.DatabaseEvent" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/events/DatabaseEvent.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="171" width="201" x="63" y="1763"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="de.unibox.client.api.IncomingMessageHandler" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/api/IncomingMessageHandler.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="188" x="806" y="711"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="de.unibox.client.thread.worker.RunnableDatabaseAgent" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/worker/RunnableDatabaseAgent.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="225" width="228" x="417" y="446"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="de.unibox.client.thread.worker.RunnableMessageSender" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/worker/RunnableMessageSender.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="171" width="193" x="912" y="446"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <enumeration id="12" language="java" name="de.unibox.client.events.RequestType" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/events/RequestType.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="153" width="169" x="63" y="2218"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </enumeration>  
+  <class id="13" language="java" name="de.unibox.client.api.ClientProvider" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/api/ClientProvider.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="819" width="341" x="806" y="904"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="de.unibox.client.thread.implementation.ThreadFactoryImpl" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/implementation/ThreadFactoryImpl.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="315" width="401" x="325" y="1763"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="de.unibox.client.thread.worker.RunnableCometListener" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/worker/RunnableCometListener.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="99" width="161" x="1549" y="1763"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="de.unibox.client.thread.worker.RunnableLoginAgent" project="UniBoxClient" 
+    file="/UniBoxClient/src/de/unibox/client/thread/worker/RunnableLoginAgent.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="99" width="141" x="1368" y="1763"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <dependency id="17">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="18">    
+    <bendpoint x="685" y="904"/>    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="19">    
+    <bendpoint x="1198" y="904"/>    
+    <bendpoint x="1156" y="711"/>    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="11"/>  
+  </dependency>  
+  <dependency id="20">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="15"/>  
+  </dependency>  
+  <association id="21">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="22" name="outgoingDatabaseEvents"/>      
+      <multiplicity id="23" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="24">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="25" name="instance"/>      
+      <multiplicity id="26" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="27">    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <association id="28">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="29" name="rejectionHandler"/>      
+      <multiplicity id="30" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="31">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <generalization id="32">    
+    <bendpoint x="866" y="446"/>    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="33">    
+    <end type="SOURCE" refId="8" navigable="false">      
+      <attribute id="34" name="requestType"/>      
+      <multiplicity id="35" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="36">    
+    <bendpoint x="1347" y="904"/>    
+    <bendpoint x="1347" y="711"/>    
+    <bendpoint x="1347" y="446"/>    
+    <end type="SOURCE" refId="15"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="37">    
+    <end type="SOURCE" refId="7"/>    
+    <end type="TARGET" refId="14"/>  
+  </generalization>  
+  <dependency id="38">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="39">    
+    <bendpoint x="32" y="711"/>    
+    <bendpoint x="32" y="904"/>    
+    <bendpoint x="32" y="1763"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <dependency id="40">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="1"/>  
+  </dependency>  
+  <generalization id="41">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <association id="42">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="43" name="monitor"/>      
+      <multiplicity id="44" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <dependency id="45">    
+    <bendpoint x="1024" y="711"/>    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="46">    
+    <bendpoint x="249" y="711"/>    
+    <bendpoint x="249" y="904"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="8"/>  
+  </dependency>  
+  <generalization id="47">    
+    <bendpoint x="1256" y="904"/>    
+    <bendpoint x="1256" y="711"/>    
+    <bendpoint x="1256" y="446"/>    
+    <end type="SOURCE" refId="16"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <generalization id="48">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="3"/>  
+  </generalization>  
+  <dependency id="49">    
+    <bendpoint x="556" y="711"/>    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="50">    
+    <bendpoint x="1135" y="446"/>    
+    <bendpoint x="1135" y="711"/>    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="51">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="52">    
+    <bendpoint x="294" y="1763"/>    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="12"/>  
+  </dependency>  
+  <dependency id="53">    
+    <bendpoint x="1177" y="904"/>    
+    <bendpoint x="1177" y="711"/>    
+    <bendpoint x="1177" y="446"/>    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="54">    
+    <bendpoint x="775" y="904"/>    
+    <end type="SOURCE" refId="9"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="55">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="13"/>  
+  </dependency>  
+  <dependency id="56">    
+    <end type="SOURCE" refId="13"/>    
+    <end type="TARGET" refId="16"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
