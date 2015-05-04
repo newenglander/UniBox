@@ -511,8 +511,8 @@ var app = {
 				"lengthMenu" : "Show _MENU_",
 				"zeroRecords" : "No data available",
 				"info" : "_END_ of _TOTAL_",
-				"infoEmpty" : "0 to 0 of 0",
-				"infoFiltered" : "out of _MAX_)",
+				"infoEmpty" : "0 of 0",
+				"infoFiltered" : "out of _MAX_",
 				"infoPostFix" : "",
 			},
 		});
@@ -579,7 +579,7 @@ var app = {
 				"zeroRecords" : "No data available",
 				"info" : "_END_ of _TOTAL_",
 				"infoEmpty" : "0 of 0",
-				"infoFiltered" : "out of _MAX_)",
+				"infoFiltered" : "out of _MAX_",
 				"infoPostFix" : "",
 			},
 		});
