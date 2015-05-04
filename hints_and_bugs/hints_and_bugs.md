@@ -1,6 +1,4 @@
-# Hints and Bugs
-
-## Hints
+# Hints
 
 The API is providing a implementation of the native object serialization routine:
 
@@ -54,10 +52,9 @@ String serializedObject = ObjectSerializerImpl.objectToString(list);
 ClientProvider.sendGameMessage(serializedObject);
 ```
 
-## Bugs
-##Known Bugs:
-###Internet Explorer 11
-1. The Chat-Function is not working until the app is recieving the second incoming message.
+# Bugs
+
+- In *Internet Explorer 11* the Chat-Function is not working until the app is recieving the second/third incoming message.
 
 
 

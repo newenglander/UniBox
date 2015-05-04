@@ -1,5 +1,33 @@
 # Concept
 
-To be prepared for any kind of firewall configurations within the network or the serving system the communication is completly processable over one single port. By default it would be the tomcat destination port e.g. 8080. But you can simply forward your default apache listener (port 80) to your tomcat instance.
-
 The communication architecture is basically a comet pattern. Any client, regardless of which kind, can call a certain listener route and will receive a long polling http handle on which all incoming messages transfered instantly. If a client needs to send a message, it will call a parameterized (static) url to inject a new message into the communication lifecycle of the backend. The backend is able to switch messages directly to related receivers and will deliver the messages via the long polling comet routes.
+
+**Note:** To be prepared for any kind of firewall configurations within the network or the serving system the communication is completly processable over one single port. By default it would be the tomcat destination port e.g. 8080. But you can use any other port if you want to.
+
+## Server Structure
+
+The modular and high flexible structure of UniBoxServer is splitted into several Packages.
+
+![UniBoxServer PackageDependencies](http://alextape.github.io/UniBox/uml/UniBoxServer/PackageDependencies.png)
+
+To get a more detailed overview you can take a look at the [UML Diagram](http://alextape.github.io/UniBox/uml/UniBoxServer/ClassDependencies.png) of the current state.
+
+## Client API Structure
+
+The Client API is accessible through the ClientProvider class located in the de.unibox.client.api Package. It is a static Wrapper-Class which gives access to all needed functionalities provided by the backend.
+
+![UniBoxServer PackageDependencies](http://alextape.github.io/UniBox/uml/UniBoxClient/PackageDependencies.png)
+
+To get a more detailed overview you can take a look at the [UML Diagram](http://alextape.github.io/UniBox/uml/UniBoxClient/ClassDependencies.png) of the current state.
+
+## Core Structure
+
+The UniBoxCore centralized the intersection-classes of UniBoxServer and UniBoxClient.
+
+![UniBoxServer PackageDependencies](http://alextape.github.io/UniBox/uml/UniBoxCore/PackageDependencies.png)
+
+To get a more detailed overview you can take a look at the [UML Diagram](http://alextape.github.io/UniBox/uml/UniBoxCore/ClassDependencies.png) of the current state.
+
+
+
+

@@ -7,3 +7,6 @@ To get in touch with the service and to play your JavaFX game against another re
 The Dashboard is displaying all available game channels and the current result statistics. Furhtermore you can create new game channels and chat with other remote players via the chat tab.
 
 NOTE: The backend is fully responsible, so you can even use it with your smartphone or tablet as a simple but functional chat system.
+
+
+
