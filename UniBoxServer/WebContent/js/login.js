@@ -5,9 +5,6 @@ $(document).ready(function() {
 		case "invalid_credentials":
 			swal("Ups..", "Wrong username and password!", "error");
 			break;
-		case "Not found":
-			swal("Ups..", "Resource not found!", "warning");
-			break;
 		case "logout":
 			swal("Good job!", "You are logged out!", "success");
 			break;
