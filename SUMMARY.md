@@ -1,6 +1,6 @@
 # Summary
 
-* [Introduction](Home.md)
+* [Introduction](README.md)
 * [Concept](1.-Concept.md)
 * [Server](2.-Server.md)
    * [Installation](2.1-Installation.md)
