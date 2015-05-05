@@ -2,7 +2,11 @@
 
 UniBox is an simple and easy to use messaging-system implementing custom "games" for distributed gaming clients.
 
-Read full Manual here: [UniBoxManual](http://alextape.github.io/UniBox/UniBoxManual.pdf)
+## Documentation
+
+UniBoxManual [Read](http://alextape.gitbooks.io/unibox/content/) [Download](https://www.gitbook.com/download/pdf/book/alextape/unibox)
+
+or visit the [GitHubWiki](https://github.com/AlexTape/UniBox/wiki)
 
 ## The Project Website
 
