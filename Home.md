@@ -2,8 +2,6 @@
 
 UniBox is an simple and easy to use messaging system implementing custom "games" for distributed gaming clients.
 
-Read full Manual here: [UniBoxManual](http://alextape.github.io/UniBox/UniBoxManual.pdf)
-
 ## Introduction
 
 The UniBox backend is connecting various gaming clients via http based network connections. Basically it consists of a Servlet Stack linked to a MySQL database (to store user names, passwords, rankings), an easy to use client API and a core library, to cover cross-package dependencies.
