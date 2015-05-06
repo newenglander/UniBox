@@ -12,7 +12,7 @@ or visit the [GitHubWiki](https://github.com/AlexTape/UniBox/wiki)
 
 The UniBox backend is connecting various gaming clients via http based network connections. Basically it consists of a Servlet Stack linked to a MySQL database (to store user names, passwords, rankings), an easy to use client API and a core library, to cover cross-package dependencies.
 
-It is designed as a asynchron message mediator. Messages can be injected by simple http requests against the backend services. The backend will queue injected messages and the corresponding thread workers will deliver and receive the messages via asynchron long polling http responses based on a [comet-pattern](http://en.wikipedia.org/wiki/Comet_%28programming%29) immediatly.
+It is designed as a asynchronous message mediator. Messages can be injected by simple http requests against the backend services. The backend will queue injected messages and the corresponding thread workers will deliver and receive the messages via asynchron long polling http responses based on a [comet-pattern](http://en.wikipedia.org/wiki/Comet_%28programming%29) immediatly.
 
 In fact each concrete game represents a screened messaging channel in principle. Besides this functionality of sending messages between a several group of connected clients, the frontend priovides a simple chat box to get in bound with other player directly.
 
