@@ -12,7 +12,7 @@
    * [Handle Highscores](3.4-Highscores.md)
 * [User Guide](4.-User-Guide.md)
 * [Requests](5.-Requests.md)
-   * [Asynchron Requests](5.1-Asynchron-Requests.md)
-   * [Synchron Requests](5.2-Synchron-Requests.md)
+   * [Asynchronous Requests](5.1-Asynchron-Requests.md)
+   * [Synchronous Requests](5.2-Synchron-Requests.md)
 * [Hints and Bugs](6.-Hints-and-Bugs.md)
 
